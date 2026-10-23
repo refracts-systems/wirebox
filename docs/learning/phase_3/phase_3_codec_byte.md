@@ -1,0 +1,13 @@
+# Phase 3 — Codec: arti setiap byte dan bit
+
+**Yang dikerjakan.** [codec.zig](../../../kernel/src/codec.zig) membaca dan menulis Ethernet II, ARP, IPv4, serta subset ICMP. Fungsi `read`/`write` menangani integer network order secara eksplisit. Decoder mengecek panjang sebelum membaca field; `checksum` menghitung one's complement, termasuk payload dengan jumlah byte ganjil. Tidak ada cast byte buffer ke layout struct native.
+
+**Keputusan kode.** `ethernet`, `arp`, `ipv4`, dan `icmp` mengembalikan error yang dibedakan: header terpotong, nilai tidak valid, checksum salah, atau fitur yang belum didukung. IPv4 yang diproses mempunyai IHL=5, MTU 1500 dan tidak berfragmentasi. VLAN, IPv4 options, fragmentasi, serta protokol lain ditolak sebagai unsupported. Menolak secara eksplisit penting agar paket yang luput dari model tidak dilaporkan sebagai ping yang berhasil.
+
+Encoder `ipHeader` membuat header 20 byte dan checksum, `decrement` mengurangi TTL lalu memperbarui checksum, `frame` menulis destination/source MAC dan EtherType lalu padding sampai minimal 60 byte. Buffer frame tidak memuat FCS/preamble/SFD/IFG. Struct `Field` hanya transport hasil decode: kode field, offset byte, offset bit dari MSB, panjang bit, dan nilai hingga 64 bit. Byte wire tetap sumber kebenaran.
+
+**Contoh byte aktual.** Pada [S01](../../evidence/phase-3/byte-walkthrough.md), request sebelum forwarding berawal `45 00 00 1c 00 01 00 00 40 01 65 dd`. Sesudah R1 meneruskan: `45 00 00 1c 00 01 00 00 3f 01 66 dd`. Offset 8 adalah TTL `0x40 → 0x3f`; offset 10–11 checksum `0x65dd → 0x66dd`. Hanya byte 8 dan 10 berubah; ICMP tetap sama. `view` memetakan TTL ke `byte_offset=8`, `bit_offset=0`, `bit_width=8`; pada frame Ethernet field yang sama berada di offset 22 karena header L2 menambah 14 byte.
+
+**Mengapa field view disimpan bersama byte.** Hex saja memaksa pembaca menghafal format protokol, sedangkan field semantik saja menyembunyikan perubahan byte. Pairing kedua bentuk memungkinkan inspector menyorot bit yang tepat dan menampilkan alasan perubahan. Field lebih panjang dari 64 bit tetap punya rentang dan raw bytes; JSON menggunakan `value: null` untuk rentang itu. Decoder invalid tidak mengembalikan daftar field parsial.
+
+**Periksa.** Bandingkan [golden fixture](../../../fixtures/packets/ipv4-forwarding-v1.json) dengan `codec.decrement` dan versi 5/6 di [S01.json](../../evidence/phase-3/S01.json). [Tes Zig](../../../kernel/src/network_tests.zig) menguji prefix terpotong, checksum, fragment, VLAN, payload ganjil, serta field value. Oracle [Rust acceptance](../../../crates/wirebox-headless/src/packet_demo.rs) menghitung checksum dan membaca bit dari byte secara terpisah; ia tidak meminta codec Zig menghasilkan expected value untuk dirinya sendiri.

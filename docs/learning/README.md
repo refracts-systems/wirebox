@@ -1,0 +1,21 @@
+# Belajar membangun Wirebox, phase 1–3
+
+Dokumen ini membaca **kode yang sekarang ada**, tahap demi tahap. Setiap catatan menjawab: bagian mana yang bekerja, keputusan apa yang diambil, mengapa dipilih, dan apa akibatnya saat kode dikembangkan. [ADR](../adr/README.md) adalah keputusan arsitektur; [evidence](../evidence/phase-3/README.md) merekam hasil uji. Catatan belajar ini menghubungkan keduanya dengan fungsi dan data konkret.
+
+Tambahan 23 Oktober 2026: [hardening Phase 0–3 untuk backend engineer](hardening_phase_0_3.md), [laporan pengujian](../evidence/hardening-phase-0-3/README.md), dan [Cognitive Coverage launcher](../../cognitive-coverage/cognitive-coverage-open.html). Guide interaktif berlevel memprioritaskan FFI, lifecycle handle, scheduler, jurnal, codec, dan jalur ping; progress manusia dimulai dari uncovered.
+
+Urutan yang disarankan:
+
+| Phase | Catatan | Pertanyaan utama |
+|---|---|---|
+| 1 | [Build Zig dari Cargo](phase_1/phase_1_build_zig_rust.md) | Bagaimana satu build memuat kode Zig dan Rust? |
+| 1 | [C ABI dan ownership](phase_1/phase_1_ffi_ownership.md) | Bagaimana byte menyeberangi bahasa tanpa pointer menggantung? |
+| 1 | [GPUI dan probe](phase_1/phase_1_gpui_probe.md) | Apa yang sebenarnya ditampilkan UI pertama? |
+| 2 | [Graph dan lifecycle](phase_2/phase_2_graph_lifecycle.md) | Bagaimana device, port, link, dan ID dikelola? |
+| 2 | [Scheduler dan waktu virtual](phase_2/phase_2_scheduler_timer.md) | Mengapa event selalu dieksekusi dalam urutan yang sama? |
+| 2 | [State, jurnal, dan verifikasi](phase_2/phase_2_state_trace.md) | Apa beda queue, state, trace, dan replay? |
+| 3 | [Codec dan field byte](phase_3/phase_3_codec_byte.md) | Bagaimana header diubah dan diinspeksi byte demi byte? |
+| 3 | [Alur paket jaringan](phase_3/phase_3_alur_paket.md) | Mengapa ping melewati ARP, switch, router, lalu kembali? |
+| 3 | [Versi, ABI, dan pembuktian](phase_3/phase_3_tracker_pembuktian.md) | Bagaimana hasil simulasi ditelusuri dan diuji? |
+
+Contoh phase 3 memakai fixture sintetis `PC1 — SW1 — R1 — PC2`. Nama kelas dan alamat Packet Tracer dari laporan reverse engineering memberi petunjuk desain, bukan source engine Wirebox atau bukti kesamaan perilaku vendor. Baca [batas model paket](../wirebox/packets.md) sebelum memakai hasil simulasi untuk keputusan operasional.

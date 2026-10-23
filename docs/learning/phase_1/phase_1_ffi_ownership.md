@@ -1,0 +1,13 @@
+# Phase 1 — C ABI, salinan byte, dan pemilik memori
+
+**Yang dikerjakan.** [Header wirebox.h](../../../kernel/include/wirebox.h) mendefinisikan angka status, handle, dan bentuk record; [abi.zig](../../../kernel/src/abi.zig) mengimplementasikannya; [wrapper Rust](../../../crates/wirebox-kernel/src/lib.rs) menyembunyikan call `unsafe` di balik `Session`. Host melakukan `wb_create` → `wb_probe_submit` → `wb_probe_read` → `wb_destroy`.
+
+**Keputusan kode.** Rust mengirim pointer dan panjang hanya selama pemanggilan sinkron. Zig langsung menyalin 1–64 byte ke queue miliknya. Saat read, Zig menyalin record ke buffer caller; Rust membentuk `Vec<ProbeEvent>` miliknya. Setelah `Session::close()` atau `Drop`, `Vec` tetap valid. Inilah alasan byte dapat diinspeksi tanpa menyimpan borrow lintas bahasa. Layout `extern struct`/`#[repr(C)]` dipakai untuk transport ABI, sedangkan wire format paket kelak diencode secara eksplisit.
+
+Handle `u64` memuat index+1 dan generation. Nol invalid; generation naik ketika slot dihancurkan agar handle lama tidak masuk ke session baru yang kebetulan memakai slot sama. Registry probe berkapasitas 16 session dan queue 16 record. Penuh mengembalikan status `capacity`, tidak menimpa data yang belum dibaca. Pada implementasi sekarang dua bit atas handle memisahkan probe `00`, counter `10`, dan network `11`; revisi phase 3 ini dicatat pada [kontrak ABI](../../wirebox/ffi.md).
+
+Rust memakai mutex bersama untuk menserialisasi semua panggilan registry. `Session` dibuat `!Send + !Sync` memakai `PhantomData<Rc<()>>`, dan doctest compile-fail menunjukkan instance itu tidak dapat dikirim ke thread lain. Mutex menjaga call tetap serial; penanda thread membatasi cara owner dipakai. C caller harus menjaga validitas, alignment, panjang, dan non-overlap pointer sendiri. `unsafe` pada wrapper berarti kontrak tersebut masih menjadi tanggung jawab kode Rust yang memanggil Zig.
+
+**Mengapa ini dipilih.** Menyalin byte berukuran kecil mempermudah lifetime dan error path di fase pembuktian. Container Zig atau Rust tidak diekspos sebagai ABI, sehingga perubahan implementasi internal tidak otomatis mengubah layout lintas bahasa. Status `u32` diterjemahkan ke enum `Error`; tidak ada panic, exception, atau allocator yang menyeberangi FFI.
+
+**Periksa di kode.** Lihat `Session::submit_probe` dan `Session::read_probe` pada wrapper, lalu `wb_probe_submit`/`wb_probe_read` di Zig. Ubah buffer sumber setelah submit dalam tes dan amati bahwa byte yang dibaca tidak ikut berubah. Tes layout C, Zig, dan Rust serta stale handle tercatat pada [G1](../../evidence/phase-0-1/README.md). Probe ini adalah transport dan ownership proof, bukan scheduler paket.
