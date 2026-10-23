@@ -1,0 +1,34 @@
+{
+  "observed_at": "2026-10-21T06:10:23.5859442+07:00",
+  "method": "Packet Tracer GUI, Windows UIAutomation ControlView, Simple PDU",
+  "packet_tracer_exe": "C:\\Program Files\\Cisco Packet Tracer 9.0.1\\bin\\PacketTracer.exe",
+  "packet_tracer_sha256": "843579cc806a41d57a4ca524d6805b97ee1f91e0ddd02ac09be8461db04b94a1",
+  "sample_path": "C:\\Program Files\\Cisco Packet Tracer 9.0.1\\saves\\01 Networking\\HSRP\\Hsrp_Simple_Ping_With_Same_Priority.pkt",
+  "sample_sha256": "396d4a3a5e0ff9015276ab88c823d5969f2da6759c64377341ae50b1349ac59a",
+  "sample_modified": false,
+  "scenario_matches_wirebox_fixture": false,
+  "rows": [
+    {
+      "status": "Successful",
+      "source": "PC0",
+      "destination": "Router0",
+      "type": "ICMP",
+      "time_sec": "0.000",
+      "number": "0"
+    },
+    {
+      "status": "Failed",
+      "source": "PC0",
+      "destination": "PC1",
+      "type": "ICMP",
+      "time_sec": "0.000",
+      "number": "1"
+    }
+  ],
+  "limitations": [
+    "The sample uses HSRP and differs from Wirebox S01-S05 topology/configuration.",
+    "Simple PDU status is GUI-level; no PDU byte trace or packet capture was collected.",
+    "Cause of PC0 to PC1 failure was not determined.",
+    "Time(sec) is the PDU list display value, not network latency."
+  ]
+}

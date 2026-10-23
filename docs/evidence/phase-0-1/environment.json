@@ -1,0 +1,34 @@
+{
+  "collected_on": "2026-10-20",
+  "timezone": "Asia/Bangkok",
+  "scope": "Local development host, no network device access",
+  "os": {
+    "Caption": "Microsoft Windows 11 Home Single Language",
+    "Version": "10.0.26300",
+    "BuildNumber": "26300"
+  },
+  "cpu": {
+    "Name": "AMD Ryzen 5 5600H with Radeon Graphics         ",
+    "NumberOfCores": 6,
+    "NumberOfLogicalProcessors": 12
+  },
+  "ram_bytes": 16539561984,
+  "gpu": [
+    {
+      "Name": "AMD Radeon(TM) Graphics",
+      "DriverVersion": "31.0.21925.1001"
+    },
+    {
+      "Name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "DriverVersion": "32.0.16.1714"
+    }
+  ],
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+  "zig": "0.17.0",
+  "msvc": "14.44.35207",
+  "gpui": "0.2.2",
+  "target": "x86_64-pc-windows-msvc",
+  "profile": "debug",
+  "git_state": "No commits yet; use source manifest hashes to identify this work"
+}

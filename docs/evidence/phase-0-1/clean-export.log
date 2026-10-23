@@ -1,0 +1,15 @@
+Fresh source export: C:\Users\ricky\AppData\Local\Temp\wirebox-clean-source-ff79eb8960d64f6ead22360823cc0047
+   Compiling wirebox-kernel v0.1.0 (C:\Users\ricky\AppData\Local\Temp\wirebox-clean-source-ff79eb8960d64f6ead22360823cc0047\crates\wirebox-kernel)
+   Compiling wirebox-studio v0.1.0 (C:\Users\ricky\AppData\Local\Temp\wirebox-clean-source-ff79eb8960d64f6ead22360823cc0047\crates\wirebox-studio)
+   Compiling wirebox-headless v0.1.0 (C:\Users\ricky\AppData\Local\Temp\wirebox-clean-source-ff79eb8960d64f6ead22360823cc0047\crates\wirebox-headless)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.91s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+   Compiling wirebox-headless v0.1.0 (C:\Users\ricky\AppData\Local\Temp\wirebox-clean-source-ff79eb8960d64f6ead22360823cc0047\crates\wirebox-headless)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.00s
+     Running `C:\Users\ricky\src\wirebox\target\debug\wirebox-headless.exe --probe`
+{"abi_version":1,"event_count":1,"event_id":1,"hex":"57697265626f78202f205a696720746f2052757374202f20414249207631","mode":"abi_probe","ownership":"copied","phase":1,"result":"pass","session":"destroyed","simulation":"not_implemented","zig_version":"0.17.0"}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.27s
+     Running `C:\Users\ricky\src\wirebox\target\debug\wirebox-headless.exe --check-fixtures`
+{"inventory":"user_reported_with_unknowns","ipv4_checksums":"valid","mode":"fixture_validation","network_simulation_run":false,"nodes":4,"result":"pass","scenarios":5,"schema_version":1}
+Fresh-source build passed with cached dependencies; not a cold-cache or remote CI run.

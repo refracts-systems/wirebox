@@ -1,0 +1,86 @@
+{
+  "created_at": "2026-10-21T11:17:10.0149700+07:00",
+  "scope": "Local PT audit, runtime smoke and Wirebox baseline; differential verdict not_evaluated",
+  "files": [
+    {
+      "path": "docs/evidence/pt-comparison/ghidra-audit-run.log",
+      "bytes": 5385,
+      "sha256": "75e6356185f20acb9658c8cf54977c9b5265deab8808c3835ecdb92494204472"
+    },
+    {
+      "path": "docs/evidence/pt-comparison/ghidra-audit.json",
+      "bytes": 1416,
+      "sha256": "de8c9cbb52708b91cce7e9d9ccce0a57b59887f38261a95fcb13e276abf87d64"
+    },
+    {
+      "path": "docs/evidence/pt-comparison/ghidra-run.log",
+      "bytes": 5559,
+      "sha256": "ec6074e1f5caa32063699f1ee2ac0a293d2af068eb0c07ba26d3341102cb1aff"
+    },
+    {
+      "path": "docs/evidence/pt-comparison/pt-runtime-observations.json",
+      "bytes": 1316,
+      "sha256": "ecfc606da6389dc90f1c43f5cc8f7173d0da8ac0a67008ca3cdd973c2280d021"
+    },
+    {
+      "path": "docs/evidence/pt-comparison/pt-ui-observe.json",
+      "bytes": 497,
+      "sha256": "c90f7942df9ed2e1762a3013473284e6f9ed7fbdf17242438d60cb5dc1738c49"
+    },
+    {
+      "path": "docs/evidence/pt-comparison/rea-artifact.json",
+      "bytes": 6821,
+      "sha256": "99c05ebb70127380fe89b0030864f2c1db067a9b915dffce6262a22007ee8f2b"
+    },
+    {
+      "path": "docs/evidence/pt-comparison/rea-managed-check.json",
+      "bytes": 1828,
+      "sha256": "7084f96866f1e20b1edf016fc03090e1cf486e5b48db87b1f8164620b9b95a38"
+    },
+    {
+      "path": "docs/evidence/pt-comparison/rea-status.json",
+      "bytes": 257,
+      "sha256": "6481395256ad356e0a202d5d106766411acb9d59a831799c0a39ad97de3f65b2"
+    },
+    {
+      "path": "docs/evidence/pt-comparison/README.md",
+      "bytes": 7521,
+      "sha256": "1230340340f61a764b2cb4edd2f3f1dd1a690918db620f7526e35f0aac309774"
+    },
+    {
+      "path": "docs/evidence/pt-comparison/wirebox-network.json",
+      "bytes": 6781,
+      "sha256": "713ca4acc65d0e80a91ab556cf7e85cce50a37364021e9be8529fe8c9d94e941"
+    },
+    {
+      "path": "docs/evidence/pt-comparison/wirebox-verify.log",
+      "bytes": 16008,
+      "sha256": "30f804ad7cc0d5ee4416d374739779a31610e9c547ff6ebdb5ad9389b982f8eb"
+    },
+    {
+      "path": "docs/packet-tracer/comparison-tests.md",
+      "bytes": 4932,
+      "sha256": "d2857b37f3a747943eca689183ec66b1ccfbd7478064f3c7af9addd5fba557cc"
+    },
+    {
+      "path": "fixtures/packets/ipv4-forwarding-v1.json",
+      "bytes": 730,
+      "sha256": "c8807dc9c85727ec625f5ed4fb3f4725afcb2f35df495d5860720dcc49b7d1b5"
+    },
+    {
+      "path": "fixtures/scenarios/icmp-static-v1.json",
+      "bytes": 3675,
+      "sha256": "a40d13908e49d9210285c61191818fb9f05f85ca752737b639693d090001d610"
+    },
+    {
+      "path": "scripts/ghidra/WireboxPtAudit.java",
+      "bytes": 3923,
+      "sha256": "03448483bea73de22bff9a62ac080e0be64429a8151aa0981f1971780ec5a393"
+    },
+    {
+      "path": "target/debug/wirebox-headless.exe",
+      "bytes": 3057664,
+      "sha256": "d37e445e8e65d286d12f95ecda23b96d144be295c9c733aba57f761d73b44a96"
+    }
+  ]
+}

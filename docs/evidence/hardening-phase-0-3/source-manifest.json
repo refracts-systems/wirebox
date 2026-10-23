@@ -1,0 +1,517 @@
+{
+  "recorded_at": "2026-10-23T09:04:06.7213078+07:00",
+  "git_revision": null,
+  "scope": "Phase 0-3 hardening pass, local sources and learning artifacts; old gate manifests preserved. No HEAD.",
+  "sources": [
+    {
+      "file": ".agents/skills/cognitive-coverage/cognitive-coverage.schema.json",
+      "bytes": 14680,
+      "sha256": "80885f0ebabf42e4447d9e8afd038dad1f3e20640bcce7564e56bdc3c2769703"
+    },
+    {
+      "file": ".agents/skills/cognitive-coverage/LICENSE",
+      "bytes": 1088,
+      "sha256": "654622e6b14dd73fba07d703718cfe3b418f8e9ad9c764ca32097d8dc6dafd68"
+    },
+    {
+      "file": ".agents/skills/cognitive-coverage/SKILL.md",
+      "bytes": 55209,
+      "sha256": "7deb29fccabe25d125b59f9dfd5abd7e03ad522ba73e64223010525471fd2b73"
+    },
+    {
+      "file": ".agents/skills/cognitive-coverage/UPSTREAM.md",
+      "bytes": 745,
+      "sha256": "1dbc3c06cd78afc47ce214553faef828fc2d0ec1012aa9ee59720d8212e1e2f8"
+    },
+    {
+      "file": ".cargo/config.toml",
+      "bytes": 96,
+      "sha256": "ebb630fa92f4af4588c9e68d9ab599da5482d7d000528a4903dc821441b92999"
+    },
+    {
+      "file": ".github/workflows/verify.yml",
+      "bytes": 1184,
+      "sha256": "821495b15301e1dd6d991dac72dac050167b948ca31cb4a778f63d926b32dff6"
+    },
+    {
+      "file": ".gitignore",
+      "bytes": 62,
+      "sha256": "32cfc769f8872ff657659d4ce10e267fe556ae60fd1e280df506fb62a53a4a91"
+    },
+    {
+      "file": "AGENTS.md",
+      "bytes": 9202,
+      "sha256": "f403f98872c232562448c94c3888d8b51a3d34961f1b16cc51b33dcd1b9e87fe"
+    },
+    {
+      "file": "Cargo.lock",
+      "bytes": 146401,
+      "sha256": "3d07ac580672511c946674a29d4f5ba142cfc8b21b4d0d8cf147f27139ed8a53"
+    },
+    {
+      "file": "Cargo.toml",
+      "bytes": 498,
+      "sha256": "974652280e328157dfba89e1567d7c7c92b88e78bae659d38c15597b54731f7c"
+    },
+    {
+      "file": "cognitive-coverage/cognitive-coverage-open.html",
+      "bytes": 3514,
+      "sha256": "98c4d005b4e7403725845c9abce33d870f9ca255026e6f0da5c3f84479bbe4ba"
+    },
+    {
+      "file": "cognitive-coverage/cognitive-coverage.html",
+      "bytes": 71044,
+      "sha256": "752efd741223cb87c4e5ccc30e93bac14018f640d209c53b149f4ff036dd4b79"
+    },
+    {
+      "file": "cognitive-coverage/cognitive-coverage.json",
+      "bytes": 74540,
+      "sha256": "8901577a93d6d8b5c3b92bd6b7b390252667508b50d281e893b98fbfd09e5a7d"
+    },
+    {
+      "file": "cognitive-coverage/learning-guide.html",
+      "bytes": 47325,
+      "sha256": "96ccb2e44f9857ff57f05a91ea5dcaf4db60c181aa4fa056373cdd2eddfa1458"
+    },
+    {
+      "file": "crates/wirebox-headless/Cargo.toml",
+      "bytes": 217,
+      "sha256": "30084fee671e0f47f9ed23035c393598defd6cdb268572cdf3f5726a3d4f24e3"
+    },
+    {
+      "file": "crates/wirebox-headless/src/fixtures.rs",
+      "bytes": 4625,
+      "sha256": "02f7c637de731275683ca722229550e9ccd62ada139c86fa4b50343de32c85b5"
+    },
+    {
+      "file": "crates/wirebox-headless/src/main.rs",
+      "bytes": 2355,
+      "sha256": "fc4c5270d0b5620ef828670cf55c6eabb48abe5fbfc4d1eb9fc4df60efddb13c"
+    },
+    {
+      "file": "crates/wirebox-headless/src/packet_demo.rs",
+      "bytes": 21843,
+      "sha256": "f6fca52079af24164f94bd672ac89fd73ea97288bf23cb4c3982f4adcf3fd599"
+    },
+    {
+      "file": "crates/wirebox-headless/src/runtime_demo.rs",
+      "bytes": 7933,
+      "sha256": "7c84c381f1231fd9351d63d7b7b0c9f55c1e9ca2af6286698797a5199033e2e6"
+    },
+    {
+      "file": "crates/wirebox-kernel/build.rs",
+      "bytes": 2189,
+      "sha256": "53f6d93767688c929286a4d04c525bde8bf7197461defa2308a779e4696090c1"
+    },
+    {
+      "file": "crates/wirebox-kernel/Cargo.toml",
+      "bytes": 210,
+      "sha256": "b1aa1f550a12e6c784661ffb9ded159757963a87ba34659bf7a20f6b099e3684"
+    },
+    {
+      "file": "crates/wirebox-kernel/src/lib.rs",
+      "bytes": 8472,
+      "sha256": "7cd85013b9e4d2ff77e2f3b38ee29b6deb478d605cd402bf96979de6e0c528a1"
+    },
+    {
+      "file": "crates/wirebox-kernel/src/network.rs",
+      "bytes": 15362,
+      "sha256": "71f895390d8d9fb37fd2396737c02b7bf72690ffba27e8aaef24f7bd1a03682e"
+    },
+    {
+      "file": "crates/wirebox-kernel/src/simulation.rs",
+      "bytes": 13586,
+      "sha256": "16062ba3f1a29ef8200ed5208c72335bea21d804e47dc49bc1d0e08de12bc189"
+    },
+    {
+      "file": "crates/wirebox-studio/Cargo.toml",
+      "bytes": 263,
+      "sha256": "d921279d7b96ca288a7034e40f6e3dfbc0af7c6a54dd1f24d5090d7c5a84bef2"
+    },
+    {
+      "file": "crates/wirebox-studio/src/main.rs",
+      "bytes": 11673,
+      "sha256": "55a8b4d694e8f44c87cd181193f785874d56d8e136b89077c42244cfcc16b26d"
+    },
+    {
+      "file": "docs/adr/0001-semantic-state.md",
+      "bytes": 1650,
+      "sha256": "718ab3aad2f2d2a262907163e24c990d97301b89b24876eb4fb95d4c43491d2e"
+    },
+    {
+      "file": "docs/adr/0002-zig-rust-abi.md",
+      "bytes": 2479,
+      "sha256": "b5dc0e0d417520ed68e3a3fdd03fffa9cfe707aacfac7c09118fadc60e7d7f73"
+    },
+    {
+      "file": "docs/adr/0003-virtual-time-and-trace.md",
+      "bytes": 1980,
+      "sha256": "0cc13fa0acd1e4c88c2ee80772223e51de14e6ef6f28ed0bbb01f38ee60212d4"
+    },
+    {
+      "file": "docs/adr/0004-gpui-windows.md",
+      "bytes": 1850,
+      "sha256": "4daf1f6528fc96acc674493363d81dca3cae5f55f0ad584e8d693ff6826da250"
+    },
+    {
+      "file": "docs/adr/0005-pilot-scope.md",
+      "bytes": 1963,
+      "sha256": "c24e9388ce27731e745f6124cfd0d3a2e92a89724dfd125f34fdf3f38d98fb9d"
+    },
+    {
+      "file": "docs/adr/0006-phase-2-runtime.md",
+      "bytes": 4322,
+      "sha256": "d7e165684e42c0e6e8268858fb6c00435eab0cb210f4cc6c6ebc12326a7e0d0f"
+    },
+    {
+      "file": "docs/adr/0007-packet-model.md",
+      "bytes": 3925,
+      "sha256": "0102a397ace75f1bd8d0696eaff92c39da79ea8825971136275822484b226771"
+    },
+    {
+      "file": "docs/adr/README.md",
+      "bytes": 1681,
+      "sha256": "c9b55cb38aaf09ded5c0e7aa05896e0cfba0e7f746ed203df5b0df1d1147ab40"
+    },
+    {
+      "file": "docs/learning/hardening_phase_0_3.md",
+      "bytes": 6949,
+      "sha256": "17fb9328d50b3bdf4f9f21a055b37b8ccc3dcd09ea008ca44bd808da7d6139f0"
+    },
+    {
+      "file": "docs/learning/phase_1/phase_1_build_zig_rust.md",
+      "bytes": 2389,
+      "sha256": "a7a2a8cdf805d64cc2f45346b1abc8ae9cfb93baa9e1ec3317ba4c181fe2a506"
+    },
+    {
+      "file": "docs/learning/phase_1/phase_1_ffi_ownership.md",
+      "bytes": 2688,
+      "sha256": "c475be215a1888cf52cc1d5cfa6057c4aaa14a01e4d63d3faa8600ce4302d0f2"
+    },
+    {
+      "file": "docs/learning/phase_1/phase_1_gpui_probe.md",
+      "bytes": 2005,
+      "sha256": "d99a2d02ec340664897fe4a3b3c4e3aa57b795d22195e935bba7758a2466cb6f"
+    },
+    {
+      "file": "docs/learning/phase_2/phase_2_graph_lifecycle.md",
+      "bytes": 2142,
+      "sha256": "7186fd4b79bd6a94bae8ee1e140b35c183b1e48beb0ea9cad5727fe02a49010f"
+    },
+    {
+      "file": "docs/learning/phase_2/phase_2_scheduler_timer.md",
+      "bytes": 2855,
+      "sha256": "abcd60b0e399aade0494876fdf7cb385183ea7c393c219a2727566b08954531a"
+    },
+    {
+      "file": "docs/learning/phase_2/phase_2_state_trace.md",
+      "bytes": 2507,
+      "sha256": "b7a42fd8a8fdaeb1b5674466671e68805ff1b1f8b71218067a46c7e0aad8f4ee"
+    },
+    {
+      "file": "docs/learning/phase_3/phase_3_alur_paket.md",
+      "bytes": 3219,
+      "sha256": "d1a7beb4ad55271452c753d53b8d8fb9ac33649374d3e93ab103cb5ffbe1b518"
+    },
+    {
+      "file": "docs/learning/phase_3/phase_3_codec_byte.md",
+      "bytes": 2766,
+      "sha256": "f92b1fe72b5bbe86c2249ca4da3de474b641448b30e2881c06bcf6e46f751140"
+    },
+    {
+      "file": "docs/learning/phase_3/phase_3_tracker_pembuktian.md",
+      "bytes": 3679,
+      "sha256": "cd18a4ce68f0481b443e1a87649d0c4f111005f85e99a3cff7b8ea359f89e0e8"
+    },
+    {
+      "file": "docs/learning/README.md",
+      "bytes": 2325,
+      "sha256": "7efd84804a3e8f864dede0091c9a3f1ba642d74a4498d199eb4a45b89129b186"
+    },
+    {
+      "file": "docs/packet-tracer/architecture.md",
+      "bytes": 4925,
+      "sha256": "bfecc7098cae3fff935730e058daafeb5782c1c662539b00e16d36ec39ff9956"
+    },
+    {
+      "file": "docs/packet-tracer/comparison-tests.md",
+      "bytes": 4932,
+      "sha256": "d2857b37f3a747943eca689183ec66b1ccfbd7478064f3c7af9addd5fba557cc"
+    },
+    {
+      "file": "docs/packet-tracer/evidence-ledger.md",
+      "bytes": 3819,
+      "sha256": "826f705fb670c311e080658f016e963e63b78ef92b36385208584fa90bb3782b"
+    },
+    {
+      "file": "docs/packet-tracer/mini-simulator.md",
+      "bytes": 3832,
+      "sha256": "5d729f2f449c7a995ad224dee8c02f343b6f9da0532f61f4494dfddf6c072910"
+    },
+    {
+      "file": "docs/packet-tracer/pkt-format.md",
+      "bytes": 3718,
+      "sha256": "8ef67c203e552cf9dd714839a22aa3b721bcd2e03d464ace802d0f0ada87bf82"
+    },
+    {
+      "file": "docs/packet-tracer/README.md",
+      "bytes": 2796,
+      "sha256": "f690662fe22eed4c4af546afd4b02b8d02a05e0b1a68365dc637b2d0c82ad002"
+    },
+    {
+      "file": "docs/packet-tracer/wirebox-implications.md",
+      "bytes": 2790,
+      "sha256": "b61256a022098a9ccfe0dcc3e89017d27b9cf97227bce4347b5e71cd1f821567"
+    },
+    {
+      "file": "docs/README.md",
+      "bytes": 3239,
+      "sha256": "3ae5e4596408148d1e846ed7dad0b6538e70cb04d2955dce7da406a130091c6f"
+    },
+    {
+      "file": "docs/wirebox/architecture.md",
+      "bytes": 6212,
+      "sha256": "27363677612bf2d1b4951a20ea66c899222bf167e89879275d1246f0da9d24fc"
+    },
+    {
+      "file": "docs/wirebox/byte-tracker.md",
+      "bytes": 4458,
+      "sha256": "937192b08c1190a92d8d15deec1452e3b08de101a65251b0cde88e933af99ccd"
+    },
+    {
+      "file": "docs/wirebox/decisions.md",
+      "bytes": 6361,
+      "sha256": "436e1e3d269ced9d1a85a068449fa466c62bae296d1f8f0510acbd66100a26a3"
+    },
+    {
+      "file": "docs/wirebox/ffi.md",
+      "bytes": 3559,
+      "sha256": "cba24f530b611c58f0b6e4ee2a75c9e0924f3dcf6c3af1952abf6d2631e09579"
+    },
+    {
+      "file": "docs/wirebox/packets.md",
+      "bytes": 10275,
+      "sha256": "9c75e6d838760389a67c63143568d7c122226d53197945699f38847e5b880749"
+    },
+    {
+      "file": "docs/wirebox/phase-0-contract.md",
+      "bytes": 6939,
+      "sha256": "118f7d42cefacdd6ba14d4ccb6749b3a3b69bc4791382fa645a69dc1ae2aa68c"
+    },
+    {
+      "file": "docs/wirebox/pilot.md",
+      "bytes": 12094,
+      "sha256": "3ac4e708053876021771299180719f59153f1ab87d6148ac5f750e0adc961e8c"
+    },
+    {
+      "file": "docs/wirebox/positioning.md",
+      "bytes": 3295,
+      "sha256": "60a964c6224dcff73d8239820b2ea1f118d23f2f66312ede1fbb9f86dda01d25"
+    },
+    {
+      "file": "docs/wirebox/README.md",
+      "bytes": 5699,
+      "sha256": "25fb721cb6353e2e87b5fafd901f313bd10598bfcaa291207d6ec80d54849365"
+    },
+    {
+      "file": "docs/wirebox/roadmap.md",
+      "bytes": 8983,
+      "sha256": "35cd8b06f806e7999570e8fa63f390d169a2363d330325ea6087f039cd8f1990"
+    },
+    {
+      "file": "docs/wirebox/runtime.md",
+      "bytes": 9219,
+      "sha256": "054ff43d2bd3f8ea8bf0c7dc7234a65cf207b148f9e5f5ef50c4591a969900a5"
+    },
+    {
+      "file": "docs/wirebox/simulation.md",
+      "bytes": 5365,
+      "sha256": "8cf3e8e4315c4730f16e856b5f40277d2748d8743ffb8407507464ee2b120151"
+    },
+    {
+      "file": "docs/wirebox/technology.md",
+      "bytes": 9033,
+      "sha256": "f81847663bd136b1d7a108ef08b7e672ce08a5e68e96e66dd5b986296683d2b0"
+    },
+    {
+      "file": "docs/wirebox/todos.md",
+      "bytes": 15345,
+      "sha256": "2393fe46e0fe1cb37137eda676d893e16509473a26f473b6394123da8c41e4c5"
+    },
+    {
+      "file": "docs/evidence/hardening-phase-0-3/artifact-integrity.log",
+      "bytes": 306,
+      "sha256": "50aaea593162a2115a5b8d1609772111373f3df2af86abd52bf3bbccbf889be7"
+    },
+    {
+      "file": "docs/evidence/hardening-phase-0-3/browser-qa.json",
+      "bytes": 510,
+      "sha256": "0cf0a093de58b97fe45680ddfd783bdb231a1210ae8e6e62034cfd300dddb296"
+    },
+    {
+      "file": "docs/evidence/hardening-phase-0-3/clean-export.log",
+      "bytes": 9942,
+      "sha256": "06f0cc092fcbbc276aaee67dde57c9f95ee99d97a41a72818f693d92f9282ec3"
+    },
+    {
+      "file": "docs/evidence/hardening-phase-0-3/dashboard-desktop.png",
+      "bytes": 63945,
+      "sha256": "f723a5075f0d3b7f357985b164a8bd9d7915344bfd0486f82e9ab1ae3e18d26b"
+    },
+    {
+      "file": "docs/evidence/hardening-phase-0-3/learning-desktop.png",
+      "bytes": 79151,
+      "sha256": "f1b80645f2a6d47efaa75d19cad0307184c287f217bc44db495429717f225f05"
+    },
+    {
+      "file": "docs/evidence/hardening-phase-0-3/learning-mobile.png",
+      "bytes": 38552,
+      "sha256": "5e2b8cf90ade2da361f20795817f0a00e5a8b23643419eeb40548d0f63c2ec69"
+    },
+    {
+      "file": "docs/evidence/hardening-phase-0-3/README.md",
+      "bytes": 6881,
+      "sha256": "781c27a9acc0dc855bb36c559dae91d08ef9d25c2d776d9179eb7bfd61c8dba1"
+    },
+    {
+      "file": "docs/evidence/hardening-phase-0-3/route-before.log",
+      "bytes": 836,
+      "sha256": "bc7c9bcafa06b87d2c14e6b6b66a25977c44fcc74b4ea6d007d00e99bbdc9a85"
+    },
+    {
+      "file": "docs/evidence/hardening-phase-0-3/scheduler.log",
+      "bytes": 145,
+      "sha256": "e6c37f509f4de08e322390bee3dce67abb42d7e6d51b02ad52116de8c1bbbe0d"
+    },
+    {
+      "file": "docs/evidence/hardening-phase-0-3/targeted.log",
+      "bytes": 458,
+      "sha256": "5af16f11298535c91590f70a9513022422da18463449021a5b341e1059e444aa"
+    },
+    {
+      "file": "docs/evidence/hardening-phase-0-3/workspace-final.log",
+      "bytes": 26439,
+      "sha256": "4e521c62eb975cfc79848b0bd531e5aa8a7526dec4d1eda5369bf08651f2fadf"
+    },
+    {
+      "file": "docs/evidence/hardening-phase-0-3/workspace.log",
+      "bytes": 19006,
+      "sha256": "c40507ed18b0d2ba957c48109dac68602ac5f5aab6130ca36be4e780f192ad06"
+    },
+    {
+      "file": "fixtures/inventory/pilot-v1.json",
+      "bytes": 1885,
+      "sha256": "53e034801257888a1800c67182cb9d7e2d90e71d4a3d7bb7d8f4d87ffc4b558c"
+    },
+    {
+      "file": "fixtures/packets/ipv4-forwarding-v1.json",
+      "bytes": 730,
+      "sha256": "c8807dc9c85727ec625f5ed4fb3f4725afcb2f35df495d5860720dcc49b7d1b5"
+    },
+    {
+      "file": "fixtures/scenarios/icmp-static-v1.json",
+      "bytes": 3675,
+      "sha256": "a40d13908e49d9210285c61191818fb9f05f85ca752737b639693d090001d610"
+    },
+    {
+      "file": "kernel/include/wirebox_net.h",
+      "bytes": 2829,
+      "sha256": "ff57493edf796a7a9030d6de6eb386a9f034a0a9bde3e2648e1ae357f525ce25"
+    },
+    {
+      "file": "kernel/include/wirebox_sim.h",
+      "bytes": 2795,
+      "sha256": "d0e157622f79eedb3da535701240a87bc591c08d42656cec8a0277a1588b6032"
+    },
+    {
+      "file": "kernel/include/wirebox.h",
+      "bytes": 1000,
+      "sha256": "5d23578a84c2705fce8f0ac0a24990a1537609f8c70358ddceae716cf6d47903"
+    },
+    {
+      "file": "kernel/src/abi.zig",
+      "bytes": 13069,
+      "sha256": "b35d30fc46b46121bbba3af9778b866a1eaff2ddb457794fc452d1768c79b976"
+    },
+    {
+      "file": "kernel/src/codec.zig",
+      "bytes": 10221,
+      "sha256": "267f245aae36a843eb91e3251e96b5b6e437539f59e31f9e05a470b5e5de5733"
+    },
+    {
+      "file": "kernel/src/graph.zig",
+      "bytes": 3273,
+      "sha256": "f08d7eb158a1e330896b7c520e1f874629af30dba4c7bbfc106ddaeb8a1357e1"
+    },
+    {
+      "file": "kernel/src/net_abi.zig",
+      "bytes": 9546,
+      "sha256": "b27c04915334485db44dca195e380df3d763fe054b139829da5ff27d887be264"
+    },
+    {
+      "file": "kernel/src/network_tests.zig",
+      "bytes": 10479,
+      "sha256": "7b8115eb353f545079cf02252c4f1b0ce22f2440c158e65a606f54b2072de6b6"
+    },
+    {
+      "file": "kernel/src/network.zig",
+      "bytes": 31967,
+      "sha256": "26180287aeb736e2f6bf0f2c7eb264a5be9c68da59f63acf48a3b0c39c44c872"
+    },
+    {
+      "file": "kernel/src/runtime_tests.zig",
+      "bytes": 14076,
+      "sha256": "da716b48529014ea1162861da3b26d5c0f95fefa4e1487fe5a620d5beba41f80"
+    },
+    {
+      "file": "kernel/src/runtime.zig",
+      "bytes": 12098,
+      "sha256": "822ace554131cab95628625cefefb23dbbd5b5ad8961a61c09eed6ebf47ae5f2"
+    },
+    {
+      "file": "kernel/src/sim_abi.zig",
+      "bytes": 8446,
+      "sha256": "d82d7835392fc2e845dacb64b73c220dddec6f118cb62fd72c38c3724938bd81"
+    },
+    {
+      "file": "kernel/tests/layout.c",
+      "bytes": 1459,
+      "sha256": "e80272ae82fdf8a1c4ff11483452f78286c09b1df713567dd0968048e2e29ff1"
+    },
+    {
+      "file": "README.md",
+      "bytes": 4769,
+      "sha256": "aaed1d3d84b393c6bb59e85850355d9d785991742b8cd68d6ff071e385f18d93"
+    },
+    {
+      "file": "rust-toolchain.toml",
+      "bytes": 86,
+      "sha256": "d13306be0ecda81ce779baa290ffb417380d525928477f16200884b5169cca33"
+    },
+    {
+      "file": "scripts/check-cognitive-coverage.mjs",
+      "bytes": 3200,
+      "sha256": "3a58d7c22d7eeee9fc9cb93ce5341862bb25c27be3fcb06f9788e86332df76f1"
+    },
+    {
+      "file": "scripts/ghidra/WireboxPtAudit.java",
+      "bytes": 3923,
+      "sha256": "03448483bea73de22bff9a62ac080e0be64429a8151aa0981f1971780ec5a393"
+    },
+    {
+      "file": "scripts/test-handle-candidates.ps1",
+      "bytes": 2654,
+      "sha256": "db4c1c7c0561b856753ab744a58d7603217aa05a21a98046649cd041be12b987"
+    },
+    {
+      "file": "scripts/verify-clean-export.ps1",
+      "bytes": 1941,
+      "sha256": "bef8006048247544c680749a68b56259237a59a812c3f76b1c7bdc2bc756b105"
+    },
+    {
+      "file": "scripts/verify.ps1",
+      "bytes": 2548,
+      "sha256": "68979678566f8334a632896a5e8fc8429f0a24c05a259eb2e6e2aeda825cdf64"
+    }
+  ]
+}

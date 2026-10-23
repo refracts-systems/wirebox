@@ -1,0 +1,10 @@
+Wirebox G3 integrity validation
+2026-10-21T05:44:08.3708044+07:00
+PASS: 35 Markdown files, 314 local links, balanced code fences.
+PASS: no trailing whitespace in 64 current source/document files.
+PASS: 6 original PT archives match their preserved manifest.
+PASS: 11 G0/G1/G2 artifacts match their historical manifests; prior source hashes were not rewritten.
+PASS: 71 source, 12 G3 evidence, 3 historical-manifest hashes.
+PASS: six demo summaries agree with acceptance; walkthrough byte versions and 69600 ns delivery match actual S01.
+No hardware, remote CI, checkpoint restore, or native UI interaction is asserted by this validation.
+RESULT: PASS

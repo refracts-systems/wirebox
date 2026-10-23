@@ -1,0 +1,54 @@
+Fresh source export: C:\Users\ricky\AppData\Local\Temp\wirebox-clean-source-db88b650e3224a53a209afce990b0f6a
+   Compiling wirebox-kernel v0.1.0 (C:\Users\ricky\AppData\Local\Temp\wirebox-clean-source-db88b650e3224a53a209afce990b0f6a\crates\wirebox-kernel)
+   Compiling wirebox-headless v0.1.0 (C:\Users\ricky\AppData\Local\Temp\wirebox-clean-source-db88b650e3224a53a209afce990b0f6a\crates\wirebox-headless)
+   Compiling wirebox-studio v0.1.0 (C:\Users\ricky\AppData\Local\Temp\wirebox-clean-source-db88b650e3224a53a209afce990b0f6a\crates\wirebox-studio)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 18.03s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+   Compiling wirebox-headless v0.1.0 (C:\Users\ricky\AppData\Local\Temp\wirebox-clean-source-db88b650e3224a53a209afce990b0f6a\crates\wirebox-headless)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.38s
+     Running `C:\Users\ricky\src\wirebox\target\debug\wirebox-headless.exe --probe`
+{"abi_version":1,"event_count":1,"event_id":1,"hex":"57697265626f78202f205a696720746f2052757374202f20414249207631","mode":"abi_probe","ownership":"copied","phase":1,"result":"pass","session":"destroyed","simulation":"not_implemented","zig_version":"0.17.0"}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.46s
+     Running `C:\Users\ricky\src\wirebox\target\debug\wirebox-headless.exe --check-fixtures`
+{"inventory":"user_reported_with_unknowns","ipv4_checksums":"valid","mode":"fixture_validation","network_simulation_run":false,"nodes":4,"result":"pass","scenarios":5,"schema_version":1}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.66s
+     Running `C:\Users\ricky\src\wirebox\target\debug\wirebox-headless.exe --check-runtime`
+{
+  "baseline_runs": 5,
+  "compared": [
+    "execution_order",
+    "trace",
+    "graph_state",
+    "clock",
+    "timer_lifecycle",
+    "rng_state",
+    "ids"
+  ],
+  "expected_event_ids": [
+    2,
+    1,
+    3,
+    4,
+    7
+  ],
+  "phase": 2,
+  "repeat_runs": 15,
+  "result": "pass",
+  "retention_capacities": [
+    0,
+    1,
+    3,
+    256
+  ],
+  "retention_runs": 20,
+  "scope": "fresh-run reproducibility; checkpoint/restore and packets not implemented",
+  "seeds": [
+    0,
+    1,
+    42,
+    20260117,
+    18446744073709551615
+  ]
+}
+Fresh-source build passed with cached dependencies; not a cold-cache or remote CI run.

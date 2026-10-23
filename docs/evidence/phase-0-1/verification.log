@@ -1,0 +1,62 @@
+0.17.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+1/3 abi.test.ABI layout is fixed and data is copied before the caller changes it...OK
+2/3 abi.test.destroyed handle cannot access a reused slot...OK
+3/3 abi.test.session exhaustion is reported and released slots can be used again...OK
+All 3 tests passed.
+   Compiling wirebox-kernel v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-kernel)
+   Compiling wirebox-headless v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-headless)
+   Compiling wirebox-studio v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-studio)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.59s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running unittests src\main.rs (target\debug\deps\wirebox_headless-42e2aaa4ac20b13c.exe)
+
+running 2 tests
+test fixtures::tests::checksum_or_mutation_regression_in_golden_is_detected ... ok
+test fixtures::tests::frozen_fixture_set_is_consistent ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\wirebox_kernel-e5272c5ebaa74415.exe)
+
+running 5 tests
+test tests::copied_data_survives_mutation_and_owner_shutdown ... ok
+test tests::invalid_inputs_do_not_change_queue ... ok
+test tests::raw_boundary_rejects_null_mismatched_abi_and_stale_handles ... ok
+test tests::partial_batches_preserve_order_and_failed_submit_does_not_consume_ids ... ok
+test tests::layout_matches_c_and_zig ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\main.rs (target\debug\deps\wirebox_studio-7f0215514a16ed51.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests wirebox_kernel
+
+running 1 test
+test crates\wirebox-kernel\src\lib.rs - Session (line 86) - compile fail ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+   Compiling wirebox-kernel v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-kernel)
+    Checking wirebox-studio v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-studio)
+    Checking wirebox-headless v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-headless)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.92s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+   Compiling wirebox-headless v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-headless)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.72s
+     Running `target\debug\wirebox-headless.exe --probe`
+{"abi_version":1,"event_count":1,"event_id":1,"hex":"57697265626f78202f205a696720746f2052757374202f20414249207631","mode":"abi_probe","ownership":"copied","phase":1,"result":"pass","session":"destroyed","simulation":"not_implemented","zig_version":"0.17.0"}
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running `target\debug\wirebox-headless.exe --check-fixtures`
+{"inventory":"user_reported_with_unknowns","ipv4_checksums":"valid","mode":"fixture_validation","network_simulation_run":false,"nodes":4,"result":"pass","scenarios":5,"schema_version":1}
+   Compiling wirebox-studio v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-studio)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.67s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+Wirebox verification passed. Native UI interaction is a separate manual/Computer Use check.

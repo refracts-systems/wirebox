@@ -1,0 +1,8 @@
+{
+  "code": "provider_timeout",
+  "category": "timeout",
+  "timeout_ms": 330000,
+  "failure": "Ghidra startup deadline elapsed",
+  "target_sha256": "843579cc806a41d57a4ca524d6805b97ee1f91e0ddd02ac09be8461db04b94a1",
+  "provider_version": "12.1.4"
+}

@@ -1,0 +1,73 @@
+{
+  "entities": {
+    "L1": 11,
+    "L2": 12,
+    "L3": 13,
+    "PC1": 1,
+    "PC1:eth0": 2,
+    "PC2": 9,
+    "PC2:eth0": 10,
+    "R1": 6,
+    "R1:eth0": 7,
+    "R1:eth1": 8,
+    "SW1": 3,
+    "SW1:p0": 4,
+    "SW1:p1": 5
+  },
+  "executed_events": 0,
+  "failure_entity": 1,
+  "now_ns": 5000000000,
+  "outcome": "invalid_packet",
+  "packet_versions": 1,
+  "packets": [
+    {
+      "cause_event": 0,
+      "fields": [],
+      "hex": "4500",
+      "layer": "ipv4",
+      "packet_id": 1,
+      "parent_version": 0,
+      "version": 1
+    }
+  ],
+  "pending_arp": 0,
+  "pending_events": 0,
+  "reason": "truncated_ipv4",
+  "scenario": "S05",
+  "trace": [
+    {
+      "cause_id": 0,
+      "detail_a": 0,
+      "detail_b": 0,
+      "entity": 2,
+      "event_id": 0,
+      "kind": "packet_version",
+      "ordinal": 1,
+      "packet_id": 1,
+      "prior": 0,
+      "reason": "none",
+      "time_ns": 0,
+      "transmission": 0,
+      "version": 1
+    },
+    {
+      "cause_id": 0,
+      "detail_a": 0,
+      "detail_b": 0,
+      "entity": 1,
+      "event_id": 0,
+      "kind": "drop",
+      "ordinal": 2,
+      "packet_id": 1,
+      "prior": 0,
+      "reason": "truncated_ipv4",
+      "time_ns": 0,
+      "transmission": 0,
+      "version": 1
+    }
+  ],
+  "trace_dropped": 0,
+  "trace_rows": 2,
+  "transmission_records": [],
+  "transmissions": 0
+}

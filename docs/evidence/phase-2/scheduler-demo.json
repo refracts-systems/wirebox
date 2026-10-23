@@ -1,0 +1,115 @@
+{
+  "budget_stop_ns": 15,
+  "cancelled_timer_did_not_fire": true,
+  "counters": [
+    {
+      "entity_id": 1,
+      "value": 1
+    },
+    {
+      "entity_id": 3,
+      "value": 104
+    },
+    {
+      "entity_id": 6,
+      "value": 12
+    },
+    {
+      "entity_id": 9,
+      "value": 0
+    }
+  ],
+  "deleted_owner_did_not_fire": true,
+  "empty_horizon_ns": 100,
+  "entities": 13,
+  "executed": 5,
+  "fixture": "icmp-static-v1 (graph only)",
+  "mode": "scheduler_demo",
+  "model": "counter-actions-v1",
+  "names": {
+    "L1": 11,
+    "L2": 12,
+    "L3": 13,
+    "PC1": 1,
+    "PC1:eth0": 2,
+    "PC2": 9,
+    "PC2:eth0": 10,
+    "R1": 6,
+    "R1:eth0": 7,
+    "R1:eth1": 8,
+    "SW1": 3,
+    "SW1:p0": 4,
+    "SW1:p1": 5
+  },
+  "now_ns": 100,
+  "packet_simulation": "phase_3_pending",
+  "pending": 0,
+  "phase": 2,
+  "prng": "SplitMix64-v1",
+  "result": "pass",
+  "rng_state": 4354685564957105471,
+  "seed": 20260117,
+  "timers": 0,
+  "trace": [
+    {
+      "action": 1,
+      "after": 10,
+      "amount": 10,
+      "before": 0,
+      "cause_id": 0,
+      "event_id": 2,
+      "ordinal": 1,
+      "target_id": 6,
+      "time_ns": 5,
+      "timer_id": 2
+    },
+    {
+      "action": 1,
+      "after": 1,
+      "amount": 1,
+      "before": 0,
+      "cause_id": 0,
+      "event_id": 1,
+      "ordinal": 2,
+      "target_id": 1,
+      "time_ns": 10,
+      "timer_id": 1
+    },
+    {
+      "action": 1,
+      "after": 12,
+      "amount": 2,
+      "before": 10,
+      "cause_id": 0,
+      "event_id": 3,
+      "ordinal": 3,
+      "target_id": 6,
+      "time_ns": 10,
+      "timer_id": 3
+    },
+    {
+      "action": 2,
+      "after": 33,
+      "amount": 100,
+      "before": 0,
+      "cause_id": 0,
+      "event_id": 4,
+      "ordinal": 4,
+      "target_id": 3,
+      "time_ns": 10,
+      "timer_id": 4
+    },
+    {
+      "action": 2,
+      "after": 104,
+      "amount": 100,
+      "before": 33,
+      "cause_id": 4,
+      "event_id": 7,
+      "ordinal": 5,
+      "target_id": 3,
+      "time_ns": 15,
+      "timer_id": 4
+    }
+  ]
+}

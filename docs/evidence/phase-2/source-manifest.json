@@ -1,0 +1,311 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-20T19:15:47.1330031+07:00",
+  "gate": "G2",
+  "git_revision": null,
+  "git_state": "uncommitted; no HEAD",
+  "scope": "Current implementation, fixture, decision and documentation source; local runtime evidence. Excludes this manifest and narrative report. Historical G0/G1 manifest remains unchanged.",
+  "sources": [
+    {
+      "file": ".cargo/config.toml",
+      "bytes": 96,
+      "sha256": "ebb630fa92f4af4588c9e68d9ab599da5482d7d000528a4903dc821441b92999"
+    },
+    {
+      "file": ".github/workflows/verify.yml",
+      "bytes": 1182,
+      "sha256": "09e99faf65966cc42be4576251e81141e2ef6a5913ce3eba133073caa0b0c4ab"
+    },
+    {
+      "file": ".gitignore",
+      "bytes": 62,
+      "sha256": "32cfc769f8872ff657659d4ce10e267fe556ae60fd1e280df506fb62a53a4a91"
+    },
+    {
+      "file": "AGENTS.md",
+      "bytes": 7820,
+      "sha256": "2ba7b661dde4d238741fe2ae6bb2a56ebaf55302975fac6454a60855741e1fb8"
+    },
+    {
+      "file": "Cargo.lock",
+      "bytes": 146401,
+      "sha256": "3d07ac580672511c946674a29d4f5ba142cfc8b21b4d0d8cf147f27139ed8a53"
+    },
+    {
+      "file": "Cargo.toml",
+      "bytes": 498,
+      "sha256": "974652280e328157dfba89e1567d7c7c92b88e78bae659d38c15597b54731f7c"
+    },
+    {
+      "file": "crates/wirebox-headless/Cargo.toml",
+      "bytes": 217,
+      "sha256": "30084fee671e0f47f9ed23035c393598defd6cdb268572cdf3f5726a3d4f24e3"
+    },
+    {
+      "file": "crates/wirebox-headless/src/fixtures.rs",
+      "bytes": 4625,
+      "sha256": "02f7c637de731275683ca722229550e9ccd62ada139c86fa4b50343de32c85b5"
+    },
+    {
+      "file": "crates/wirebox-headless/src/main.rs",
+      "bytes": 1840,
+      "sha256": "00efcea988c111d6bda6f6a08281ce2dbd98620b6844584366059820976d92d3"
+    },
+    {
+      "file": "crates/wirebox-headless/src/runtime_demo.rs",
+      "bytes": 7878,
+      "sha256": "3a2ff047cea7ee71dd3feabe57d3ecf7679ce7b70610c2315c92bb19cd25d445"
+    },
+    {
+      "file": "crates/wirebox-kernel/build.rs",
+      "bytes": 2189,
+      "sha256": "53f6d93767688c929286a4d04c525bde8bf7197461defa2308a779e4696090c1"
+    },
+    {
+      "file": "crates/wirebox-kernel/Cargo.toml",
+      "bytes": 210,
+      "sha256": "b1aa1f550a12e6c784661ffb9ded159757963a87ba34659bf7a20f6b099e3684"
+    },
+    {
+      "file": "crates/wirebox-kernel/src/lib.rs",
+      "bytes": 8220,
+      "sha256": "44e6acaa6a37c8a2eba4acc8b76a4577b688c4b570decf1f21d64d3b4a67a6c0"
+    },
+    {
+      "file": "crates/wirebox-kernel/src/simulation.rs",
+      "bytes": 13586,
+      "sha256": "16062ba3f1a29ef8200ed5208c72335bea21d804e47dc49bc1d0e08de12bc189"
+    },
+    {
+      "file": "crates/wirebox-studio/Cargo.toml",
+      "bytes": 263,
+      "sha256": "d921279d7b96ca288a7034e40f6e3dfbc0af7c6a54dd1f24d5090d7c5a84bef2"
+    },
+    {
+      "file": "crates/wirebox-studio/src/main.rs",
+      "bytes": 11673,
+      "sha256": "55a8b4d694e8f44c87cd181193f785874d56d8e136b89077c42244cfcc16b26d"
+    },
+    {
+      "file": "docs/adr/0001-semantic-state.md",
+      "bytes": 1650,
+      "sha256": "718ab3aad2f2d2a262907163e24c990d97301b89b24876eb4fb95d4c43491d2e"
+    },
+    {
+      "file": "docs/adr/0002-zig-rust-abi.md",
+      "bytes": 2427,
+      "sha256": "b817fddd2fdc7eacd61182f64dcd2b0954a051ca01d89dcc1f6805b58776018c"
+    },
+    {
+      "file": "docs/adr/0003-virtual-time-and-trace.md",
+      "bytes": 1980,
+      "sha256": "0cc13fa0acd1e4c88c2ee80772223e51de14e6ef6f28ed0bbb01f38ee60212d4"
+    },
+    {
+      "file": "docs/adr/0004-gpui-windows.md",
+      "bytes": 1850,
+      "sha256": "4daf1f6528fc96acc674493363d81dca3cae5f55f0ad584e8d693ff6826da250"
+    },
+    {
+      "file": "docs/adr/0005-pilot-scope.md",
+      "bytes": 1963,
+      "sha256": "c24e9388ce27731e745f6124cfd0d3a2e92a89724dfd125f34fdf3f38d98fb9d"
+    },
+    {
+      "file": "docs/adr/0006-phase-2-runtime.md",
+      "bytes": 4061,
+      "sha256": "8eb61511056ca7050677bca58ff889c28b4c5ff21548232be3421e8fd5104fa0"
+    },
+    {
+      "file": "docs/adr/README.md",
+      "bytes": 1501,
+      "sha256": "d29e019065223e72e7421fa834263f4768223660a0831b7535fec05554b37c6e"
+    },
+    {
+      "file": "docs/README.md",
+      "bytes": 2363,
+      "sha256": "7348a22d45b7455a7ba921bcba0ff4a679743279ea0f74bca1be976e8f9afa5d"
+    },
+    {
+      "file": "docs/wirebox/architecture.md",
+      "bytes": 6055,
+      "sha256": "14ae3aad1136cf339fa2ebcd30fb82b7c1cd5a41e7ee2c68f82b83e4c7b6e496"
+    },
+    {
+      "file": "docs/wirebox/byte-tracker.md",
+      "bytes": 4267,
+      "sha256": "d05ce9df19ddb64f8b28ba33ad1da6e24874ce3cd0cb06c2632915ab33f2353d"
+    },
+    {
+      "file": "docs/wirebox/decisions.md",
+      "bytes": 6075,
+      "sha256": "23080a3d4a8865a308b162bca2d9129c88f5fd6489a380ea061ca75e68b1d2e1"
+    },
+    {
+      "file": "docs/wirebox/ffi.md",
+      "bytes": 3401,
+      "sha256": "9e5b11e8ddb964109c4ea9bd1001719d075845468362706c2822897e7d3a634c"
+    },
+    {
+      "file": "docs/wirebox/phase-0-contract.md",
+      "bytes": 6783,
+      "sha256": "e8a046651fcbdde5d579a32f968f4c6721fed985880f88d3038cd85d35624cf7"
+    },
+    {
+      "file": "docs/wirebox/pilot.md",
+      "bytes": 11806,
+      "sha256": "b1437e418b2dd62eac3bc3d4bca5b6368f1d2dad86ba9cd21965e313ef249ca7"
+    },
+    {
+      "file": "docs/wirebox/positioning.md",
+      "bytes": 3295,
+      "sha256": "60a964c6224dcff73d8239820b2ea1f118d23f2f66312ede1fbb9f86dda01d25"
+    },
+    {
+      "file": "docs/wirebox/README.md",
+      "bytes": 5514,
+      "sha256": "8e8c9ed09510756adc8115a219f59d4e9f9c9137e662769bd7468abfed5e866f"
+    },
+    {
+      "file": "docs/wirebox/roadmap.md",
+      "bytes": 8801,
+      "sha256": "d6c47961b0683d90a6a7671d0673d57eb2a5efa85de71420a959dc6498bdcfc0"
+    },
+    {
+      "file": "docs/wirebox/runtime.md",
+      "bytes": 8832,
+      "sha256": "eab4e4ff12cefe8f2671399ee4125fd32c8b2bb8a9b0f00d0deb21b8edbe0bd5"
+    },
+    {
+      "file": "docs/wirebox/simulation.md",
+      "bytes": 4946,
+      "sha256": "555d6495aa645e74c5cb60aca3d679aae76c6e36a66f722e95babf80913d6692"
+    },
+    {
+      "file": "docs/wirebox/technology.md",
+      "bytes": 8820,
+      "sha256": "c011f507431deabe53cf6dd7756c4b3f1132b2a4a23927bd715f263327cd0f9c"
+    },
+    {
+      "file": "docs/wirebox/todos.md",
+      "bytes": 14909,
+      "sha256": "8c2a86dcbfeb4b9491f55a8226649de604031597692dc0a676716a130b36d241"
+    },
+    {
+      "file": "fixtures/inventory/pilot-v1.json",
+      "bytes": 1885,
+      "sha256": "53e034801257888a1800c67182cb9d7e2d90e71d4a3d7bb7d8f4d87ffc4b558c"
+    },
+    {
+      "file": "fixtures/inventory/zte-c320-user-report.txt",
+      "bytes": 1710,
+      "sha256": "7008709761413a093c7f0aafb583e4222b80e8b86b3c30f54343d693122c2de0"
+    },
+    {
+      "file": "fixtures/packets/ipv4-forwarding-v1.json",
+      "bytes": 730,
+      "sha256": "c8807dc9c85727ec625f5ed4fb3f4725afcb2f35df495d5860720dcc49b7d1b5"
+    },
+    {
+      "file": "fixtures/scenarios/icmp-static-v1.json",
+      "bytes": 3675,
+      "sha256": "a40d13908e49d9210285c61191818fb9f05f85ca752737b639693d090001d610"
+    },
+    {
+      "file": "kernel/include/wirebox_sim.h",
+      "bytes": 2795,
+      "sha256": "d0e157622f79eedb3da535701240a87bc591c08d42656cec8a0277a1588b6032"
+    },
+    {
+      "file": "kernel/include/wirebox.h",
+      "bytes": 1000,
+      "sha256": "5d23578a84c2705fce8f0ac0a24990a1537609f8c70358ddceae716cf6d47903"
+    },
+    {
+      "file": "kernel/src/abi.zig",
+      "bytes": 5718,
+      "sha256": "d15403d9387f23198b65935007d97ce31dd80a8c414f0e3d83fa2496bd8919af"
+    },
+    {
+      "file": "kernel/src/graph.zig",
+      "bytes": 3273,
+      "sha256": "f08d7eb158a1e330896b7c520e1f874629af30dba4c7bbfc106ddaeb8a1357e1"
+    },
+    {
+      "file": "kernel/src/runtime_tests.zig",
+      "bytes": 11684,
+      "sha256": "d17af913dc0df06dfaedc6fce8631f6533228c80f4c603284da243a88007dbf2"
+    },
+    {
+      "file": "kernel/src/runtime.zig",
+      "bytes": 10671,
+      "sha256": "7e9cb69d24da479258bcc33f70419fd26af3e50b2ce113789ce60bda33d1d21b"
+    },
+    {
+      "file": "kernel/src/sim_abi.zig",
+      "bytes": 6884,
+      "sha256": "e3b5ed637016cec46bb0a79f86430a201b55b455f84819e938d64cb5bb0c6d9e"
+    },
+    {
+      "file": "kernel/tests/layout.c",
+      "bytes": 1016,
+      "sha256": "2a22414f5291cdf564d9c0f891703ee72936e8fd5bc5763359263203a5370741"
+    },
+    {
+      "file": "README.md",
+      "bytes": 3582,
+      "sha256": "60b4dbc28b36e46470b49153b0b3000981fa653056ac19359a9564d3b5448d7f"
+    },
+    {
+      "file": "rust-toolchain.toml",
+      "bytes": 86,
+      "sha256": "d13306be0ecda81ce779baa290ffb417380d525928477f16200884b5169cca33"
+    },
+    {
+      "file": "scripts/verify-clean-export.ps1",
+      "bytes": 1787,
+      "sha256": "000900628b3255d4c7fd2a5f003f7a6e631883283b83346f497a9270cada7470"
+    },
+    {
+      "file": "scripts/verify.ps1",
+      "bytes": 2168,
+      "sha256": "3f013b1a496c0867a8b6ab43b6098acee40c178e718c7b96266ececd88f81649"
+    }
+  ],
+  "evidence": [
+    {
+      "file": "docs/evidence/phase-2/acceptance.json",
+      "bytes": 574,
+      "sha256": "826f50252b2148a3bd420883a8eafc803b6738c1b3dca1d062e797646e0d5912"
+    },
+    {
+      "file": "docs/evidence/phase-2/clean-export.log",
+      "bytes": 2641,
+      "sha256": "3905970cf6a6e145e9d0a75127a14ac2eed7b96e524b2bb31d87b6538bad576b"
+    },
+    {
+      "file": "docs/evidence/phase-2/environment.json",
+      "bytes": 560,
+      "sha256": "66662ac2afcc132a3120c523d0d0111cf66004f5459e87960f4c1e5a9576da91"
+    },
+    {
+      "file": "docs/evidence/phase-2/scheduler-demo.json",
+      "bytes": 2141,
+      "sha256": "e0db26cc419cefdafdf23f0719d83d306e4c65b70aa615dd5c2e78a43ab6e83f"
+    },
+    {
+      "file": "docs/evidence/phase-2/verification.log",
+      "bytes": 8906,
+      "sha256": "fe630f36670f13f290b62ec89fbc6f2ad7b7158ce4121499dbacd8662dd16b57"
+    }
+  ],
+  "validation": {
+    "markdown_files": 31,
+    "local_links": 236,
+    "broken_links": 0,
+    "whitespace_or_fence_errors": 0,
+    "historical_re_archives_verified": 6,
+    "source_hashes_verified": 53,
+    "evidence_hashes_verified": 5
+  }
+}

@@ -1,0 +1,26 @@
+1/10 abi.test_0...OK
+2/10 abi.test.destroyed handle cannot access a reused slot...OK
+3/10 abi.test.handle boundary generation 1...
+g=0x00000001 old=0x0000000100000001 destroy=0 stored=0x00000003 create=0 next=0x0000000300000001 lookup(next)=true
+OK
+4/10 abi.test.handle boundary generation 0x3ffffffe...
+g=0x3ffffffe old=0x3ffffffe00000001 destroy=0 stored=0x00000000 create=0 next=0x0000000100000002 lookup(next)=true
+expected 1, found 2
+FAIL (TestExpectedEqual)
+5/10 abi.test.handle boundary generation 0x3fffffff...
+g=0x3fffffff old=0x3fffffff00000001 destroy=0 stored=0x40000001 create=0 next=0x4000000100000001 lookup(next)=false
+FAIL (TestUnexpectedResult)
+6/10 abi.test.handle boundary generation 0x40000000...
+g=0x40000000 old=0x4000000000000001 destroy=3 stored=0x40000000 create=0 next=0x0000000100000002 lookup(next)=true
+OK
+7/10 abi.test.handle boundary generation 0x7fffffff...
+g=0x7fffffff old=0x7fffffff00000001 destroy=3 stored=0x7fffffff create=0 next=0x0000000100000002 lookup(next)=true
+OK
+8/10 abi.test.handle layout rejects zero index generation and every foreign discriminator...OK
+9/10 abi.test.handle stale history stays invalid across reuse and final retirement...expected 0, found 4
+FAIL (TestExpectedEqual)
+10/10 abi.test.handle property namespace and reuse over boundary neighborhoods and random generations...expected 4, found 0
+FAIL (TestExpectedEqual)
+6 passed; 0 skipped; 4 failed.
+error: the following test command failed with exit code 1:
+target\zig-handle-tests\o\81232d85cbdcf6fad4b5754d85ed2975\test.exe --seed=0x671dd23f

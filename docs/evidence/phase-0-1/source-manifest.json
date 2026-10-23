@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "collected_on": "2026-10-20",
+  "timezone": "Asia/Bangkok",
+  "git_revision": null,
+  "git_state": "uncommitted; no HEAD commit",
+  "scope": "Implementation/fixture/ADR source hashes and local evidence; manifest and narrative report exclude themselves",
+  "sources": [
+    {
+      "file": ".cargo/config.toml",
+      "bytes": 96,
+      "sha256": "ebb630fa92f4af4588c9e68d9ab599da5482d7d000528a4903dc821441b92999"
+    },
+    {
+      "file": ".github/workflows/verify.yml",
+      "bytes": 1182,
+      "sha256": "09e99faf65966cc42be4576251e81141e2ef6a5913ce3eba133073caa0b0c4ab"
+    },
+    {
+      "file": "Cargo.lock",
+      "bytes": 146401,
+      "sha256": "3d07ac580672511c946674a29d4f5ba142cfc8b21b4d0d8cf147f27139ed8a53"
+    },
+    {
+      "file": "Cargo.toml",
+      "bytes": 498,
+      "sha256": "974652280e328157dfba89e1567d7c7c92b88e78bae659d38c15597b54731f7c"
+    },
+    {
+      "file": "crates/wirebox-headless/Cargo.toml",
+      "bytes": 217,
+      "sha256": "30084fee671e0f47f9ed23035c393598defd6cdb268572cdf3f5726a3d4f24e3"
+    },
+    {
+      "file": "crates/wirebox-headless/src/fixtures.rs",
+      "bytes": 4625,
+      "sha256": "02f7c637de731275683ca722229550e9ccd62ada139c86fa4b50343de32c85b5"
+    },
+    {
+      "file": "crates/wirebox-headless/src/main.rs",
+      "bytes": 1498,
+      "sha256": "8822215b282c943af352f3597f6700368c4268c18c9df009b24a6e2220607a73"
+    },
+    {
+      "file": "crates/wirebox-kernel/build.rs",
+      "bytes": 2160,
+      "sha256": "f16aa590a4d1117ef8fbe8083d3130f4f51247f503de6b7ff5f175312d4ed361"
+    },
+    {
+      "file": "crates/wirebox-kernel/Cargo.toml",
+      "bytes": 210,
+      "sha256": "b1aa1f550a12e6c784661ffb9ded159757963a87ba34659bf7a20f6b099e3684"
+    },
+    {
+      "file": "crates/wirebox-kernel/src/lib.rs",
+      "bytes": 8004,
+      "sha256": "a05a8cff946f5f92f79c9d7d3e9f919aa2ae1daa4e80ef7da36aba0fdb0eeaa1"
+    },
+    {
+      "file": "crates/wirebox-studio/Cargo.toml",
+      "bytes": 263,
+      "sha256": "d921279d7b96ca288a7034e40f6e3dfbc0af7c6a54dd1f24d5090d7c5a84bef2"
+    },
+    {
+      "file": "crates/wirebox-studio/src/main.rs",
+      "bytes": 11673,
+      "sha256": "55a8b4d694e8f44c87cd181193f785874d56d8e136b89077c42244cfcc16b26d"
+    },
+    {
+      "file": "docs/adr/0001-semantic-state.md",
+      "bytes": 1650,
+      "sha256": "718ab3aad2f2d2a262907163e24c990d97301b89b24876eb4fb95d4c43491d2e"
+    },
+    {
+      "file": "docs/adr/0002-zig-rust-abi.md",
+      "bytes": 2386,
+      "sha256": "529c8c5b22abd20c4ded23e0f58e12b6f0f6a13dbb0ae8a555debd9de710ccaa"
+    },
+    {
+      "file": "docs/adr/0003-virtual-time-and-trace.md",
+      "bytes": 1957,
+      "sha256": "c96b8c3e1c1abaa6b16af4e7b41a386f1d0123ed83f2fec394f33e8507ab7a7c"
+    },
+    {
+      "file": "docs/adr/0004-gpui-windows.md",
+      "bytes": 1850,
+      "sha256": "4daf1f6528fc96acc674493363d81dca3cae5f55f0ad584e8d693ff6826da250"
+    },
+    {
+      "file": "docs/adr/0005-pilot-scope.md",
+      "bytes": 1963,
+      "sha256": "c24e9388ce27731e745f6124cfd0d3a2e92a89724dfd125f34fdf3f38d98fb9d"
+    },
+    {
+      "file": "docs/adr/README.md",
+      "bytes": 1321,
+      "sha256": "9361d819542cbd7e88c08e37320d7946d2bd02c31bbdf5d97d971b9b9b3ee47d"
+    },
+    {
+      "file": "docs/wirebox/phase-0-contract.md",
+      "bytes": 6783,
+      "sha256": "e8a046651fcbdde5d579a32f968f4c6721fed985880f88d3038cd85d35624cf7"
+    },
+    {
+      "file": "fixtures/inventory/pilot-v1.json",
+      "bytes": 1885,
+      "sha256": "53e034801257888a1800c67182cb9d7e2d90e71d4a3d7bb7d8f4d87ffc4b558c"
+    },
+    {
+      "file": "fixtures/inventory/zte-c320-user-report.txt",
+      "bytes": 1710,
+      "sha256": "7008709761413a093c7f0aafb583e4222b80e8b86b3c30f54343d693122c2de0"
+    },
+    {
+      "file": "fixtures/packets/ipv4-forwarding-v1.json",
+      "bytes": 730,
+      "sha256": "c8807dc9c85727ec625f5ed4fb3f4725afcb2f35df495d5860720dcc49b7d1b5"
+    },
+    {
+      "file": "fixtures/scenarios/icmp-static-v1.json",
+      "bytes": 3675,
+      "sha256": "a40d13908e49d9210285c61191818fb9f05f85ca752737b639693d090001d610"
+    },
+    {
+      "file": "kernel/include/wirebox.h",
+      "bytes": 1000,
+      "sha256": "5d23578a84c2705fce8f0ac0a24990a1537609f8c70358ddceae716cf6d47903"
+    },
+    {
+      "file": "kernel/src/abi.zig",
+      "bytes": 5502,
+      "sha256": "c3be9c1268110d6358d667ea71ca5eee49199740b10dd82006e6c1856e702a17"
+    },
+    {
+      "file": "kernel/tests/layout.c",
+      "bytes": 328,
+      "sha256": "2aa2dfb94d9d0aee401d5d6ae41d0f1f318f3c2de9892cd056f6b08cd88c48dd"
+    },
+    {
+      "file": "rust-toolchain.toml",
+      "bytes": 86,
+      "sha256": "d13306be0ecda81ce779baa290ffb417380d525928477f16200884b5169cca33"
+    },
+    {
+      "file": "scripts/verify-clean-export.ps1",
+      "bytes": 1633,
+      "sha256": "fed0b96462dfe1fd7f226e326eabbcc386e5c5b9ad94f4b4510be0a9bdbbf74c"
+    },
+    {
+      "file": "scripts/verify.ps1",
+      "bytes": 1947,
+      "sha256": "afba88f12cbb43c17861c1450353ab6b17a4ba059ec4552e6bf66d7913d7e3f8"
+    }
+  ],
+  "evidence": [
+    {
+      "file": "environment.json",
+      "bytes": 979,
+      "sha256": "3bd6e90acabc7c520d7fb41577585be4d6f33027dc7716e8970ba2beb34ac830"
+    },
+    {
+      "file": "verification.log",
+      "bytes": 4157,
+      "sha256": "3da156a52b4d79edec5ccc85f6c0dee2c1d78832abb4b4c4239be75455f35c97"
+    },
+    {
+      "file": "clean-export.log",
+      "bytes": 1900,
+      "sha256": "2439d170eeb63d8ba36e8b666f9cdddb54bc7a77969d8e6b533841b3133fe41e"
+    },
+    {
+      "file": "ui-interaction.log",
+      "bytes": 346,
+      "sha256": "3a774ec0a28361d5838d1dd1d0e1b88dbe09e02722f0be260b89c48ef89df365"
+    },
+    {
+      "file": "ui-final.log",
+      "bytes": 45,
+      "sha256": "bd0fc17b424c6a3ec5bc691a097a4b18457b7b377ba8807cc12c68151b77001a"
+    },
+    {
+      "file": "ui-preview.jpg",
+      "bytes": 77040,
+      "sha256": "b64b74c11876b6fa73fea5f167021ad7d8479116ebfbecb5f016163358346921"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "zig": "0.17.0",
+  "results": [
+    {
+      "candidate": "A",
+      "mode": "Debug",
+      "exit_code": 1,
+      "verdict": "invariant_failure",
+      "log": "candidate-a-Debug.log"
+    },
+    {
+      "candidate": "A",
+      "mode": "ReleaseSafe",
+      "exit_code": 1,
+      "verdict": "invariant_failure",
+      "log": "candidate-a-ReleaseSafe.log"
+    },
+    {
+      "candidate": "A",
+      "mode": "ReleaseFast",
+      "exit_code": 1,
+      "verdict": "invariant_failure",
+      "log": "candidate-a-ReleaseFast.log"
+    },
+    {
+      "candidate": "B",
+      "mode": "Debug",
+      "exit_code": 0,
+      "verdict": "pass",
+      "log": "candidate-b-Debug.log"
+    },
+    {
+      "candidate": "B",
+      "mode": "ReleaseSafe",
+      "exit_code": 0,
+      "verdict": "pass",
+      "log": "candidate-b-ReleaseSafe.log"
+    },
+    {
+      "candidate": "B",
+      "mode": "ReleaseFast",
+      "exit_code": 0,
+      "verdict": "pass",
+      "log": "candidate-b-ReleaseFast.log"
+    }
+  ],
+  "source_sha256": "E89D5924A8B8D70857D05E99488036914F2E38636B8FD86D85208EDFE30C487A"
+}

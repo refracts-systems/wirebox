@@ -1,0 +1,12 @@
+1/2 abi.test_0...OK
+2/2 network_tests.test.hardening staged port changes must revalidate routes before workload starts...expected error.InvalidArgument, found void
+FAIL (TestExpectedError)
+C:\Users\ricky\AppData\Local\Programs\Zig\zig-x86_64-windows-0.17.0\lib\std\testing.zig:634:9: 0x7ff7d028125a in expectError__func_829 (test_zcu.obj)
+        return error.TestExpectedError;
+        ^
+C:\Users\ricky\src\wirebox\kernel\src\network_tests.zig:64:5: 0x7ff7d028170d in test.hardening staged port changes must revalidate routes before workload starts (test_zcu.obj)
+    try t.expectError(error.InvalidArgument, world.ping(ports[0], 0xcb007101, 64));
+    ^
+1 passed; 0 skipped; 1 failed.
+error: the following test command failed with exit code 1:
+target\zig-tests\o\d39909c6b13acd785e064ec95478a5a1\test.exe --seed=0xd518cff2

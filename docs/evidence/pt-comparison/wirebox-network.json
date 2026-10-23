@@ -1,0 +1,318 @@
+{
+  "live_device_comparison": "not_run; G5",
+  "model": "ethernet-arp-ipv4-icmp-v1",
+  "negative_cases": [
+    {
+      "bytes": 0,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 1,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 2,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 3,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 4,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 5,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 6,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 7,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 8,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 9,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 10,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 11,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 12,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 13,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 14,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 15,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 16,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 17,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 18,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 19,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 20,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 21,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 22,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 23,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 24,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 25,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 26,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 27,
+      "case": "truncated_ipv4",
+      "reason": "truncated_ipv4",
+      "result": "pass"
+    },
+    {
+      "bytes": 28,
+      "case": "bad_ip_checksum",
+      "reason": "invalid_ipv4_checksum",
+      "result": "pass"
+    },
+    {
+      "bytes": 28,
+      "case": "bad_icmp_checksum",
+      "reason": "invalid_icmp_checksum",
+      "result": "pass"
+    },
+    {
+      "bytes": 28,
+      "case": "fragment",
+      "reason": "unsupported_fragment",
+      "result": "pass"
+    },
+    {
+      "bytes": 28,
+      "case": "protocol",
+      "reason": "unsupported_protocol",
+      "result": "pass"
+    },
+    {
+      "bytes": 32,
+      "case": "options",
+      "reason": "unsupported_options",
+      "result": "pass"
+    },
+    {
+      "bytes": 60,
+      "case": "vlan",
+      "reason": "unsupported_vlan",
+      "result": "pass"
+    },
+    {
+      "bytes": 60,
+      "case": "multicast_source_mac",
+      "reason": "invalid_ethernet",
+      "result": "pass"
+    },
+    {
+      "bytes": 28,
+      "case": "icmp_type",
+      "reason": "unsupported_icmp",
+      "result": "pass"
+    },
+    {
+      "bytes": 1501,
+      "case": "mtu",
+      "reason": "unsupported_mtu",
+      "result": "pass"
+    }
+  ],
+  "oracle": "frozen IPv4 header + independent Rust checksum/field/timing/correlation checks",
+  "phase": 3,
+  "result": "pass",
+  "scenario_runs": 36,
+  "scenarios": [
+    {
+      "executed_events": 12,
+      "failure_entity": 0,
+      "now_ns": 5000000000,
+      "outcome": "echo_reply",
+      "packet_versions": 16,
+      "pending_arp": 0,
+      "pending_events": 0,
+      "reason": "none",
+      "scenario": "S01",
+      "trace_dropped": 0,
+      "trace_rows": 63,
+      "transmissions": 12
+    },
+    {
+      "executed_events": 8,
+      "failure_entity": 6,
+      "now_ns": 5000000000,
+      "outcome": "unreachable",
+      "packet_versions": 8,
+      "pending_arp": 0,
+      "pending_events": 0,
+      "reason": "no_route",
+      "scenario": "S02",
+      "trace_dropped": 0,
+      "trace_rows": 40,
+      "transmissions": 8
+    },
+    {
+      "executed_events": 8,
+      "failure_entity": 6,
+      "now_ns": 5000000000,
+      "outcome": "time_exceeded",
+      "packet_versions": 8,
+      "pending_arp": 0,
+      "pending_events": 0,
+      "reason": "ttl_expired",
+      "scenario": "S03",
+      "trace_dropped": 0,
+      "trace_rows": 40,
+      "transmissions": 8
+    },
+    {
+      "executed_events": 12,
+      "failure_entity": 6,
+      "now_ns": 5000000000,
+      "outcome": "arp_timeout",
+      "packet_versions": 9,
+      "pending_arp": 0,
+      "pending_events": 0,
+      "reason": "arp_timeout",
+      "scenario": "S04",
+      "trace_dropped": 0,
+      "trace_rows": 44,
+      "transmissions": 9
+    },
+    {
+      "executed_events": 0,
+      "failure_entity": 1,
+      "now_ns": 5000000000,
+      "outcome": "invalid_packet",
+      "packet_versions": 1,
+      "pending_arp": 0,
+      "pending_events": 0,
+      "reason": "truncated_ipv4",
+      "scenario": "S05",
+      "trace_dropped": 0,
+      "trace_rows": 2,
+      "transmissions": 0
+    },
+    {
+      "executed_events": 12,
+      "failure_entity": 0,
+      "now_ns": 5000000000,
+      "outcome": "echo_reply",
+      "packet_versions": 16,
+      "pending_arp": 0,
+      "pending_events": 0,
+      "reason": "none",
+      "scenario": "alias",
+      "trace_dropped": 0,
+      "trace_rows": 63,
+      "transmissions": 12
+    }
+  ]
+}

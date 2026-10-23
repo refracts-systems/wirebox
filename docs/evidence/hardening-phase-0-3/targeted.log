@@ -1,0 +1,6 @@
+1/5 abi.test_0...OK
+2/5 network_tests.test.hardening codec mutation corpus bounds every successful field view...OK
+3/5 network_tests.test.hardening staged port changes must revalidate routes before workload starts...OK
+4/5 sim_abi.test.hardening runtime registry retires at namespace boundary and rejects foreign handles...OK
+5/5 net_abi.test.hardening network registry retires at namespace boundary without leaking allocation...OK
+All 5 tests passed.

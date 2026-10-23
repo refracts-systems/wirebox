@@ -1,0 +1,17 @@
+{
+  "recorded_at": "2026-10-20T19:12:51.4139463+07:00",
+  "platform": "x86_64-pc-windows-msvc",
+  "profile": "debug",
+  "zig": "0.17.0",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+  "os": "Microsoft Windows 11 Home Single Language",
+  "os_version": "10.0.26300",
+  "os_build": "26300",
+  "source_state": "uncommitted; no HEAD",
+  "model": "counter-actions-v1",
+  "runtime_abi": 1,
+  "prng": "SplitMix64-v1",
+  "remote_ci": "not_run",
+  "native_ui_interaction": "not_repeated_phase_2"
+}

@@ -1,0 +1,65 @@
+1/10 abi.test_0...OK
+2/10 abi.test.destroyed handle cannot access a reused slot...OK
+3/10 abi.test.handle boundary generation 1...
+g=0x00000001 old=0x0000000100000001 destroy=0 stored=0x00000003 create=0 next=0x0000000300000001 lookup(next)=true
+OK
+4/10 abi.test.handle boundary generation 0x3ffffffe...
+g=0x3ffffffe old=0x3ffffffe00000001 destroy=0 stored=0x00000000 create=0 next=0x0000000100000002 lookup(next)=true
+expected 1, found 2
+FAIL (TestExpectedEqual)
+C:\Users\ricky\AppData\Local\Programs\Zig\zig-x86_64-windows-0.17.0\lib\std\testing.zig:93:17: 0x7ff7b05a0d03 in expectEqualInner__func_827 (test_zcu.obj)
+                return error.TestExpectedEqual;
+                ^
+C:\Users\ricky\AppData\Local\Programs\Zig\zig-x86_64-windows-0.17.0\lib\std\testing.zig:57: 0x7ff7b05a3d71 in expectEqual (test_zcu.obj)
+    return expectEqualInner(T, expected, actual);
+
+C:\Users\ricky\src\wirebox\artifacts\handle-generation\A\abi.zig:180:13: 0x7ff7b05a3ddd in expectGenerationBoundary (test_zcu.obj)
+            try std.testing.expectEqual(@as(u32, 1), @as(u32, @truncate(next)));
+            ^
+C:\Users\ricky\src\wirebox\artifacts\handle-generation\A\abi.zig:199:5: 0x7ff7b05a4f9a in test.handle boundary generation 0x3ffffffe (test_zcu.obj)
+    try expectGenerationBoundary(0x3ffffffe);
+    ^
+5/10 abi.test.handle boundary generation 0x3fffffff...
+g=0x3fffffff old=0x3fffffff00000001 destroy=0 stored=0x40000001 create=0 next=0x4000000100000001 lookup(next)=false
+FAIL (TestUnexpectedResult)
+C:\Users\ricky\AppData\Local\Programs\Zig\zig-x86_64-windows-0.17.0\lib\std\testing.zig:584:14: 0x7ff7b05a0daf in expect (test_zcu.obj)
+    if (!ok) return error.TestUnexpectedResult;
+             ^
+C:\Users\ricky\src\wirebox\artifacts\handle-generation\A\abi.zig:174:5: 0x7ff7b05a3b00 in expectGenerationBoundary (test_zcu.obj)
+    try std.testing.expect(lookup(next) != null);
+    ^
+C:\Users\ricky\src\wirebox\artifacts\handle-generation\A\abi.zig:202:5: 0x7ff7b05a4f4a in test.handle boundary generation 0x3fffffff (test_zcu.obj)
+    try expectGenerationBoundary(0x3fffffff);
+    ^
+6/10 abi.test.handle boundary generation 0x40000000...
+g=0x40000000 old=0x4000000000000001 destroy=3 stored=0x40000000 create=0 next=0x0000000100000002 lookup(next)=true
+OK
+7/10 abi.test.handle boundary generation 0x7fffffff...
+g=0x7fffffff old=0x7fffffff00000001 destroy=3 stored=0x7fffffff create=0 next=0x0000000100000002 lookup(next)=true
+OK
+8/10 abi.test.handle layout rejects zero index generation and every foreign discriminator...OK
+9/10 abi.test.handle stale history stays invalid across reuse and final retirement...expected 0, found 4
+FAIL (TestExpectedEqual)
+C:\Users\ricky\AppData\Local\Programs\Zig\zig-x86_64-windows-0.17.0\lib\std\testing.zig:93:17: 0x7ff7b05a0d03 in expectEqualInner__func_827 (test_zcu.obj)
+                return error.TestExpectedEqual;
+                ^
+C:\Users\ricky\AppData\Local\Programs\Zig\zig-x86_64-windows-0.17.0\lib\std\testing.zig:57: 0x7ff7b05a2be4 in expectEqual (test_zcu.obj)
+    return expectEqualInner(T, expected, actual);
+
+C:\Users\ricky\src\wirebox\artifacts\handle-generation\A\abi.zig:252:5: 0x7ff7b05a2c58 in test.handle stale history stays invalid across reuse and final retirement (test_zcu.obj)
+    try std.testing.expectEqual(code(.ok), wb_create(abi_version, &last));
+    ^
+10/10 abi.test.handle property namespace and reuse over boundary neighborhoods and random generations...expected 4, found 0
+FAIL (TestExpectedEqual)
+C:\Users\ricky\AppData\Local\Programs\Zig\zig-x86_64-windows-0.17.0\lib\std\testing.zig:93:17: 0x7ff7b05a0d03 in expectEqualInner__func_827 (test_zcu.obj)
+                return error.TestExpectedEqual;
+                ^
+C:\Users\ricky\AppData\Local\Programs\Zig\zig-x86_64-windows-0.17.0\lib\std\testing.zig:57: 0x7ff7b05a1454 in expectEqual (test_zcu.obj)
+    return expectEqualInner(T, expected, actual);
+
+C:\Users\ricky\src\wirebox\artifacts\handle-generation\A\abi.zig:295:13: 0x7ff7b05a14c2 in test.handle property namespace and reuse over boundary neighborhoods and random generations (test_zcu.obj)
+            try std.testing.expectEqual(code(.capacity), created);
+            ^
+6 passed; 0 skipped; 4 failed.
+error: the following test command failed with exit code 1:
+target\zig-handle-tests\o\fb60f8b9bba5d6595becd9e3055ac047\test.exe --seed=0x4f4c0d48

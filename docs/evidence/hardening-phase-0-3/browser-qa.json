@@ -1,0 +1,19 @@
+{
+  "result": "pass",
+  "browser": "155.0.4283.62",
+  "level_combinations": 9,
+  "questions_per_level": 2,
+  "checks": [
+    "answer/score",
+    "fragment transfer and cleanup",
+    "focus recalculation downward",
+    "manual override",
+    "export JSON",
+    "invalid JSON import",
+    "invalid fragment",
+    "file storage denied fallback",
+    "mobile no horizontal overflow"
+  ],
+  "page_errors": [],
+  "note": "Synthetic answers in isolated browser contexts; no learner progress is written to the repo."
+}

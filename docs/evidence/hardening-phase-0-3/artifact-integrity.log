@@ -1,0 +1,10 @@
+{
+  "result": "pass",
+  "files": 82,
+  "concepts": 9,
+  "flows": 3,
+  "quiz": 18,
+  "note": "Static integrity only; browser interaction is tested separately."
+}
+JSON Schema 2020-12: source and exported manifests pass (jsonschema 4.26.0)
+Local Markdown links/fences and historical PT archive hashes pass.
