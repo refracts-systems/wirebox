@@ -1,0 +1,8 @@
+0.000462896 | PC1 | CICMPPROCESS_FC_ICMP_ECHO_REPLY | ICMP echo reply received (from 10.0.1.2, seq 1).
+0.000610845 | PC1 | CTCPCONNECTION_FC_CON_SUCCESS | Three-way handshake complete with 10.0.1.2:80.
+0.000685937 | PC2 | CTCPCONNECTION_FC_CON_SUCCESS | The handshake is complete; connection established.
+1.00099 | PC1 | CTcpConnection_fc_retransmit | Segment not acknowledged; retransmitting (attempt 1).
+1.00144 | PC2 | CTCPCONNECTION_FC_SET_STATE | Connection state = CLOSED.
+1.00144 | PC2 | CTcpConnection_fc_disconnected | Connection closed.
+1.00159 | PC2 | CUDPPROCESS_FC_SEND_ICMP_UNREACHABLE | ICMP port unreachable sent to 10.0.0.2.
+Virtual time: 1.00167 s   events: 461

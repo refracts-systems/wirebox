@@ -1,0 +1,30 @@
+{
+  "verified_on": "2026-10-19",
+  "timezone": "Asia/Bangkok",
+  "rebuilt": false,
+  "scope": "Existing ptmini executable and source inspection; no PacketTracer.exe re-analysis",
+  "commands": [
+    "ptmini.exe -q",
+    "ptmini.exe (selected trace lines retained)"
+  ],
+  "artifacts": [
+    {
+      "name": "main.cpp",
+      "original_path": "C:\\Users\\ricky\\AppData\\Local\\Temp\\opencode\\pt_minisim\\main.cpp",
+      "sha256": "3D52F9CD10666F185F85CFC6AFBAF6AC024717F9E83CDEB47E7BA9AFE58F72F9",
+      "bytes": 7228
+    },
+    {
+      "name": "ptmini.h",
+      "original_path": "C:\\Users\\ricky\\AppData\\Local\\Temp\\opencode\\pt_minisim\\ptmini.h",
+      "sha256": "8F936E70C42471DC2D788C66186D60513E5629451B1EC8984AFC8A698F55D7E8",
+      "bytes": 54929
+    },
+    {
+      "name": "ptmini.exe",
+      "original_path": "C:\\Users\\ricky\\AppData\\Local\\Temp\\opencode\\pt_minisim\\ptmini.exe",
+      "sha256": "27AA575FBBF420111CA694FAFC9B509B4251DDA921455F9F4D99EEE86673CDD9",
+      "bytes": 400896
+    }
+  ]
+}

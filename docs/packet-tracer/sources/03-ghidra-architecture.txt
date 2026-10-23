@@ -1,0 +1,96 @@
+Hasil Reverse Engineering Packet Tracer 9.0.1 — Arsitektur Simulasi
+Status alat: Ghidra 12.1.4 headless, import + auto-analysis berhasil (2.825 detik). RTTI analyzer jalan 400 s → semua class + vftable terpulihkan. Tanpa PDB, jadi nama method direkonstruksi via RTTI + string anchoring (teknik pengganti PDB).
+Temuan tak terduga: jalur source code bocor di binary, memperlihatkan struktur repo asli:
+engine\  (inti simulasi)      → engine/algorithms/{acl,icmp,netcon,ot/iec61850},
+gui\     (antarmuka)             engine/models/{links/CCable,ports}, engine/scripting,
+                                 engine/traffic/CUserTraffic.cpp, engine/IPC, engine/PTMP
+gui\...                          misc\QtHttpServer\lib\QtHttpServer.cpp
+Arsitektur inti (terkonfirmasi)
+CNetwork / CNetworkFile          ← dokumen topologi (.pkt), serialisasi
+   └── CWorkspaceList            ← addDevice/removeDevice/addLink/removeLink
+        ├── Device::CDevice  ──► Port::CPort ──► rantai CProcess (higher/lower)
+        └── Link::CLink / Link::CCable
+                                  Traffic::CPdu / CPduGroup / CFrameInstance
+Simulation::CSimulation  ──►  Simulation::CScheduler ──► CIpcTimer  (118× CTimer<T>)
+1. Representasi device — ✅ terkonfirmasi
+Objek	Peran	Bukti
+Device::CDevice	objek device abstrak	vftable @142a12a98, banyak slot _purecall
+Device::CDeviceDescriptor	metadata/tipe device	RTTI
+Device::CDeviceFactory	pabrik objek device	RTTI
+Device::CDeviceEvent, CDeviceNameChangedEvent, CDeviceTimeChangeEvent	event device	RTTI
+Ptr<...> (QObject) bukan struct C	device = objek C++ polymorphic dengan event sendiri	vftable
+Konfigurasi device (grup, tipe, kabel) berasal dari resource terenkapsulasi :/Resources/DeviceTypesConfig.json (15.251 B, sudah saya dekompresi).
+2. Link antar device — ✅ terkonfirmasi
+Link::CLink + Link::CCable (source: engine/models/links/CCable.cpp). CWorkspaceList mengelola addLink/removeLink/refreshLinks.
+Delay model terkonfirmasi dari string: "Constant Processing, Transmission, and Propagation Delay", "Constant Delay", "Disable random packet transmission delay jitter" (widget m_constantDelayCBox), handler FUN_142582f00. CTimer<Link::CCable> membuktikan kabel punya timer sendiri (propagasi).
+3. Packet / PDU — ✅ terkonfirmasi
+- Traffic::CPdu (vftable @142b8da98), Traffic::CPduGroup, Traffic::CFrameInstance (objek instance untuk animasi).
+- Resource :/Resources/PDUDefinition.json (183.638 B, ±170 layout), dengan catatan di dalamnya: "There are currently 170 or so PDU layouts here, but there are over 250 PDU getDecapsulationInfo() in engine."
+- Tiap kelas PDU punya signal_type = "Namespace__CClass" dan method getDecapsulationInfo() → PDU = objek berlapis (header per layer), didekapsulasi lapis demi lapis.
+4. Perpindahan paket device→device — ✅ terkonfirmasi
+Model rantai proses (process chain), bukan socket:
+- Antarmuka virtual: processSend / processReceive / processNoConnection.
+- init() membangun higher/lower process vector; addEntryToMapTable() mendaftarkan koneksi.
+- Bukti error nyata (identitas fungsi berhasil dipulihkan):
+- FUN_14049d650 = Hdlc::CHdlcProcess::init() → "...no higher process connection.", "...more than one lower process."
+- FUN_140b96750 = Tcp::CTcpProcess::listen(), FUN_140b953b0 = CTcpProcess::open()
+- addEntryToMapTable(): Icmp @140570da0, Udp @140bc2610, HostIp @1405ab570, FrameRelay @140463340, Bluetooth @1402a8f90, Hdlc @14049d1b0
+- Port punya operasi sendiri: label CPort_send, CPort_receive, CPort_collideFrame, plus "If no source process is set, drop the frame."
+Alur: PDU → CPort::send → CCable (delay) → port lawan → CEthernetEncapProcess::FC_DECAP → CHostIp/CRoutingProcess → seterusnya.
+5. Discrete-event simulation / event queue — ✅ terkonfirmasi
+- Simulation::CScheduler adalah QObject (qt_metacast mengembalikan "Simulation::CScheduler" — terbukti dari decompile FUN_14010fcd0).
+- Simulation::CIpcTimer mewarisi CScheduler — terbukti karena entri vftable CScheduler (indeks 0–3) muncul di indeks 16–19 vftable CIpcTimer.
+- CIpcTimer::vftable[12] = komparator operator< yang sudah saya decompile: membandingkan (waktuPrimer + waktuSekunder) lalu tie-break dengan sebuah id → queue terurut berdasarkan (waktu, id).
+- CTimer<T> diinstansiasi untuk 118 kelas proses (mis. CTimer<Arp::CArpProcess>, CTimer<Tcp::CTcpConnection>, CTimer<QoS::CCbwfq>).
+- Log scheduler: "   Initializing Scheduler...", "CScheduler::removeIpcTimer delete", "getIpcTimer implementation error".
+- Event List: kolom Time(sec) | Last Device | At Device | Type, dibatasi "The maximum number of events has been reached." (handler FUN_142580fc0).
+→ Discrete-event simulation berbasis waktu virtual, dengan timer per-proses dan satu scheduler terpusat.
+6. Waktu simulasi vs realtime — ✅ terkonfirmasi
+Mode	Bukti verbatim
+Simulation	"Go to simulation mode where the simulation time will freeze and you can control the time and view individual packets.", "Simulation mode is active and time is paused."
+Realtime	"Go to realtime mode where the simulation will run at almost real life speed."
+Kunci	getLastAdvanceTime / setLastAdvanceTime / resetLastAdvanceTime pada CSimulation
+State	realtime-mode / simulation-mode, pref DefaultRealtime-mode / DefaultSimulation-mode
+Constraint	"Cannot fast forward time when remote networks are connected.", "Switching to Realtime Mode because a multiuser remote network is created."
+Waktu nyata dan waktu simulasi dipisahkan; jembatannya CNetworkControllerRealWorld + Simulation::CIpcTimer + Ipc::CIpcEventMsg + registerIpcEventByID/unregisterIpcEventByID — event eksternal dijadwalkan sebagai timer simulasi.
+7. State machine ARP/Ethernet/ICMP/IP/TCP/routing — ✅ terkonfirmasi
+Engine menyimpan 1.404 kode langkah *_FC_* (flow-chart), masing-masing berpasangan dengan kunci terjemahan. Ini enumerasi eksplisit tiap state machine. Contoh terkonfirmasi:
+Protokol	Jumlah langkah	Contoh langkah
+CROUTINGPROCESS_FC_	39	LOOKUP_TABLE_IN, USE_DEFAULT_GATEWAY, DECREMENT_TTL_PS, SEND_TTL_EXPIRED, CEF_LOOKUP_ENTRY
+CMACSWITCHER_FC_	42	ADD_NEW_MAC_ADD, DST_NOT_IN_TABLE, BROADCAST_TO_ALL_TRUNK, DROP_PORT_BLOCKED
+CARPPROCESS_FC_	38	CONSTRUCT_REQUEST, ADD_TO_TABLE, PROXY_ARP_ENABLED, GRATUITOUS_FIX
+CTcpConnection_FC_	46	RECEIVE_SEGMENT, RETRANSMIT, SEND_TCP_WINDOW, BUFFER_DATA_NAGLE_ALG
+CHOSTIP_FC_	31	SET_NEXT_HOP, SET_TTL, DEFAULT_GATEWAY_NOT_SET, MATCH_IP_MULTICAST
+CICMPPROCESS_FC_	14	ICMP_ECHO_REPLY, ICMP_TTL_EXCEEDED, ICMP_PORT_UNREACHABLE
+CIPFRAGMENTATIONPROCESS_FC_	12	TOTAL_LENGTH_GREATER_THAN_IP_MTU, STORE_FRAGMENT, SUCCESSFUL_REASSEMBLING
+Sufiks _PS = Process Send, _PR = Process Receive. Ada juga Ethernet (CETHERNETENCAPPROCESS_FC_DECAP/ENCAP/MAC_MATCH) dan QoS (CWFQ_FC_QOS_WFQ_*, CCBWFQ_*) — membuktikan cakupan stack lengkap.
+8. Capture / Forward — ⚠️ sebagian terkonfirmasi, sebagian inferensi kuat
+Terkonfirmasi (nama slot & tombol nyata):
+- Tombol: Capture / Forward, Capture then Forward (Alt+C), Go Back to Previous Event (Alt+B), Auto Capture / Play, Fast Forward Time (Alt+D)
+- Slot internal: captureTimerDone(), timerDone(), animationDoneSignal(), animationDone, signalsAnimationDone, onSignalsAnimationDone(Traffic::CFrameInstance*)
+Inferensi kuat: satu "Forward" = ambil event berikutnya dari CScheduler → buat CFrameInstance untuk paket itu → mainkan animasi (Qt timer) → setelah animationDoneSignal() catat baris ke Event List. captureTimerDone()/timerDone() = dua mesin durasi animasi (kabel vs perangkat).
+9. Bagaimana router memutuskan — ✅ terkonfirmasi
+Fungsi mesinnya: Routing::CRoutingProcess::vftable[5] = FUN_14094c530 (26.901 byte) — decompile menunjukkan operasi nyata: lookup RIB ("), routed via RIB"), "), unroutable", "\nICMP: time exceeded (time to live) send to", "\nICMP: unreachable host icmp message sent to", "\nICMP: dst ( ... protocol unreachable sent to", ", encapsulation failed", ", rcvd local pkt", ", g=" (gateway goto), IP: tableid=0 (VRF), interface VirtualPortGroup0, 819HG-4G-IOX, helper address.
+Urutan langkah dari enumerasi CROUTINGPROCESS_FC_*:
+CEK PORT IP (CHECK_PORT_IP_PR)          → apakah paket ke IP milik saya?
+  └─ CHECK_MULTICAST_BROADCAST / BROADCAST_MULTICAST_CHECK_PR
+       └─ HIGHERPROCESS_NOTSET_PR       → drop: "If no source process is set, drop the frame."
+CHECK_TTL_ZERO / INVALID_TTL → SEND_TTL_EXPIRED   → ICMP Time Exceeded
+LOOKUP_TABLE_IN → LOOKUP_TABLE_OUT                → "looks up the destination IP address in the routing table"
+  ├─ MATCHING_ENTRY_PS → CONNECTEDROUTE_SET_PORT_PS / STATIC_ROUTE_SET_PORT_PS
+  │                     → NOTSTATIC_NOTCONNECTED_PS
+  └─ NO_MATCHING_ENTRY_PS → USE_DEFAULT_GATEWAY   → "sends the packet to the default-gateway"
+CEF_LOOKUP_ENTRY → CEF_FOUND_ENTRY / CEF_NO_ENTRY → CEF_DISPATCH
+  └─ NO_OUT_PORT / NULLPORT_PS / NO_VALID_SOURCEIP  → drop
+DECREMENT_TTL_PS                                  → "decrements the TTL on the packet"
+ENCAP_TO_PACKET → (gagal) "encapsulation failed"
+RECEIVE_LOCAL_PACKET                              → paket untuk diri sendiri
+DROP_OUT_NON_ICMP_BROADCAST
+ICMP_HOST_UNREACHABLE / PROTOCOL_UNREACHABLE / ADMIN_PROHIBITED_UNREACHABLE
+FORWARD_HELPER / HELPER_REPLY                     → ip helper-address
+ASA: OWN_PORT_DROP, NO_FORWARD, NO_NAMEIF, SSH/TELNET_NOT_CONFIGURED
+Lalu resolusi L2 via ARP: CARPPROCESS_FC_CHECK_ROUTING_TABLE → CARPLOOKUP_FC_UNICAST/BROADCAST/MULTICAST → NOT_FOUND_BUFFER (paket dibuffer) / NOT_FOUND_DROP / FOUND / FOUND_ADJACENCY.
+10. Paket nyata atau murni simulasi — ✅ kesimpulan kuat
+- PDU = objek C++ (Traffic::CPdu) dengan header per-layer yang dibuat/dihapus di memori; tidak ada serializer wire, tidak ada sendto() pada jalur trafik simulasi.
+- Interaksi OS nyata di luar jalur simulasi: WS2_32 (multiuser/IPC/Netcon), Qt6Network/Qt6WebSockets, libcrypto-3 (enkripsi .pkt/lisensi), Ptmp::CPtmpServer, Ipc::CIpcManager, MultiUser::CMUManager, CScriptHttpServer.
+→ Paket 100% objek simulasi.

@@ -1,0 +1,38 @@
+[
+  {
+    "file": "01-wirebox-vision.txt",
+    "original_path": "C:\\Users\\ricky\\.codex\\attachments\\6ea2ade6-97f0-429e-b364-dc3c9bb33fff\\Pasted text.txt",
+    "sha256": "2E2B57D14BC039C2E8AB67162D3359157DD3D79F495574C915E7BFD8E1FA1D2D",
+    "bytes": 15592
+  },
+  {
+    "file": "02-static-analysis.txt",
+    "original_path": "C:\\Users\\ricky\\.codex\\attachments\\7a6497eb-37cd-4c72-a499-ee27073264ec\\Pasted text.txt",
+    "sha256": "4E9125644FC931A98240B3AEA43D735248E048BC86CD0D6C450311014648F45F",
+    "bytes": 24145
+  },
+  {
+    "file": "03-ghidra-architecture.txt",
+    "original_path": "C:\\Users\\ricky\\.codex\\attachments\\06af8977-4d66-4108-9e10-fee83d6f4fcb\\Pasted text.txt",
+    "sha256": "E563FCA962B68ABEFD9D3CBE68E569CE6D953A2D0B3B7B683C5F9CF5BB74151A",
+    "bytes": 10141
+  },
+  {
+    "file": "04-pkt-addendum.txt",
+    "original_path": "C:\\Users\\ricky\\.codex\\attachments\\6a3fb77d-12c1-405e-8c3f-a81fcd84bc3b\\Pasted text.txt",
+    "sha256": "071C5AA8D2AAA51B7B37A835B770BAD7DFA3E067DA5C164395467AD8D5E59BE1",
+    "bytes": 6612
+  },
+  {
+    "file": "REPORT_addendum.original.md",
+    "original_path": "C:\\Users\\ricky\\AppData\\Local\\Temp\\opencode\\pt_minisim\\REPORT_addendum.md",
+    "sha256": "506B0251B0477D38928E3A3BE701DBDB49FB2E23254A847D3853CA8D7C8F71FD",
+    "bytes": 42506
+  },
+  {
+    "file": "ptmini-README.original.md",
+    "original_path": "C:\\Users\\ricky\\AppData\\Local\\Temp\\opencode\\pt_minisim\\README.md",
+    "sha256": "4FD58359C3552FD1093F7ECAA2FD6CCCFED7AE45320E4A113B357D75CFAA287A",
+    "bytes": 9560
+  }
+]

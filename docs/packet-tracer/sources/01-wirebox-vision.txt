@@ -1,0 +1,1118 @@
+# Wirebox
+
+> Rethinking infrastructure from first principles, challenging the status quo.
+
+## Overview
+
+**Wirebox is a semantic infrastructure studio for inspecting, simulating, debugging, and changing real infrastructure through one common model.**
+
+It combines ideas from:
+
+- **Winbox** for direct device interaction
+- **Cisco Packet Tracer** for topology and simulation
+- **Wireshark** for protocol visibility
+- **Terraform** for declarative intent
+- **debuggers** for replay, state inspection, breakpoints, and time travel
+
+Wirebox is not built around one vendor, one protocol, or one class of device.
+
+An OLT is only one possible target.
+
+Wirebox can eventually model:
+
+```text
+Router
+Switch
+Firewall
+OLT
+ONU
+Linux host
+Server
+PLC
+UPS
+IoT gateway
+Radio
+Storage
+Industrial controller
+```
+
+The central idea is:
+
+> Infrastructure should be inspectable, simulatable, versionable, and executable through the same semantic model.
+
+---
+
+# 1. The Problem
+
+Infrastructure tooling is fragmented.
+
+The same physical system may expose itself through:
+
+```text
+CLI
+SSH
+Telnet
+SNMP
+NETCONF
+RESTCONF
+gNMI
+Modbus
+vendor APIs
+vendor GUIs
+monitoring systems
+configuration tools
+```
+
+Each interface exposes a different representation of the same underlying concepts.
+
+Example:
+
+```text
+Cisco:
+show interface GigabitEthernet0/1
+
+MikroTik:
+/interface print
+
+Linux:
+ip link show
+```
+
+Different syntax, same conceptual object:
+
+```text
+Interface
+State
+Address
+Link
+Capability
+Dependency
+```
+
+Wirebox treats vendor syntax and transport as backend details.
+
+The user interacts with infrastructure semantics instead.
+
+---
+
+# 2. The Core Model
+
+Wirebox models infrastructure as:
+
+```text
+Infrastructure
+=
+Graph
++
+State
++
+Behavior
++
+Constraints
++
+Time
+```
+
+This produces one semantic world that can be connected to either simulation or reality.
+
+```text
+                    Wirebox
+
+                     Intent
+                       |
+                       v
+              Infrastructure IR
+                       |
+             +---------+---------+
+             |                   |
+             v                   v
+        Sim Executor        Real Executor
+             |                   |
+             v                   v
+       Virtual World       Real Devices
+```
+
+The simulator and production runtime therefore use the same operations.
+
+That is the core architectural idea.
+
+---
+
+# 3. Product Experience
+
+Wirebox should feel like a visual infrastructure IDE.
+
+Example topology:
+
+```text
+Internet
+   |
+Edge Router
+   |
+Firewall
+   |
+MikroTik
+   +-------------------+
+   |                   |
+OLT                 Linux Server
+ |                      |
+ONU                  PostgreSQL
+ |
+Customer
+```
+
+Every object can be selected and inspected.
+
+## Router
+
+```text
+Router-01
+
+Interfaces
+Routing
+BGP
+NAT
+Firewall
+CPU
+Memory
+Logs
+```
+
+## OLT
+
+```text
+OLT-01
+
+PON
+ONU
+VLAN
+GEM
+TCONT
+Optical
+Alarms
+```
+
+## Linux Host
+
+```text
+Server-01
+
+Network
+Processes
+Services
+Disk
+Containers
+Sockets
+```
+
+All device classes share common interaction primitives:
+
+```text
+inspect()
+observe()
+snapshot()
+diff()
+simulate()
+mutate()
+validate()
+rollback()
+replay()
+```
+
+---
+
+# 4. Three Main Modes
+
+## Inspect
+
+Understand the current system.
+
+```text
+topology
+device state
+dependencies
+configuration
+telemetry
+events
+protocol activity
+```
+
+## Simulate
+
+Fork real infrastructure into a virtual state.
+
+```text
+Production
+    |
+    v
+Snapshot
+    |
+    v
+Virtual Twin
+    |
+    +--> test routing change
+    +--> test VLAN migration
+    +--> simulate device failure
+    +--> test firmware change
+```
+
+## Execute
+
+Apply a validated change to the real system.
+
+```text
+Intent
+  |
+Plan
+  |
+Validate
+  |
+Simulate
+  |
+Compile
+  |
+Execute
+  |
+Verify
+```
+
+---
+
+# 5. Infrastructure IR
+
+Wirebox needs a vendor-neutral intermediate representation.
+
+The first version can be built from ten primitives.
+
+## Entity
+
+Something with identity.
+
+```ts
+Entity {
+  id
+  kind
+  parent?
+  labels
+}
+```
+
+Examples:
+
+```text
+Router
+Interface
+OLT
+PON
+ONU
+Server
+Process
+PLC
+Sensor
+```
+
+## Capability
+
+What an entity can do.
+
+```text
+routing
+switching
+nat
+firewall
+pon
+optical
+process-management
+modbus
+```
+
+## Property
+
+State attached to an entity.
+
+```text
+Interface.operState = UP
+ONU.rxPower = -22.4 dBm
+CPU.temperature = 62 C
+```
+
+## Relation
+
+Connections between entities.
+
+```text
+ONU17 --attached_to--> PON1
+
+eth0 --member_of--> br0
+
+postgres --depends_on--> disk01
+```
+
+## Resource
+
+Something finite that can be allocated.
+
+```text
+bandwidth
+IP address
+VLAN ID
+ONU ID
+GEM port
+CPU
+RAM
+I/O channel
+```
+
+## Constraint
+
+Rules describing valid infrastructure state.
+
+```text
+VLAN must be between 1 and 4094
+
+ONU must belong to exactly one PON
+
+route next-hop must be reachable
+
+temperature must remain below threshold
+```
+
+## Intent
+
+The desired state.
+
+```ts
+Intent {
+  target: ONU17,
+  desired: {
+    internet: {
+      vlan: 100,
+      mode: "pppoe"
+    }
+  }
+}
+```
+
+Intent describes what should be true, not which command should be run.
+
+## Operation
+
+An atomic change.
+
+```text
+AddRoute
+CreateVLAN
+EnableInterface
+BindONU
+RestartProcess
+WriteRegister
+```
+
+## Event
+
+Something that happened.
+
+```text
+LinkDown
+BGPDown
+LOS
+PowerFailure
+ONURegistered
+ProcessExited
+```
+
+## Observation
+
+Something Wirebox measured.
+
+```text
+SNMP reports interface UP
+
+CLI reports interface DOWN
+
+telemetry reports zero traffic
+```
+
+Observations stay separate from derived state so conflicting evidence can be reasoned about instead of blindly overwritten.
+
+---
+
+# 6. Infrastructure as a DOM
+
+A useful mental model is:
+
+> Wirebox gives physical infrastructure something similar to a browser DOM.
+
+Instead of thinking in vendor commands:
+
+```text
+show interface
+display ont info
+/interface print
+```
+
+tools can query semantic objects:
+
+```ts
+infra
+  .site("jakarta")
+  .olt("olt-03")
+  .pon(4)
+  .onus()
+  .filter(x => x.rxPower < -27)
+```
+
+Or conceptually:
+
+```text
+find all ONU
+where optical.rx < -27
+and WAN.status != UP
+```
+
+The goal is to let humans and agents reason about infrastructure objects rather than raw command output.
+
+---
+
+# 7. Infrastructure Compiler
+
+Wirebox behaves like a compiler.
+
+Traditional compiler:
+
+```text
+Source Code
+    |
+    v
+AST
+    |
+    v
+IR
+    |
+    v
+Machine Code
+```
+
+Wirebox:
+
+```text
+Intent
+   |
+   v
+Infrastructure Graph
+   |
+   v
+Infrastructure IR
+   |
+   v
+Vendor Operations
+   |
+   v
+Protocol / Wire
+```
+
+Example intent:
+
+```text
+Ensure network 10.20.0.0/16 is reachable through 10.1.1.1
+```
+
+Cisco lowering:
+
+```text
+ip route 10.20.0.0 255.255.0.0 10.1.1.1
+```
+
+MikroTik lowering:
+
+```text
+/ip route add dst-address=10.20.0.0/16 gateway=10.1.1.1
+```
+
+Linux lowering:
+
+```text
+ip route add 10.20.0.0/16 via 10.1.1.1
+```
+
+The intent stays the same.
+
+Only the backend changes.
+
+---
+
+# 8. Device Driver Model
+
+Each device integration implements a common contract.
+
+Conceptually:
+
+```ts
+interface DeviceDriver {
+  discover()
+  observe()
+  capabilities()
+  plan()
+  execute()
+  validate()
+}
+```
+
+Possible drivers:
+
+```text
+Cisco IOS
+Cisco NX-OS
+MikroTik RouterOS
+Huawei OLT
+ZTE OLT
+Linux
+Modbus PLC
+Redfish
+SNMP devices
+```
+
+Transport remains independent from semantics:
+
+```text
+SSH
+Telnet
+SNMP
+NETCONF
+RESTCONF
+gNMI
+HTTP
+Modbus TCP
+serial
+vendor binary protocol
+```
+
+---
+
+# 9. OLT as One Domain
+
+OLT does not define Wirebox.
+
+It is simply one rich domain implemented on top of the same primitives.
+
+Example:
+
+```text
+OLT-01
+└── PON-1
+    └── ONU-17
+        ├── Optical
+        ├── GEM
+        ├── TCONT
+        ├── VLAN
+        ├── WAN
+        └── Ethernet
+```
+
+Example intent:
+
+```text
+ONU17.internet = PPPoE
+ONU17.vlan = 100
+```
+
+Planner output:
+
+```text
+Allocate ONU ID
+Allocate TCONT
+Allocate GEM
+Create service mapping
+Configure WAN
+Validate connectivity
+```
+
+Huawei, ZTE, or another vendor can lower the same semantic operations to their own implementation.
+
+---
+
+# 10. Record, Replay, Modify, Simulate, Apply
+
+One of Wirebox's strongest workflows is:
+
+```text
+RECORD
+  |
+REPLAY
+  |
+MODIFY
+  |
+SIMULATE
+  |
+APPLY
+```
+
+Example:
+
+An outage occurs at `03:17`.
+
+Wirebox captures:
+
+```text
+topology
+device state
+configuration
+telemetry
+events
+observations
+protocol interactions
+```
+
+The incident can later be reopened as a reproducible state.
+
+```text
+Incident #381
+
+03:17:01 route changed
+03:17:03 BGP reset
+03:17:07 OLT unreachable
+03:17:11 832 ONU offline
+```
+
+Infrastructure incidents become debuggable artifacts instead of disappearing with time.
+
+---
+
+# 11. Time-Travel Debugging
+
+Wirebox can treat infrastructure state like a debugger treats program execution.
+
+```text
+03:14:01
+Router route changed
+
+03:14:03
+NAT state changed
+
+03:14:05
+BGP session dropped
+
+03:14:09
+OLT became unreachable
+```
+
+The engineer can move through time:
+
+```text
+< Previous State
+
+Next Event >
+```
+
+A historical state can also be forked:
+
+```text
+State at 03:14:02
+      |
+      +--> Branch A: restore route
+      |
+      +--> Branch B: change firewall
+      |
+      +--> Branch C: restart BGP
+```
+
+This creates speculative execution for infrastructure.
+
+---
+
+# 12. Git-Like Infrastructure State
+
+Because operations and state are explicit, Wirebox can support:
+
+```text
+snapshot
+diff
+commit
+branch
+merge
+rollback
+bisect
+```
+
+Example:
+
+```text
+commit 8fc021
+
+Router-01
++ route 10.20.0.0/16
+
+Firewall-01
++ allow 10.20.0.0/16
+
+OLT-03
+~ VLAN 100 -> 120
+```
+
+Branches can be simulated before equivalent changes touch production.
+
+---
+
+# 13. Desired State and Reconciliation
+
+Wirebox can eventually separate:
+
+```text
+desired state
+```
+
+from:
+
+```text
+actual state
+```
+
+Example:
+
+```yaml
+bgp:
+  neighbor: 10.1.1.2
+  state: established
+```
+
+Observed state:
+
+```text
+BGP = IDLE
+```
+
+Wirebox can:
+
+```text
+detect drift
+diagnose
+produce repair plan
+simulate repair
+apply repair
+verify result
+```
+
+This turns automation from scripts into state reconciliation.
+
+---
+
+# 14. Executable Topology
+
+Most topology diagrams are documentation.
+
+Wirebox topology should be executable.
+
+A user draws:
+
+```text
+Router
+  |
+Firewall
+  |
+OLT
+  |
+ONU
+```
+
+But edges are semantic objects containing:
+
+```text
+interface
+address
+VLAN
+route
+tunnel
+capacity
+dependency
+policy
+```
+
+The diagram becomes part of the runtime model.
+
+This creates something close to:
+
+```text
+Figma
++
+Packet Tracer
++
+Terraform
+```
+
+for infrastructure.
+
+---
+
+# 15. AI-Native Infrastructure
+
+AI should not operate primarily through raw vendor CLI.
+
+Bad abstraction:
+
+```text
+AI -> arbitrary CLI
+```
+
+Better abstraction:
+
+```text
+AI
+ |
+ v
+Infrastructure Intent
+ |
+ v
+Planner
+ |
+ v
+Infrastructure IR
+ |
+ v
+Driver
+ |
+ v
+Device
+```
+
+Example question:
+
+```text
+Why can this subscriber not reach the internet?
+```
+
+The agent can inspect:
+
+```text
+ONU status
+optical state
+GEM mapping
+VLAN path
+OLT uplink
+MikroTik route
+NAT
+PPPoE state
+```
+
+across multiple devices through one graph.
+
+AI becomes an infrastructure reasoning agent rather than a terminal autocomplete system.
+
+---
+
+# 16. Safety Model
+
+Simulation and real mutation must be clearly separated.
+
+Every real change should support:
+
+```text
+preconditions
+dry-run
+simulation
+blast-radius estimation
+constraint checks
+policy checks
+approval
+execution deadline
+post-condition validation
+rollback plan
+audit log
+```
+
+Recommended execution flow:
+
+```text
+Intent
+   |
+Plan
+   |
+Constraint Check
+   |
+Simulation
+   |
+Policy Gate
+   |
+Approval
+   |
+Real Execution
+   |
+Verification
+```
+
+Wirebox should make the safe path the natural path.
+
+---
+
+# 17. MVP
+
+The first release should prove the architecture rather than maximize device support.
+
+## Core
+
+```text
+Wirebox Core
+├── Entity Graph
+├── State Engine
+├── Intent
+├── Operations
+├── Events
+├── Observations
+├── Constraints
+├── Simulator
+└── Driver SDK
+```
+
+## Initial Drivers
+
+```text
+Linux
+MikroTik
+Huawei or ZTE OLT
+```
+
+## Initial UI
+
+```text
+Topology Canvas
+Device Inspector
+State Diff
+Event Timeline
+Operation Planner
+Simulation Mode
+Real Execution Mode
+```
+
+## First Strong Demo
+
+A useful first intent:
+
+```text
+EnsureReachability {
+  from: CustomerNetwork,
+  to: Internet
+}
+```
+
+Planner reasons across:
+
+```text
+ONU
+OLT
+VLAN
+MikroTik
+route
+NAT
+uplink
+```
+
+That single scenario is enough to prove Wirebox is not just another OLT manager.
+
+---
+
+# 18. Non-Goals
+
+Wirebox should not initially become:
+
+- another generic monitoring dashboard
+- another configuration backup system
+- another SSH terminal wrapper
+- another diagramming tool
+- another vendor-specific NMS
+- a full hardware emulator for every chipset
+- an AI agent that executes arbitrary CLI without a semantic model
+
+Those may exist as supporting features, but they should not define the architecture.
+
+---
+
+# 19. Architecture Direction
+
+```text
+                 Wirebox Studio
+                       |
+                Semantic Graph
+                       |
+            Infrastructure Runtime
+                       |
+        +--------------+--------------+
+        |              |              |
+     Planner       Simulator       Timeline
+        |              |              |
+        +--------------+--------------+
+                       |
+                Infrastructure IR
+                       |
+          +------------+------------+
+          |            |            |
+        Cisco       MikroTik        OLT
+          |            |            |
+         CLI         RouterOS      CLI/SNMP
+          |            |            |
+          +------------+------------+
+                       |
+                  Real World
+```
+
+The foundational pieces are:
+
+```text
+Infrastructure DOM
+Infrastructure IR
+State Runtime
+Simulation Runtime
+Driver ABI
+Event Timeline
+Intent Planner
+```
+
+Everything else can be built on top.
+
+---
+
+# 20. Final Positioning
+
+Wirebox is not:
+
+```text
+Packet Tracer for OLT
+```
+
+It is not:
+
+```text
+Winbox for every vendor
+```
+
+It is not:
+
+```text
+another NMS
+```
+
+The stronger positioning is:
+
+> **Wirebox is an infrastructure semantic runtime and studio that lets engineers inspect reality, fork it into simulation, reason about change, replay failures, and safely execute validated intent back onto real systems.**
+
+The deeper analogy is:
+
+```text
+Winbox
++
+Packet Tracer
++
+Wireshark
++
+Terraform
++
+Debugger
++
+Compiler
+```
+
+built around one infrastructure model.
+
+---
+
+# 21. One-Line Vision
+
+> **Wirebox gives physical infrastructure the abstractions software already has: objects, state, types, IR, simulation, debugging, replay, branching, validation, and compilation.**

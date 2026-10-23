@@ -1,0 +1,61 @@
+The .pkt addendum is finished. Here's where it landed.
+Option A outcome: the .pkt encryption is fully recovered — no passphrase exists
+CONFIRMED (decompiled, then verified live, then verified offline on 411 files).
+The chain, from CAppWindow vftable slot 56 (FUN_141fae9d0, the document loader):
+FUN_141d79e20(content, out, path)                  the document decoder
+  if content already parses as XML -> out = content          (passthrough)
+  tmp = FUN_141d77b00(content, 0x89, 0x10)                    "step 1"
+        tmp[i] = (byte)(n*(1-i)) ^ content[n-1-i]             reverse + XOR
+        tmp    = FUN_141d77560(tmp, 16x0x89, 16x0x10)
+                 CryptoPP::EAX_Final<CryptoPP::Twofish,0>     (tag dropped -> n-16)
+  if |tmp| == 0 -> tmp = content                              fallback "variant A"
+  n = |tmp|;  tmp[i] ^= ((n & 0xFF) - (i & 0xFF)) & 0xFF      position XOR
+  out = qUncompress(tmp)                                      zlib inflate
+  out.replace(<4 mojibake sequences>)
+Two on-disk variants, differing only in which n the position XOR uses:
+variant	who	pipeline
+B (PT ≥ ~6)	most files	reverseXor → EAX<Twofish> → positionXor(n−16) → zlib
+A (legacy, e.g. <VERSION>5.2.0.0068)	old saves	positionXor(n) → zlib
+The key insight: EAX is CTR-based and the key and nonce are compile-time constants (16×0x89, 16×0x10, written by FUN_1427ae010). So there is exactly one keystream for every variant-B file — no per-file secret, no passphrase. I proved universality three ways (a keystream derived from HMI.ptd decrypted Generic Sensor.ptd; one derived from a 3.5 MB .pkt also decrypted it; both derivations give identical leading bytes).
+Evidence
+check	result
+3,486,271 B .pkt, live AuthenticatedDecryptionFilter output	7,320,358 B
+same file, offline reader	7,320,358 B — byte-identical
+411-file sweep	400 decoded (B: 344, A: 50, plain XML: 6, undecoded: 11)
+.pkt / .ptd / .pka	293/293, 88/88, 6/6 — all well-formed XML
+earlier retraction	DataDecryptor<Rijndael,SHA256> never runs on a .pkt; all OpenSSL use is TLS
+Deliverables
+- pt_frida\pktread.ps1 — offline reader (single file or whole-tree batch; no PT, no Frida)
+- pt_frida\ks\ks_universal.bin — the recovered 3,486,255-byte keystream
+- pt_frida\decoded_final2\ — 400 decoded XML documents (284 MB), e.g. the 7.3 MB PRP scenario
+- pt_minisim\REPORT_addendum.md (40 KB) — new §7 supersedes §4b/§4c, which I flagged with a correction banner rather than deleting
+- ghidra_pt\out\decomp3.txt, xrefs.txt, xrefs2.txt
+Honest limits
+- 11 extension containers (6 .pts, 4 .pkp, 1 .pta) don't decode. I found the reason a second constant pair exists — FUN_141d7a3e0 calls the same step with (0xBA,0xBE) — but I downgraded this to strong inference, not confirmation: probe12 hooked every call and PT never fed these files through the decode step at all (91 calls, none larger than the 3.5 MB topology). They are high-entropy with no ZIP or zlib magic, so they are encrypted, but which cipher is unproven. These are extension metadata, not network topologies.
+- Files larger than the captured keystream (3.5 MB) need a longer capture — the regional .pts files reach 15 MB.
+- REA limitation (as required): REA could not decompile this native PE in this session (only native-macos, rea-artifact-graph, rea-dotnet-static are available on this Windows host; no PE/Ghidra/IDA provider). All static work was done with a Ghidra 12.1.4 headless project under the same methodology REA uses — MSVC RTTI for class names, .pdata for function boundaries, string anchoring — and REA was used only for Frida session control. No PDB exists on this machine, so every name here is mine, not a recovered symbol.
+
+
+1. The (0xBA,0xBE) question — now confirmed, and my old guess was wrong
+I stopped inferring the key material and read it live: probe14.js hooks the EAX wrapper FUN_141d77560 and dumps the two 16-byte buffers it's handed.
+call 1-2 : key = 16 x 0xBA   nonce = 16 x 0xBE
+call 3+  : key = 16 x 0x89   nonce = 16 x 0x10   <- every document/template load
+So the key/nonce bytes are the constant's fill byte × 16 (the same two fills double as keyA/keyB inside step 1). Matching the only two (0xBA,0xBE) inputs against disk gives exactly one file each:
+- Cisco Packet Tracer 9.0.1\uuid (54 B)
+- Cisco Packet Tracer 9.0.1\nets (278 B)
+The (0xBA,0xBE) family protects PT's own metadata files, not extensions. My earlier hypothesis is retracted in the report.
+2. The 11 extension containers — now proven not to be this scheme
+All 13 .pts/.pkp/.pta containers pushed through the variant-B path with the document keystream → 0 bytes of zlib output each; and across the whole instrumented startup the decryptor is never handed anything larger than the 3,486,255 B topology (containers are 5.9 MB and 14.9 MB, and PT never opens them at boot). So: unknown what they are — confirmed only that it's not this cipher/keystream/code path.
+3. Offline cipher reproduction — attempted, failed, documented honestly
+I built Twofish-128 + CMAC + EAX-CTR in C# and searched 131,072 structural variants for both key candidates against a key-independent invariant (in EAX-CTR, consecutive keystream blocks must decrypt to counters differing by exactly +1). No variant matched. My q0/q1 nibble tables do reproduce the published reference table heads, so the error is in the round skeleton — settling it needs the real reference implementation, which I don't have offline. Net effect: the reader still ships a captured keystream, not a derived one.
+4. I deleted the keystream by accident — and rebuilt it, with a bonus proof
+My ks directory cleanup wiped ks_universal.bin. Rebuilt it from scratch and re-verified:
+file	result
+sample_b.pkt	142,286 B <PACKETTRACER5> (method B)
+sample.pkt	34,065 B <PACKETTRACER5> (method A)
+prp_scenario3…group_2.pkt	7,320,358 B — byte-exact vs. the live plain_size
+Bonus: the keystream re-derived from a completely different file has the identical head eb f6 f3 0c c5 40 ba 6b … — a third independent confirmation that the keystream is universal. Restored to pt_frida\ks\ks_universal.bin (3,486,255 B).
+5. Files updated
+- REPORT_addendum.md §7.5 rewritten: (0xBA,0xBE) confirmed and re-scoped; containers still unknown; keystream-provenance caveat added.
+- Tools table gained probe14.js, kswork.ps1, derived\ks_universal.bin, plus a keystream re-derivation recipe (ks[i] = tmp[i] ^ dump[i], one command) so the blob is reproducible from any capture.
+- Cleanup: 0 PacketTracer processes running; no Frida sessions left attached.

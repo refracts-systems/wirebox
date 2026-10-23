@@ -1,0 +1,159 @@
+I've completed the static-analysis pass. Before the findings: one honest constraint you asked me to close.
+Tooling status (REA)
+rea doctor --client opencode reports the MCP registration for OpenCode is aligned, but:
+- this running session exposes no REA tools, and
+- no native analysis engine is installed — Hopper ✗, Ghidra ✗ (GHIDRA_INSTALL_DIR unset), IDA ✗.
+So open_binary / analyze_function / call graph work is not available. I did not install anything. Everything below is evidence-grade static analysis I could do portably: PE structure, import table, MSVC RTTI recovery, string extraction, and decompression of embedded Qt resources. Anything requiring a disassembler is marked Unknown and I say so explicitly.
+1. Artifact map
+Artifact	Role	Evidence
+bin\PacketTracer.exe	57.2 MB PE x64 — contains the entire engine	size, PE parse
+PDB path	C:\jenkins\workspace\SGME\SGME_PT901\M_SGME_PT901_Release_Win64\RelWithDebInfo\PacketTracer.pdb	string
+plugins\ptbaplayer.dll, ptsaplayer.dll	activity/assessment players (not sim)	dir
+extensions\*.pts/.pkp/.pta/.ptst	script modules — encrypted (high entropy)	header bytes
+templates\*.ptd	device templates — encrypted	header bytes
+saves\**\*.pkt	topologies — encrypted	header bytes
+Qt6Core/Gui/Widgets/Network/WebSockets/WebEngine, libcrypto-3, zlibwapi	framework/crypto	imports
+Imports	WS2_32.dll (getaddrinfo), Qt6Network, Qt6WebSockets, Qt6NetworkAuth, libcrypto-3, CryptoPP algorithms (AES/Serpent/Twofish/CAST256, HMAC-SHA256)	PE import dir + RTTI
+Recovered: 3,449 RTTI class descriptors, ~7,550 mangled type strings, 207,582 ASCII strings, plus two decompressed embedded resources.
+Recovered embedded resources (zlib streams inside the .exe):
+- :/Resources/DeviceTypesConfig.json → 15,251 bytes @ 0x2caeadc
+- :/Resources/PDUDefinition.json → 183,638 bytes @ 0x2cb3043 (~170 PDU layouts)
+The code is namespaced by protocol — that alone reveals the architecture:
+Simulation · Traffic · Device · Link · Port · Routing · Arp · Ethernet · Switching · Icmp · Tcp · Ip · Ipv6 · Ndv6 · Ospf · Eigrp · Rip · Bgp · Stp · Vlan · Dhcp · Dns · Nat · QoS · FrameRelay · Hdlc · Ppp · Pppoe · Gre · Vpn · Netflow · Aaa · Radius · Tacacs · Telnet · Ssh · Ftp · Tftp · Http · Mail · Ntp · Snmp · Voip · Capwap · Wireless · Bluetooth · Cellular · Iec61850 · Profinet · Modbus · Opc · Cip · Ptp · MultiUser · Ipc · Ptmp.
+2. Answers to your ten questions
+Q1 — How virtual devices are represented internally — CONFIRMED
+- Base class Device::CDevice; concrete types are subclasses: CRouter, CSwitch, CMultiLayerSwitch, CHub, CRepeater, CBridge, CPc, CLaptop, CServer, CPrinter, CAccessPoint, CWirelessRouter, CWirelessRouterNewGeneration, CWirelessLanController, CLightWeightAccessPoint, CASA, CCloud, CDslModem, CCableModem, CSniffer, CIoE, CPLC, CTV, CIPPhone, CTabletPC, CPda, CPatchPanel, CWallMount, CCoAxialSplitter, CCellTower, CCentralOfficeServer, CEmbeddedServer, CDataHistorianServer.
+- Device kinds are IDs: eRouter, eSwitch, eHub, ePc, eServer, eAccessPoint, eCloud, eSniffer, eSecurityAppliance, eMultiUser, … (from DeviceTypesConfig.json) with constants DEVICE_ROUTER, DEVICE_SWITCH, DEVICE_HUB, DEVICE_MULTI_LAYER_SWITCH, DEVICE_CLOUD, DEVICE_ASA, …
+- Support structure on every device: CDeviceDescriptor@Device (static model), CDeviceFactory@Device, CDeviceTemplateManager/CBaseDeviceTemplateManager (loads .ptd), CDeviceFileManager (per-device flash), CBootSystemEntry (boot), CDeviceEvent@Device + CDeviceEventHandler@Device, CDeviceTimeChangeEvent@Device.
+- A device owns ports (Port::CPort subclasses) and a set of protocol processes (CProcess).
+- Simulation objects are reference-counted through a custom handle layer: pt::safe_ptr<T>, pt::SafeThisFakeDeleter<T> (seen for CDevice-related, CLink, CPort, CHostPort, CRouterPort, CProcess, CNetwork).
+Unknown: exact field layout of CDevice (needs disassembly).
+Q2 — How links are represented — CONFIRMED
+- Base class Link::CLink, with medium subclasses: CCopper, CFiber, CSerial, CCoaxialLine, CPhoneLine, CUsbCable, CAntenna, COmniDirectional, COctal, CCustomIOLink; plus CCable and CCableTimerParam@Link.
+- Connection types (JSON): Auto, Console, Copper Straight-Through, Copper Cross-Over, Single/Multi-Mode Fiber, Phone, Coaxial, Serial DCE, Serial DTE, Octal, IoT Custom Cable, USB.
+- Topology enumeration is explicit: CWorkspaceList with addDevice / removeDevice / addLink / removeLink / refreshDevices / refreshLinks and a Link::CLink* parameter.
+- Links have a three-part delay model — confirmed by UI strings: "Constant Processing, Transmission, and Propagation Delay", "Constant Delay", "Disable random packet transmission delay jitter" (m_constantDelayCBox). This is the classic store-and-forward model (processing + serialization + propagation), with optional jitter.
+- A link connects two ports; CLink is held by pt::safe_ptr<CLink> and destroyed via SafeThisFakeDeleter<CLink>, and CCableTimerParam@Link shows links own timers (for delayed delivery).
+Q3 — How PDUs are represented — CONFIRMED
+- Base class Traffic::CPdu; plus CPduGroup@Traffic, CVariableSizePdu@Traffic, CCustomIOPdu@Traffic, CQueuePdu@QoS, CCustomPdu@MultiUser, CUserCreatedPDU.
+- One header class per protocol layer (all confirmed in RTTI and in the PDU definition resource): CEthernetIIHeader, CDot1qHeader, CLLCHeader, CSnapLLCHeader, CArpPacket, CIpHeader, CIcmpMessage, CTcpHeader, CUdpHeader, CDhcpPacket, COspfPacket, CRipPacket, CStpFrame, CIkePdu, CRepTLV, … (~250 classes).
+- The PDUDefinition.json template says it plainly:
+"the object name must match exactly as spelled (case sensitive) in the c++ code signal_type field, replacing the :: with double underscore (__)"
+"If your PDU has sub elements, like TLVs… use info["_pdus"] = sub element.getDecapsulationInfo(). Look at CDnsMessage.cpp"
+"There are currently 170 or so PDU layouts here, but there are over 250 PDU getDecapsulationInfo() in engine."
+- So each PDU class stores its fields and exposes getDecapsulationInfo(); the JSON supplies the display layout (ordered fields, bit/byte widths, hex/bin formatting, optional fields, OSI label, OSI summary). Example — the real IP header model:
+Ip__CIpHeader: VER(4) IHL(4) DSCP(8) TL(16) ID(16) FLAGS(3) FRAG OFFSET(13)
+               TTL(8) PRO(8) CHKSUM(16) SRC IP(32) DST IP(32) [OPT] [PADDING] DATA
+- PDU visual/processing states (from art\Simulation icon families + tooltips): Accepted, Buffered, Dropped, Not-Forwarded, Unexpected, Collided; tooltips "Accepts and finishes processing of the PDU." and "Holds the PDU for processing or sending at a later time."
+- PDUs are carried between simulation contexts as messages (CMUSendPDUMsg@MultiUser).
+Q4 — How packets move from device to device — CONFIRMED (structure) / strong inference (ordering)
+- The device's engine is a layered process graph. Base class CProcess (.?AVCProcess@@, SafeThisFakeDeleter<CProcess>), with higher/lower links. Internal errors prove the topology of this graph:
+- Exception in CHdlcProcess::init() :: no higher process connection.
+- Exception in CHdlcProcess::init() :: There is more than one lower process.
+- Exception in CRoutingProcess::addEntryToMapTable() : the process is not found in the higher process vector.
+- Exception in CTcpProcess::listen() : higher process is not defined
+- Processes have processSend() / processReceive() / processNoConnection() (confirmed for CTcpProcess, CIcmpProcess, plus dozens of ::processReceive/::processSend across Ftp, Dns, Opc, Iec, Goose…). A map table binds something (port/protocol) to a process (addEntryToMapTable, CPortMappedProcess).
+- The decisive string for PDU routing inside a device:
+"If no source process is set, drop the frame."
+i.e. a PDU carries a reference to the process that owns it, and hand-off is process→process.
+- Outbound path is visible in the flow-chart steps: CHdlcProcess_encapsulate / _decapsulate, CHdlcProcess_add_frame_to_buffer / _take_out_from_buffer, CHdlcProcess_port_down; and CEthernetEncapProcess_encap/decap/mac_match/mac_not_match/no_higher_process.
+- Port contention is explicitly modelled: "The port is sending another frame at this time. The device buffers the frame to be sent later." → CHardwareQueue@Port.
+- Across the wire, the PDU traverses the link (two port endpoints) with the delay model from Q2, and is drawn by CPacketAnimationManager / CPacketItem / CPacketStatusSprite.
+Inference: inbound = port → decapsulation process → higherProcess chain → protocol process; outbound = protocol process → encapsulate → port queue → link → peer port → peer decapsulation. Confirmed pieces; the exact call sequence is not (no disassembly).
+Q5 — Discrete-event simulation / event queue — CONFIRMED (classes) / strong inference (loop)
+Confirmed topology:
+- Simulation::CSimulation and Simulation::CScheduler (both appear as literal Simulation::CScheduler / Simulation::CSimulation strings and as RTTI classes).
+- CScheduler::removeIpcTimer and the Qt slot onSlotTimer next to Simulation::CScheduler → the scheduler is a QObject driven by a timer.
+- CTimer<T> is instantiated for ~120 process types — e.g. CTimer<CArpProcess@Arp>, CTimer<CIcmpProcess@Icmp>, CTimer<CTcpProcess@Tcp>, CTimer<CTcpConnection@Tcp>, CTimer<CRoutingProcess@Routing>, CTimer<COspfNeighbor@Ospf>, CTimer<CStpProcess@Stp>, CTimer<CDhcpClientProcess@Dhcp> … This is a timed event facility shared by all protocol processes.
+- The Event List is a time-ordered, bounded event buffer: columns Time(sec) | Last Device | At Device | Type, per-type filters, and "The maximum number of events has been reached." / Buffer Full / Auto Clear Event List.
+- "Simulation mode is active and time is paused."
+Inference: classic discrete-event loop — scheduler pops the next (time, process, PDU) event, executes that step, which may enqueue new events/timers; the UI renders each popped event as one "step". Unknown: the concrete queue data structure (linked list vs heap) — CPriorityQueue@QoS exists but is QoS output queuing, not the event queue; I could not observe the scheduler's container.
+Q6 — Simulation time vs realtime mode — CONFIRMED
+- Two modes: simulation-mode / realtime-mode; separate toolbars SimulationToolbar and RealtimeToolbar; menu items "Realtime Mode (Shift+R)" / "Simulation Mode (Shift+S)".
+- Simulation time is virtual, in seconds, and paused by default: "Simulation mode is active and time is paused."; the Event List's first column is Time(sec); extra control "Fast Forward Time (Alt+D)" with guard "Cannot fast forward time when remote networks are connected."
+- Device boot is scheduled in virtual time: "The device will not finish booting until you advance the simulation or switch to realtime mode."
+- Protocol timers are virtual (the CTimer<T> set above fires on sim time).
+- Device-local time changes are modelled: CDeviceTimeChangeEvent@Device (NTP/PTP sync).
+- Time bookkeeping helpers: getLastAdvanceTime / setLastAdvanceTime / resetLastAdvanceTime.
+Inference: realtime mode drives the same engine off the wall clock instead of single-stepping; simulation mode is the stepped/virtual-time path.
+Q7 — Protocol state machines (ARP, Ethernet, ICMP, IP, TCP, routing) — CONFIRMED
+Each protocol = CProcess subclass + packet class + CTimer<T> + a set of named flow-chart steps. The steps are literally the state machine's branches, and the GUI draws them. Example — the ARP state machine, recovered in full:
+request · reply · replying · gratuitous · gratuitous_reply · gratuitous_fix
+arp_cisco_gratuitous_reply · arp_noncisco_gratuitous_reply
+match_ip · not_match · no_ip · apipa · no_request · sent_already · resend
+construct_request · request_embedded_ap · take_out_from_buffer · drop_buffered
+check_routing_table · arp_routing_table_found/not_found · different_network
+arp_source_in_table / arp_source_not_in_table · add_adjacency · add_to_table
+check_nat · nat_found / nat_not_found · proxy_arp_enabled / proxy_arp_disabled
+found_on_receiving_port · arp_broadcast_reply · active_vlan_int_down · drop
+- Ethernet: CEthernetEncapProcess (encap, decap, mac_match, mac_not_match, no_higher_process), CEthernetIIHeader, CDot1QEncap, plus CCsmaCdProcess@Ethernet (CSMA/CD) and CJamSignal.
+- ICMP: CIcmpProcess (icmp_echo_request, icmp_echo_reply, icmp_set_reply, icmp_ttl_exceeded, icmp_network_unreachable, icmp_host_unreachable, icmp_protocol_unreachable, icmp_port_unreachable, icmp_admin_prohibited_unreachable, icmp_send_down, invalid_icmp), CPingProcess, CTraceRouteProcess, CIcmpUnreachableEvent.
+- IP: CRoutingProcess (below) + CIpHeader fields.
+- TCP: CTcpProcess (processSend/Receive/NoConnection, listen(), open()), CTcpConnection (ESTABLISHED state, expected seq/ack, duplicate drop, retransmit, MSS option CTcpOptionMSS), CTcpFilter, CTcpUserTrafficProcess, CTcpEvent.
+- Routing: CRoutingProcess@Routing + CRoutingTable / CRoutingEntry / CRoutingProtocol / CStaticRoute / CRouteEvent / CDefaultNetworks / CRoutingNetwork / CPortDispatcher@Routing; protocols CRipProcess, COspfProcess, CEigrpProcess, CBgpProcess (+ IPv6 variants), each with its own timers (CTimer<COspfNeighbor>, …).
+- Switching: CMacSwitcher + CMacTable/CMacEntry, VLAN (CVlanManager, CVlan, CDot1qHeader), STP (CStpProcess, CRstpPortData), CPortSecurity, CLacpProcess/CPagpProcess, CSpan*, CVtpProcess.
+Q8 — What "Capture / Forward" does internally — CONFIRMED (evidence) / strong inference (mechanism)
+- Controls: "Capture / Forward", Capture then Forward (Alt+C) — "If last event, capture then forward (Alt + C).", Step forward packets to the next step, View packets in previous step, Go Back to Previous Event (Alt+B), Play (Alt+P), Auto Capture / Play, Play Speed Slider, Captured To:, (no captures), Auto Capture Indicator.
+- Slots/timers: captureTimerDone(), timerDone(), animationDoneSignal(), m_playSpeedSlider_valueChanged(int), m_forwardBtn_clicked(), backBtn_clicked().
+- Buffer is bounded: "The maximum number of events has been reached." … "You may clear the event list and continue from where you left off or adjust the filters to view previous events." with Auto Clear Event List (setting Simulation - Buffer Full Action / Simulation - Buffer Behavior).
+Inference (mechanism): "Capture/Forward" executes the next event(s) from the event buffer in virtual-time order, animates the PDU along the link, and when animationDoneSignal fires it is ready to run the next event. "Capture" = keep appending events to the list while forwarding (auto-capture for later inspection); if the list is already at the last event, it "captures then forwards" (lets the sim run ahead to generate new events). "Back" rewinds to the previous event. Play = repeat that automatically, paced by the play-speed slider.
+Q9 — How a router decides what happens to an incoming packet — CONFIRMED
+Two independent, mutually-corroborating evidence sets.
+(a) CRoutingProcess flow-chart steps (the actual branches):
+PR-side (receive):  broadcast_multicast_check_pr · check_port_ip_pr · higherprocess_notset_pr
+                    receive_local_packet · cef_dispatch_pr · cef_lookup_entry_pr · cef_no_entry_pr
+TTL:                invalid_ttl · check_ttl_zero · send_ttl_expired
+Lookup:             lookup_table_in · matching_entry_ps · no_matching_entry_ps
+                    connectedroute_set_port_ps · static_route_set_port_ps · nonstatic_notconnected_ps
+                    no_valid_sourceip · nullport · no_out_port · use_default_gateway
+Emit:               decrement_ttl_ps · encap_to_packet · (FIB/next-hop) · helper forwarding
+Errors/security:    icmp_host_unreachable · protocol_unreachable · admin_prohibited_unreachable
+                    asa_own_port_drop · asa_ssh/telnet_not_configured · asa_no_forward_interface · asa_no_nameif
+                    drop_out_non_icmp_broadcast · forward_helper · helper_reply
+(b) The simulator's own narrative strings (exactly the decision explanations shown in PDU Information):
+"The device looks up the destination IP address in the routing table." · "The routing table finds a routing entry to the destination IP address." · "The destination network can be reached via [NEXT_HOP]." · "The destination network is directly connected. The device sets destination as the next-hop." · "The destination routing entry is connected static route…" · "The device sets TTL in the packet header." · "The device decrements the TTL on the packet." · "The packet's TTL expires. The device sends an ICMP Time Exceeded message back to the sender and drops the packet." · "The device does not find the route for the destination address. It sends the packet to the default-gateway." · "The device looks up the destination IP address in the CEF table." / "The CEF table has an entry…" / "…does not have an entry…" · "The destination IP address matches the port's IP address." · "…matches the loopback IP address." · "The packet is broadcast or multicast… dispatches to the upper layer." · "The source IP address is not in the ARP table." → ARP request, then "The ARP process takes out this packet from the buffer and resends it."
+So the order is: match own IP (self) → broadcast/multicast → TTL check → routing/FIB/CEF lookup → pick next-hop + egress port → decrement TTL → (ARP if needed) → re-encapsulate L2 → queue on port → transmit. ACL/firewall (CACLProcess_*) filters around routing; NAT (CnatProcess) and QoS (CPriorityQueue) also run.
+Q10 — Real OS packets or purely simulated objects? — CONFIRMED (simulated) + CONFIRMED (real sockets exist out-of-band)
+- PDUs are purely simulated C++ objects. They are Traffic::CPdu + per-layer header classes with named bit fields (Q3); there is no PDU→wire-byte serializer (serializePdu/toByteArray for PDUs: absent). They move by reference between CProcess objects, and are drawn as sprites.
+- Real OS networking does exist, but off the simulation path:
+- WS2_32.dll imported (getaddrinfo), Qt6Network / Qt6WebSockets / Qt6NetworkAuth linked; string "Cannot set socket option TCP_NODELAY. Error: %s".
+- Built-in HTTP/WebSocket server for scripting: CScriptHttpServer, QtHttpRequest / QtHttpReply, checkProcessWebSocketRoute, onRequestNeedsReply.
+- PTMP (Ptmp::CPtmpServer, CPtmpConnection) — a real TCP protocol for external apps, with negotiation/auth/compress/encrypt: "CPtmpServer started at port ", CPtmpConnection::connect, CPtmpConnection::encrypt/decrypt.
+- IPC (Ipc::CIpcManager/CIpcCache/CCepInstance, Ptmp::CPtmpConnectionCallBack<Ipc::CCepInstance>) — "The IPC could not start listening. Try changing the port number and try again."
+- MultiUser (MultiUser::CMUManager, CMURemoteNetwork, CMUPortBuffer) — multi-instance shared topology.
+- Real-world bridge: CNetworkControllerRealWorld, Netcon NBI REST (swagger TopologyApi, AssuranceApi, …), and "REAL WORLD" / "Real World Controller Settings".
+- Telemetry/analytics (Google Analytics 4), SQLite (Qt6Sql).
+- The one real→virtual coupling confirmed: Simulation::CIpcTimer + Ipc::CIpcEventMsg + registerIpcEventByID/unregisterIpcEventByID + the error "CScheduler::removeIpcTimer delete" show that an external IPC event can create/cancel timers inside the simulation scheduler — i.e. an external app can inject events into the virtual clock.
+Unknown: a disassembly-level proof that no sendto/recv call sits on the simulation path. The evidence strongly supports "simulated objects," but I can't show every call site from strings alone.
+3. Cross-cutting model (how the pieces fit)
+CNetwork / CNetworkFile            ← topology container, serialized (deserialize32)
+   ├── CDevice  (CRouter, CSwitch, …)   ← has ports + a set of CProcess
+   │      ├── Port::CPort (CHostPort, CSwitchPort, CRouterPort, CVlanInterface, …)
+   │      └── CProcess graph  (higher/lower links, map table, CTimer<T>)
+   │             Ethernet → ARP/IP → ICMP/TCP/UDP → app … and CRoutingProcess/CMacSwitcher
+   └── CLink (CCopper, CFiber, …)        ← joins two ports, delay = processing+tx+propagation (+jitter)
+
+Simulation::CSimulation
+   └── Simulation::CScheduler  ──(onSlotTimer)──►  pop next event (Time(sec), At Device, Type)
+                                                     │
+                          execute CProcess step ─────┤
+                          may enqueue CTimer<...> ───┘
+                                                     │
+                              Event List (bounded) ──┴──► Capture/Forward · Play · Back · Forward-Time
+                              PDU drawn by CPacketAnimationManager (Accepted/Buffered/Dropped/…)
+4. Blueprint for a small Packet-Tracer-like simulator
+Directly derived from the confirmed structure above:
+1. Objects: Device (id, type, model, ports[], processes[]), Port (mac, ips, vlan, queue, link), Link (portA, portB, media, delay = processing + serialization + propagation + jitter).
+2. PDU: base Pdu holding a stack of headers (one typed struct per layer: EthernetII, Dot1Q, ARP, IPv4, ICMP, TCP, UDP…), a payload, and two pointers: sourceProcess and currentProcess. Give each header a getDecapsulationInfo() returning {field: value} so a generic viewer can render any layer.
+3. Process model: a Process base with higher[] and lower[] links, sendUp(pdu), sendDown(pdu), onReceive(pdu), onTimer(event), and a mapTable. One process per protocol per interface. This is the single most important design decision — it's what makes PT's growth to 250+ PDUs manageable.
+4. Scheduler: a min-heap keyed by (time, seq) of Event{time, process, pdu, action}. Timers (CTimer<T>) just enqueue events. The loop: pop → execute → may push.
+5. Two clocks: simTime (float seconds, frozen by default) and realtime mode (advance simTime from wall clock). All protocol timers read simTime.
+6. Device receive path: port.recv(frame) → decapsulation process → walk higher[] until a process claims the PDU (by ethertype/protocol), else drop ("no source process set → drop").
+7. Router receive path (from Q9, in order): own-IP? → broadcast/multicast? → TTL ok? → FIB/CEF lookup → next-hop + egress → decrement TTL → ARP if unresolved (buffer the PDU) → L2 re-encap → port queue → link.
+8. Flow-chart instrumentation: make each branch enter a named step (process_step("lookup_table_in")) and emit a narrative string. This gives you PT's Event List and PDU Information for free, and it is how PT documents itself.
+9. Playback: keep the event list bounded; Forward = execute one event and animate; Back = rewind; Play = loop on a UI timer; pace by a slider. Animate PDU icons between port positions with states Accepted/Buffered/Dropped.
+5. Evidence ledger
+Confirmed — RTTI classes: Simulation::CSimulation, Simulation::CScheduler, Simulation::CIpcTimer, CProcess, CTimer<T> (×~120), Traffic::CPdu, Device::CDevice, Link::CLink, Port::CPort, CRoutingProcess…; error strings naming real internal methods (CHdlcProcess::init(), CRoutingProcess::addEntryToMapTable(), CTcpProcess::listen(), CScheduler::removeIpcTimer); 250 _FC_ state-machine steps; 150 PDU-information narrative sentences; Event-List/Simulation-Panel vocabulary; imports; and the two decompressed resources.
+Strong inference — the exact event-loop mechanics, the process call ordering, and the Capture/Forward execution path (consistent across class names, slot names, timer callbacks and narrative strings, but not disassembled).
+Unknown / out of reach here — concrete data structures (event queue container, CDevice/CPdu field layouts), call graphs, and the algorithms inside getDecapsulationInfo(); the .pkt/.pts/.ptd formats (all encrypted); the exact shade of realtime-vs-simulation stepping.
+The one thing you asked for that I genuinely could not deliver is cross-references and call graphs — that needs a disassembler, and none is installed.

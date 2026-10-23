@@ -1,0 +1,14 @@
+== Scenario 1: ping + TCP + UDP, jitter ON (Packet Tracer default) ==
+
+== Comparison: jitter ON vs OFF ==
+                          jitter ON        jitter OFF
+first frame at SW1 (s)   2.44705e-05        2.436e-05
+virtual time (s)         1.00167           1.00163
+events                   461             461
+frame arrivals           66             66
+TCP state transitions    7             7
+TCP retransmissions      1              1
+injected frame losses    1              1
+
+With jitter ON every transmission carries a small random extra delay, so the
+timeline is not exactly reproducible; with it OFF the timeline is deterministic.

@@ -1,0 +1,3 @@
+# Source/evidence manifests record exact bytes, including existing line endings.
+# Preserve them through add/checkout so recorded SHA-256 values remain valid.
+* -text
