@@ -1,0 +1,11 @@
+[package]
+name = "wirebox-kernel"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+build = "build.rs"
+links = "wirebox_kernel"
+
+[lib]
+path = "src/lib.rs"

@@ -1,0 +1,3 @@
+[build]
+# Keep native dependency builds within the 16 GB reference machine's capacity.
+jobs = 4

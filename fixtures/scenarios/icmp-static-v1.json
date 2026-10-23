@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "fixture_id": "icmp-static-v1",
+  "provenance": "synthetic, frozen 2026-10-20; not observed hardware",
+  "clock": {
+    "unit": "nanoseconds",
+    "seed": 20260117
+  },
+  "links": {
+    "bitrate_bps": 100000000,
+    "propagation_ns": 1000,
+    "jitter": false,
+    "loss": false
+  },
+  "nodes": [
+    {
+      "id": "PC1",
+      "kind": "host",
+      "ports": [
+        {
+          "id": "eth0",
+          "mac": "02:00:00:00:00:02",
+          "ipv4": [
+            "10.0.0.2/24"
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "prefix": "0.0.0.0/0",
+          "via": "10.0.0.1",
+          "port": "eth0"
+        }
+      ]
+    },
+    {
+      "id": "SW1",
+      "kind": "switch",
+      "ports": [
+        {
+          "id": "p0"
+        },
+        {
+          "id": "p1"
+        }
+      ],
+      "routes": []
+    },
+    {
+      "id": "R1",
+      "kind": "router",
+      "ports": [
+        {
+          "id": "eth0",
+          "mac": "02:00:00:00:00:01",
+          "ipv4": [
+            "10.0.0.1/24"
+          ]
+        },
+        {
+          "id": "eth1",
+          "mac": "02:00:00:00:01:01",
+          "ipv4": [
+            "10.0.1.1/24"
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "prefix": "198.51.100.2/32",
+          "via": "10.0.1.2",
+          "port": "eth1"
+        }
+      ]
+    },
+    {
+      "id": "PC2",
+      "kind": "host",
+      "ports": [
+        {
+          "id": "eth0",
+          "mac": "02:00:00:00:01:02",
+          "ipv4": [
+            "10.0.1.2/24"
+          ]
+        }
+      ],
+      "local_ipv4": [
+        "198.51.100.2/32"
+      ],
+      "routes": [
+        {
+          "prefix": "0.0.0.0/0",
+          "via": "10.0.1.1",
+          "port": "eth0"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "L1",
+      "endpoints": [
+        "PC1:eth0",
+        "SW1:p0"
+      ]
+    },
+    {
+      "id": "L2",
+      "endpoints": [
+        "SW1:p1",
+        "R1:eth0"
+      ]
+    },
+    {
+      "id": "L3",
+      "endpoints": [
+        "R1:eth1",
+        "PC2:eth0"
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "S01",
+      "source": "PC1",
+      "destination": "10.0.1.2",
+      "ttl": 64,
+      "mutations": [],
+      "expected": {
+        "outcome": "echo_reply",
+        "forwarder": "R1",
+        "forwarded_ttl": 63,
+        "reason": "connected_route"
+      }
+    },
+    {
+      "id": "S02",
+      "source": "PC1",
+      "destination": "198.51.100.2",
+      "ttl": 64,
+      "mutations": [
+        {
+          "operation": "remove_route",
+          "target": "R1",
+          "prefix": "198.51.100.2/32"
+        }
+      ],
+      "expected": {
+        "outcome": "unreachable",
+        "at": "R1",
+        "reason": "no_route",
+        "icmp": {
+          "type": 3,
+          "code": 0
+        }
+      }
+    },
+    {
+      "id": "S03",
+      "source": "PC1",
+      "destination": "10.0.1.2",
+      "ttl": 1,
+      "mutations": [],
+      "expected": {
+        "outcome": "time_exceeded",
+        "at": "R1",
+        "icmp": {
+          "type": 11,
+          "code": 0
+        }
+      }
+    },
+    {
+      "id": "S04",
+      "source": "PC1",
+      "destination": "10.0.1.2",
+      "ttl": 64,
+      "mutations": [
+        {
+          "operation": "disable_port",
+          "target": "PC2:eth0"
+        }
+      ],
+      "expected": {
+        "outcome": "unreachable",
+        "at": "R1",
+        "reason": "arp_timeout",
+        "arp_attempts": 3,
+        "arp_interval_ns": 1000000000
+      }
+    },
+    {
+      "id": "S05",
+      "input_hex": "4500",
+      "expected": {
+        "outcome": "invalid_packet",
+        "reason": "truncated_ipv4"
+      }
+    }
+  ]
+}

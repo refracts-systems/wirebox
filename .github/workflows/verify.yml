@@ -1,0 +1,29 @@
+name: Windows phase-0-3 verification
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Rust
+        shell: pwsh
+        run: rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy
+      - name: Install pinned Zig and verify archive
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $archive = Join-Path $env:RUNNER_TEMP 'zig-0.17.0.zip'
+          Invoke-WebRequest 'https://ziglang.org/download/0.17.0/zig-x86_64-windows-0.17.0.zip' -OutFile $archive
+          $expected = 'b5663f69581dcf391293fbf16c06cb80d81d806545ce618b4d0bab7f0eb8c428'
+          if ((Get-FileHash $archive -Algorithm SHA256).Hash -ne $expected) { throw 'Zig hash mismatch' }
+          tar -xf $archive -C $env:RUNNER_TEMP
+          if ($LASTEXITCODE -ne 0) { throw 'Zig extraction failed' }
+          "WIREBOX_ZIG=$(Join-Path $env:RUNNER_TEMP 'zig-x86_64-windows-0.17.0\zig.exe')" | Add-Content $env:GITHUB_ENV
+      - name: Verify workspace
+        shell: pwsh
+        run: ./scripts/verify.ps1

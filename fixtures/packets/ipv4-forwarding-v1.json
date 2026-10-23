@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "fixture_id": "ipv4-forwarding-v1",
+  "provenance": "Hand-assembled IPv4 headers; ones-complement checksum calculated independently before kernel codecs exist. RFC 791 section 3.1; not live capture.",
+  "before_hex": "4500001c00010000400165dd0a0000020a000102",
+  "after_hex": "4500001c000100003f0166dd0a0000020a000102",
+  "ipv4_header_bytes": 20,
+  "total_length": 28,
+  "protocol": 1,
+  "source": "10.0.0.2",
+  "destination": "10.0.1.2",
+  "ttl_before": 64,
+  "ttl_after": 63,
+  "changed_offsets": [
+    8,
+    10,
+    11
+  ],
+  "note": "Header only; ICMP payload excluded from this byte fixture. Offset 11 can retain its value when checksum changes; changed_offsets names fields allowed to change."
+}

@@ -1,0 +1,18 @@
+[workspace]
+members = ["crates/wirebox-kernel", "crates/wirebox-headless", "crates/wirebox-studio"]
+default-members = ["crates/wirebox-kernel", "crates/wirebox-headless"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99.1"
+publish = false
+
+[workspace.dependencies]
+wirebox-kernel = { path = "crates/wirebox-kernel" }
+serde_json = "=1.0.145"
+gpui = { version = "=0.2.2", default-features = false, features = ["windows-manifest"] }
+
+[profile.dev]
+debug = 1
