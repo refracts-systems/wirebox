@@ -2,6 +2,7 @@
 /.zig-cache/
 /zig-out/
 /artifacts/
+/cognitive-coverage/
 *.pdb
 *.ilk
 *.exp
