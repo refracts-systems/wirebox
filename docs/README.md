@@ -18,7 +18,7 @@ Catatan konsep, arah desain, keputusan, dan bukti pengembangan Wirebox. Phase 0�
 - [Learning docs phase 1–3: keputusan kode dan alasannya](learning/README.md)
 - [Hardening Phase 0–3: hasil dan batas pengujian](evidence/hardening-phase-0-3/README.md)
 - [Panduan hardening untuk backend engineer](learning/hardening_phase_0_3.md)
-- [Cognitive Coverage: guide, kuis dan dashboard](../cognitive-coverage/cognitive-coverage-open.html)
+- [Catatan Cognitive Coverage](learning/hardening_phase_0_3.md#apa-arti-generated): guide, kuis dan dashboard pribadi tersedia hanya dalam folder lokal yang diabaikan Git.
 - [Apa itu Wirebox, tujuan, dan batas cakupan](wirebox/README.md)
 - [Model semantik, state, planner, dan runtime](wirebox/architecture.md)
 - [Simulasi tanpa perangkat dan hubungan dengan bukti PT](wirebox/simulation.md)

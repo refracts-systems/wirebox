@@ -31,7 +31,9 @@ Pada window: pilih node/link atau byte untuk inspector, tekan **Ctrl+R** untuk b
 
 ## Verifikasi
 
-Hardening Phase 0–3 dan satu perbaikan validasi route dijelaskan di [learning notes](docs/learning/hardening_phase_0_3.md), dengan [hasil pengujian](docs/evidence/hardening-phase-0-3/README.md). Buka [Cognitive Coverage](cognitive-coverage/cognitive-coverage-open.html) untuk guide berlevel, kuis, inventaris source, dan progress belajar lokal. Skill dipasang pada scope project, tanpa dependency runtime baru untuk engine.
+Hardening Phase 0–3 dan satu perbaikan validasi route dijelaskan di [learning notes](docs/learning/hardening_phase_0_3.md), dengan [hasil pengujian](docs/evidence/hardening-phase-0-3/README.md).
+
+Materi pribadi Cognitive Coverage (guide HTML, kuis, dashboard, dan progress belajar) disimpan **hanya secara lokal** dalam `cognitive-coverage/`, yang diabaikan Git. Folder ini tidak tersedia melalui GitHub atau clone baru. Jika materi sudah dihasilkan di komputermu, buka `cognitive-coverage/cognitive-coverage-open.html` melalui browser. Skill project dan catatan belajar Markdown tetap tersedia di repository; materi ini tidak menambah dependency runtime engine.
 
 ```powershell
 # Kernel, C layout, wrapper, fixture, formatter, dan Clippy
@@ -46,9 +48,9 @@ Hardening Phase 0–3 dan satu perbaikan validasi route dijelaskan di [learning 
 # Build dari salinan source baru, memakai dependency/compiler cache yang sudah tersedia
 ./scripts/verify-clean-export.ps1
 
-# Integritas source hash, anchor, dan quiz mapping artifact pembelajaran
-node scripts/check-cognitive-coverage.mjs
 ```
+
+Opsional, hanya jika folder pembelajaran lokal tersedia: jalankan `node scripts/check-cognitive-coverage.mjs` untuk memeriksa source hash, anchor, dan quiz mapping. Ini bukan prasyarat build atau CI. Perubahan source atau dokumentasi dapat membuat manifest lokal stale; refresh materi terkait sebelum menganggapnya sesuai versi terbaru.
 
 Build pertama GPUI mengunduh dan mengompilasi banyak dependency. Workspace default hanya memuat kernel/headless; `--workspace` memasukkan desktop. Script memeriksa status setiap native command. Workflow Windows pada `.github/workflows/verify.yml` disiapkan; keberadaan workflow tidak berarti job remote telah dijalankan.
 

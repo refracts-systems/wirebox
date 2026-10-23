@@ -1,6 +1,6 @@
 # Hardening Phase 0–3: cara membaca perubahan sebagai backend engineer
 
-23 Oktober 2026. Baca [laporan hardening](../evidence/hardening-phase-0-3/README.md) untuk hasil command. [Launcher pembelajaran](../../cognitive-coverage/cognitive-coverage-open.html) menghubungkan guide, kuis, dashboard dan manifest. Ini pendalaman fondasi yang sudah ada; Phase 4 tetap belum dikerjakan.
+23 Oktober 2026. Baca [laporan hardening](../evidence/hardening-phase-0-3/README.md) untuk hasil command. Launcher pribadi `cognitive-coverage/cognitive-coverage-open.html` menghubungkan guide, kuis, dashboard dan manifest jika tersedia lokal; foldernya diabaikan Git dan tidak ikut clone. Ini pendalaman fondasi yang sudah ada; Phase 4 tetap belum dikerjakan.
 
 ## Apa yang ditambahkan dan mengapa
 
@@ -37,14 +37,14 @@ Contoh komentar yang ada di kode: `All fallible work precedes mutation, includin
 
 Skill [Cognitive Coverage upstream](https://github.com/ryannadel/cognitive-coverage) dipasang pada project di [.agents/skills/cognitive-coverage](../../.agents/skills/cognitive-coverage/SKILL.md), pada commit yang dicatat di [UPSTREAM.md](../../.agents/skills/cognitive-coverage/UPSTREAM.md). MCP optional tidak dipasang karena artifact pembelajaran dapat bekerja sendiri.
 
-Empat output utama:
+Empat output utama di dalam `cognitive-coverage/` disimpan hanya secara lokal dan tidak ditautkan sebagai file GitHub:
 
-1. [learning-guide.html](../../cognitive-coverage/learning-guide.html): sembilan bagian berisi source snippet aktual, mental model, warning, tiga difficulty lenses, tiga depth layers dan 18 soal; tiap kombinasi level menampilkan dua soal.
-2. [cognitive-coverage.json](../../cognitive-coverage/cognitive-coverage.json): inventaris source, konsep, alur, source hash, dependency area dan gap pendalaman. Hash dapat dipakai untuk refresh berikutnya karena repo belum mempunyai baseline commit.
-3. [cognitive-coverage.html](../../cognitive-coverage/cognitive-coverage.html): dashboard files/concepts/flows/gap, status manual, hasil kuis dan export/import JSON.
-4. [cognitive-coverage-open.html](../../cognitive-coverage/cognitive-coverage-open.html): pintu masuk portabel untuk ketiga artifact lain.
+1. `learning-guide.html`: sembilan bagian berisi source snippet aktual, mental model, warning, tiga difficulty lenses, tiga depth layers dan 18 soal; tiap kombinasi level menampilkan dua soal.
+2. `cognitive-coverage.json`: inventaris source, konsep, alur, source hash, dependency area dan gap pendalaman. Hash merekam baseline saat materi dihasilkan dan perlu diperiksa kembali setelah source atau dokumentasi berubah.
+3. `cognitive-coverage.html`: dashboard files/concepts/flows/gap, status manual, hasil kuis dan export/import JSON.
+4. `cognitive-coverage-open.html`: pintu masuk portabel untuk ketiga artifact lain.
 
-Semua status pemahaman awal adalah **uncovered**. Agent membaca source dan membuat materi tidak membuktikan kamu sudah memahami source. Jawaban kuis dapat menaikkan status item yang dipetakan; itu indikator pembelajaran, bukan sertifikasi atau jaminan seluruh file dikuasai. Status manual adalah self-assessment. Browser menyimpan progress lokal bila tersedia; export JSON untuk menyimpan artifact ke repo. HTML tidak menulis file source secara otomatis.
+Semua status pemahaman awal adalah **uncovered**. Agent membaca source dan membuat materi tidak membuktikan kamu sudah memahami source. Jawaban kuis dapat menaikkan status item yang dipetakan; itu indikator pembelajaran, bukan sertifikasi atau jaminan seluruh file dikuasai. Status manual adalah self-assessment. Browser menyimpan progress lokal bila tersedia; export JSON untuk mencadangkan progress secara lokal. HTML tidak menulis file source secara otomatis.
 
 Large Corpus Mode dipakai karena kernel, wrapper, CLI, UI dan arsip docs mempunyai kebutuhan belajar berbeda. Overview memprioritaskan FFI, handle, scheduler, jurnal, codec, config dan ping. Pendalaman GPUI, CLI/oracle, serta seluruh laporan RE belum selesai diajarkan. Source yang diinventarisasi bukan berarti semuanya sudah diaudit mendalam.
 

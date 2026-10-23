@@ -2,7 +2,7 @@
 
 Dokumen ini membaca **kode yang sekarang ada**, tahap demi tahap. Setiap catatan menjawab: bagian mana yang bekerja, keputusan apa yang diambil, mengapa dipilih, dan apa akibatnya saat kode dikembangkan. [ADR](../adr/README.md) adalah keputusan arsitektur; [evidence](../evidence/phase-3/README.md) merekam hasil uji. Catatan belajar ini menghubungkan keduanya dengan fungsi dan data konkret.
 
-Tambahan 23 Oktober 2026: [hardening Phase 0–3 untuk backend engineer](hardening_phase_0_3.md), [laporan pengujian](../evidence/hardening-phase-0-3/README.md), dan [Cognitive Coverage launcher](../../cognitive-coverage/cognitive-coverage-open.html). Guide interaktif berlevel memprioritaskan FFI, lifecycle handle, scheduler, jurnal, codec, dan jalur ping; progress manusia dimulai dari uncovered.
+Tambahan 23 Oktober 2026: [hardening Phase 0–3 untuk backend engineer](hardening_phase_0_3.md) dan [laporan pengujian](../evidence/hardening-phase-0-3/README.md). Materi interaktif Cognitive Coverage bersifat pribadi dan disimpan dalam folder lokal `cognitive-coverage/` yang diabaikan Git; folder itu tidak ikut clone. Jika tersedia lokal, buka `cognitive-coverage/cognitive-coverage-open.html` dari root project melalui browser. Guide berlevel memprioritaskan FFI, lifecycle handle, scheduler, jurnal, codec, dan jalur ping; progress manusia dimulai dari uncovered.
 
 Urutan yang disarankan:
 

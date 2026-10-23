@@ -65,11 +65,11 @@ Implementasi phase 1–3 memakai Zig untuk engine, Rust untuk host/wrapper/oracl
 
 ## Pembelajaran dan cognitive coverage
 
-- Skill project: [.agents/skills/cognitive-coverage/SKILL.md](.agents/skills/cognitive-coverage/SKILL.md); provenance/pin pada [UPSTREAM.md](.agents/skills/cognitive-coverage/UPSTREAM.md). Output awal: [launcher](cognitive-coverage/cognitive-coverage-open.html).
+- Skill project: [.agents/skills/cognitive-coverage/SKILL.md](.agents/skills/cognitive-coverage/SKILL.md); provenance/pin pada [UPSTREAM.md](.agents/skills/cognitive-coverage/UPSTREAM.md). Output pribadi berada di `cognitive-coverage/`, diabaikan Git dan tidak tersedia pada clone baru. Jika sudah dihasilkan lokal, buka `cognitive-coverage/cognitive-coverage-open.html` melalui browser.
 - Untuk perubahan kode yang berarti, jelaskan file yang dihasilkan/diubah, invariant dan alasan keputusan, command yang benar-benar dijalankan, serta satu pertanyaan teach-back. Hubungkan dengan konsep backend bila membantu, tanpa menyamakan semua error dengan rollback transaksi.
 - Komentar kode menjelaskan why, ownership, bounds dan titik commit; `SAFETY` Rust menyatakan precondition konkret FFI. Tutorial panjang berada di [learning docs](docs/learning/README.md).
 - Jangan menandai pemahaman manusia verified karena agent membuat materi atau test lulus. Gap UI/CLI/vendor tetap terlihat. Setelah source berubah, periksa sourceHash pada manifest; refresh artifact yang terdampak atau nyatakan materi stale.
-- Checker artifact: `node scripts/check-cognitive-coverage.mjs`. Pemeriksaan ini terpisah dari test engine dan tidak menjadi ukuran pemahaman manusia.
+- Checker artifact lokal opsional: `node scripts/check-cognitive-coverage.mjs`, hanya jika folder output tersedia. Pemeriksaan ini terpisah dari build/CI dan test engine, serta tidak menjadi ukuran pemahaman manusia.
 
 ## Verifikasi
 
