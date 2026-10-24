@@ -6,6 +6,8 @@ Wyrlex is an infrastructure studio and runtime for inspection, simulation, packe
 
 Phases 0–3 are available for the local scope: contracts/fixtures, Zig–Rust/GPUI integration, virtual time, and a **headless Ethernet/ARP/IPv4/ICMP simulator with static routing and a byte tracker**. The initial [Packet Studio Phase 4](docs/wirebox/studio.md) integration shows live trace and bytes, Run/Pause/Step/Reset controls, configuration branches, and versioned session save/load. [Phase 4 technical acceptance](docs/evidence/phase-4-acceptance/README.md) passed for the declared fixture and handler-to-render scope; human usability is still unknown. The [packet model](docs/wirebox/packets.md) covers successful ping, missing route, expired TTL, ARP timeout, and invalid input. Wyrlex models network behavior; it does not require a vendor OS image.
 
+Phase 5 adds value-owned checkpoint/fork/restore and deterministic seeded loss/jitter. Initial independent Linux WSL2 comparisons cover S01–S03, each repeated three times; the full G5 assessment and vendor pilots remain open. See the [replay evidence](docs/evidence/phase-5-hardening/README.md) and [Linux comparison results](docs/evidence/corpus-linux/README.md).
+
 The target is Windows x64 with Zig **0.17.0** as the verified baseline (product minimum 0.17), Rust **1.99.1**, Visual Studio C++ Build Tools, and the Windows SDK. GPUI is pinned at **0.2.2** by `Cargo.lock`. rustup selects Rust through `rust-toolchain.toml`.
 
 ## Operate
@@ -57,15 +59,17 @@ When the local learning folder exists, optionally run `node scripts/check-cognit
 
 The first GPUI build downloads and compiles many dependencies. The default workspace commands cover kernel/headless; `--workspace` includes desktop. The scripts report the status of each native command. The Windows workflow in `.github/workflows/verify.yml` is configured; the presence of a workflow does not mean that a remote job has run.
 
-Visual inspection, input, and window-close checks are separate runtime verification. Actual results are recorded in [Phase 0–1 evidence](docs/evidence/phase-0-1/README.md), [Phase 2](docs/evidence/phase-2/README.md), [Phase 3](docs/evidence/phase-3/README.md), and [Phase 4 integration](docs/evidence/phase-4/README.md). The application uses a debug build; default kernel tests cover Debug and ReleaseSafe. Agent technical G4 passed on 24 October 2026 within the [ADR-0010 scope](docs/adr/0010-agent-acceptance-and-studio-measurement.md); Linux lab validation (G5) and release distribution have not run.
+Visual inspection, input, and window-close checks are separate runtime verification. Actual results are recorded in [Phase 0–1 evidence](docs/evidence/phase-0-1/README.md), [Phase 2](docs/evidence/phase-2/README.md), [Phase 3](docs/evidence/phase-3/README.md), and [Phase 4 integration](docs/evidence/phase-4/README.md). The application uses a debug build; default kernel tests cover Debug and ReleaseSafe. Agent technical G4 passed on 24 October 2026 within the [ADR-0010 scope](docs/adr/0010-agent-acceptance-and-studio-measurement.md). Initial Linux comparisons are available; the full G5 gate and release distribution remain open.
 
 ## Structure
 
 - `kernel/`: C ABI, probe, graph, scheduler, PRNG, packet codecs, protocols, and the Zig journal.
-- `crates/wirebox-kernel/` (package `wyrlex-kernel`): ownership/error/thread wrapper and Zig build integration.
-- `crates/wirebox-headless/` (package `wyrlex-headless`): CLI probes, fixtures, scheduler/packet demos, and the independent acceptance oracle.
-- `crates/wirebox-studio/` (package `wyrlex-studio`): GPUI Packet Studio, copied-snapshot controller, configuration branches, and versioned sessions.
+- Rust package `wyrlex-kernel`: ownership/error/thread wrapper and Zig build integration.
+- Rust package `wyrlex-headless`: CLI probes, fixtures, scheduler/packet demos, and the independent acceptance oracle.
+- Rust package `wyrlex-studio`: GPUI Packet Studio, copied-snapshot controller, configuration branches, and versioned sessions.
 - `fixtures/`: synthetic scenarios, expected bytes, and sanitized user-reported inventory.
 - `docs/`: design, decisions, phases, evidence, and historical reverse-engineering sources.
+
+Rust packages live under `crates/`. Source/documentation paths and C header filenames retained for compatibility are documented in [ADR-0011](docs/adr/0011-wyrlex-product-rename.md).
 
 Contribution guidance is in [AGENTS.md](AGENTS.md). Do not commit credentials, unsanitized customer captures, or vendor binaries.

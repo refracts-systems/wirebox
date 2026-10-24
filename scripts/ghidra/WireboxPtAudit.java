@@ -59,6 +59,6 @@ public class WireboxPtAudit extends GhidraScript {
         } finally {
             decompiler.dispose();
         }
-        println("Wirebox PT audit completed; static markers require interpretation.");
+        println("Wyrlex PT audit completed; static markers require interpretation.");
     }
 }

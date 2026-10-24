@@ -29,6 +29,6 @@ There is no cache/topology mutation in the middle of the run. Each change create
 
 Save / Ctrl+S opens the `.wb.json` file dialog; Open / Ctrl+O read it again while paused. Writer uses schema v2 and reader still accepts v1. Unapplied drafts are not saved. The session contains configuration, execution commands, traces, packets/fields, transmissions and comparison baselines if any. Load reruns from the beginning and compares reports; results that do not match are rejected. Files of other versions or models are not considered automatically compatible. Limits of 2 MiB and 1024 batches apply before sessions are replaced.
 
-Save private files in a folder of your choice, for example `artifacts/` which Git ignores. The GUI does not write real devices. Controller testing, window interactions, and performance measurements are different evidence; see [task status](todos.md#phase-4--mvp-studio-usable-).
+Save private files in a folder of your choice, for example `artifacts/` which Git ignores. The GUI does not write real devices. Controller testing, window interactions, and performance measurements are different evidence; see [task status](todos.md#phase-4--workable-mvp-studio).
 
 Advanced technical acceptance: [agent and performance results](../evidence/phase-4-acceptance/README.md), method [ADR-0010](../adr/0010-agent-acceptance-and-studio-measurement.md). The WYRLEX_ACCEPTANCE environment mode uses read-only historical projections for measurements; regular sessions still use active Network results.
