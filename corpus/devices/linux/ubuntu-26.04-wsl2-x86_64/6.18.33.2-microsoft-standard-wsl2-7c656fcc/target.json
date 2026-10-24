@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "target_id": "linux-7c656fcca275ea36",
+  "family": "linux",
+  "identity": {
+    "vendor": "Linux",
+    "model": "WSL2 network namespaces",
+    "architecture": "x86_64",
+    "distribution": "Ubuntu 26.04.1 LTS",
+    "distribution_version": "26.04",
+    "kernel_version": "6.18.33.2-microsoft-standard-WSL2",
+    "firmware_image_sha256": null,
+    "software": [
+      {
+        "component": "linux-kernel",
+        "version": "6.18.33.2-microsoft-standard-WSL2",
+        "sha256": null
+      },
+      {
+        "component": "distribution",
+        "version": "26.04",
+        "sha256": null
+      }
+    ],
+    "tools": {
+      "iproute2": "ip utility, iproute2-6.19.0, libbpf 1.6.3",
+      "python": "3.14.4",
+      "jsonschema": "4.19.2"
+    }
+  }
+}

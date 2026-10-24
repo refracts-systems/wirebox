@@ -1,0 +1,703 @@
+{
+  "schema_version": 1,
+  "scenario_id": "linux-static-ipv4-v1",
+  "status": "fail",
+  "comparisons": [
+    {
+      "case": "S01",
+      "status": "pass",
+      "checks": [
+        {
+          "name": "fixture_outcome",
+          "passed": true,
+          "expected": "echo_reply",
+          "actual": "echo_reply"
+        },
+        {
+          "name": "identical_router_ingress_ipv4",
+          "passed": true,
+          "expected": "4500001c00010000400165dd0a0000020a0001020800e5ca12340001",
+          "actual": [
+            "4500001c00010000400165dd0a0000020a0001020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "source_receives_expected_icmp",
+          "passed": true,
+          "expected": [
+            0,
+            0
+          ],
+          "actual": [
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "valid_ip_and_icmp_checksums",
+          "passed": true,
+          "expected": true,
+          "actual": {
+            "decode_errors": [],
+            "invalid_checksums": 0
+          }
+        },
+        {
+          "name": "forwarded_request_or_no_forward",
+          "passed": true,
+          "expected": 63,
+          "actual": [
+            63
+          ]
+        },
+        {
+          "name": "router_ethernet_rewrite",
+          "passed": true,
+          "expected": "0200000001020200000001010800",
+          "actual": [
+            "0200000001020200000001010800"
+          ]
+        },
+        {
+          "name": "icmp_payload_or_error_quote",
+          "passed": true,
+          "expected": "0000edca12340001",
+          "actual": [
+            "0000edca12340001"
+          ]
+        },
+        {
+          "name": "capture_no_kernel_drops",
+          "passed": true,
+          "expected": 0,
+          "actual": [
+            0,
+            0
+          ]
+        }
+      ],
+      "mismatches": [],
+      "repetition": 1
+    },
+    {
+      "case": "S01",
+      "status": "fail",
+      "checks": [
+        {
+          "name": "fixture_outcome",
+          "passed": true,
+          "expected": "echo_reply",
+          "actual": "echo_reply"
+        },
+        {
+          "name": "identical_router_ingress_ipv4",
+          "passed": true,
+          "expected": "4500001c00010000400165dd0a0000020a0001020800e5ca12340001",
+          "actual": [
+            "4500001c00010000400165dd0a0000020a0001020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "source_receives_expected_icmp",
+          "passed": true,
+          "expected": [
+            0,
+            0
+          ],
+          "actual": [
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "valid_ip_and_icmp_checksums",
+          "passed": false,
+          "expected": true,
+          "actual": {
+            "decode_errors": [
+              "expected complete IPv4 IHL=5"
+            ],
+            "invalid_checksums": 0
+          }
+        },
+        {
+          "name": "forwarded_request_or_no_forward",
+          "passed": true,
+          "expected": 63,
+          "actual": [
+            63
+          ]
+        },
+        {
+          "name": "router_ethernet_rewrite",
+          "passed": true,
+          "expected": "0200000001020200000001010800",
+          "actual": [
+            "0200000001020200000001010800"
+          ]
+        },
+        {
+          "name": "icmp_payload_or_error_quote",
+          "passed": true,
+          "expected": "0000edca12340001",
+          "actual": [
+            "0000edca12340001"
+          ]
+        },
+        {
+          "name": "capture_no_kernel_drops",
+          "passed": true,
+          "expected": 0,
+          "actual": [
+            0,
+            0
+          ]
+        }
+      ],
+      "mismatches": [
+        "valid_ip_and_icmp_checksums"
+      ],
+      "repetition": 2
+    },
+    {
+      "case": "S01",
+      "status": "fail",
+      "checks": [
+        {
+          "name": "fixture_outcome",
+          "passed": true,
+          "expected": "echo_reply",
+          "actual": "echo_reply"
+        },
+        {
+          "name": "identical_router_ingress_ipv4",
+          "passed": true,
+          "expected": "4500001c00010000400165dd0a0000020a0001020800e5ca12340001",
+          "actual": [
+            "4500001c00010000400165dd0a0000020a0001020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "source_receives_expected_icmp",
+          "passed": true,
+          "expected": [
+            0,
+            0
+          ],
+          "actual": [
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "valid_ip_and_icmp_checksums",
+          "passed": false,
+          "expected": true,
+          "actual": {
+            "decode_errors": [
+              "expected complete IPv4 IHL=5"
+            ],
+            "invalid_checksums": 0
+          }
+        },
+        {
+          "name": "forwarded_request_or_no_forward",
+          "passed": true,
+          "expected": 63,
+          "actual": [
+            63
+          ]
+        },
+        {
+          "name": "router_ethernet_rewrite",
+          "passed": true,
+          "expected": "0200000001020200000001010800",
+          "actual": [
+            "0200000001020200000001010800"
+          ]
+        },
+        {
+          "name": "icmp_payload_or_error_quote",
+          "passed": true,
+          "expected": "0000edca12340001",
+          "actual": [
+            "0000edca12340001"
+          ]
+        },
+        {
+          "name": "capture_no_kernel_drops",
+          "passed": true,
+          "expected": 0,
+          "actual": [
+            0,
+            0
+          ]
+        }
+      ],
+      "mismatches": [
+        "valid_ip_and_icmp_checksums"
+      ],
+      "repetition": 3
+    },
+    {
+      "case": "S02",
+      "status": "pass",
+      "checks": [
+        {
+          "name": "fixture_outcome",
+          "passed": true,
+          "expected": "unreachable",
+          "actual": "unreachable"
+        },
+        {
+          "name": "identical_router_ingress_ipv4",
+          "passed": true,
+          "expected": "4500001c00010000400146a90a000002c63364020800e5ca12340001",
+          "actual": [
+            "4500001c00010000400146a90a000002c63364020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "source_receives_expected_icmp",
+          "passed": true,
+          "expected": [
+            3,
+            0
+          ],
+          "actual": [
+            [
+              3,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "valid_ip_and_icmp_checksums",
+          "passed": true,
+          "expected": true,
+          "actual": {
+            "decode_errors": [],
+            "invalid_checksums": 0
+          }
+        },
+        {
+          "name": "forwarded_request_or_no_forward",
+          "passed": true,
+          "expected": null,
+          "actual": []
+        },
+        {
+          "name": "router_ethernet_rewrite",
+          "passed": true,
+          "expected": null,
+          "actual": []
+        },
+        {
+          "name": "icmp_payload_or_error_quote",
+          "passed": true,
+          "expected": "0300fcff000000004500001c00010000400146a90a000002c63364020800e5ca12340001",
+          "actual": [
+            "0300fcff000000004500001c00010000400146a90a000002c63364020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "capture_no_kernel_drops",
+          "passed": true,
+          "expected": 0,
+          "actual": [
+            0,
+            0
+          ]
+        }
+      ],
+      "mismatches": [],
+      "repetition": 1
+    },
+    {
+      "case": "S02",
+      "status": "pass",
+      "checks": [
+        {
+          "name": "fixture_outcome",
+          "passed": true,
+          "expected": "unreachable",
+          "actual": "unreachable"
+        },
+        {
+          "name": "identical_router_ingress_ipv4",
+          "passed": true,
+          "expected": "4500001c00010000400146a90a000002c63364020800e5ca12340001",
+          "actual": [
+            "4500001c00010000400146a90a000002c63364020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "source_receives_expected_icmp",
+          "passed": true,
+          "expected": [
+            3,
+            0
+          ],
+          "actual": [
+            [
+              3,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "valid_ip_and_icmp_checksums",
+          "passed": true,
+          "expected": true,
+          "actual": {
+            "decode_errors": [],
+            "invalid_checksums": 0
+          }
+        },
+        {
+          "name": "forwarded_request_or_no_forward",
+          "passed": true,
+          "expected": null,
+          "actual": []
+        },
+        {
+          "name": "router_ethernet_rewrite",
+          "passed": true,
+          "expected": null,
+          "actual": []
+        },
+        {
+          "name": "icmp_payload_or_error_quote",
+          "passed": true,
+          "expected": "0300fcff000000004500001c00010000400146a90a000002c63364020800e5ca12340001",
+          "actual": [
+            "0300fcff000000004500001c00010000400146a90a000002c63364020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "capture_no_kernel_drops",
+          "passed": true,
+          "expected": 0,
+          "actual": [
+            0,
+            0
+          ]
+        }
+      ],
+      "mismatches": [],
+      "repetition": 2
+    },
+    {
+      "case": "S02",
+      "status": "pass",
+      "checks": [
+        {
+          "name": "fixture_outcome",
+          "passed": true,
+          "expected": "unreachable",
+          "actual": "unreachable"
+        },
+        {
+          "name": "identical_router_ingress_ipv4",
+          "passed": true,
+          "expected": "4500001c00010000400146a90a000002c63364020800e5ca12340001",
+          "actual": [
+            "4500001c00010000400146a90a000002c63364020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "source_receives_expected_icmp",
+          "passed": true,
+          "expected": [
+            3,
+            0
+          ],
+          "actual": [
+            [
+              3,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "valid_ip_and_icmp_checksums",
+          "passed": true,
+          "expected": true,
+          "actual": {
+            "decode_errors": [],
+            "invalid_checksums": 0
+          }
+        },
+        {
+          "name": "forwarded_request_or_no_forward",
+          "passed": true,
+          "expected": null,
+          "actual": []
+        },
+        {
+          "name": "router_ethernet_rewrite",
+          "passed": true,
+          "expected": null,
+          "actual": []
+        },
+        {
+          "name": "icmp_payload_or_error_quote",
+          "passed": true,
+          "expected": "0300fcff000000004500001c00010000400146a90a000002c63364020800e5ca12340001",
+          "actual": [
+            "0300fcff000000004500001c00010000400146a90a000002c63364020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "capture_no_kernel_drops",
+          "passed": true,
+          "expected": 0,
+          "actual": [
+            0,
+            0
+          ]
+        }
+      ],
+      "mismatches": [],
+      "repetition": 3
+    },
+    {
+      "case": "S03",
+      "status": "fail",
+      "checks": [
+        {
+          "name": "fixture_outcome",
+          "passed": true,
+          "expected": "time_exceeded",
+          "actual": "time_exceeded"
+        },
+        {
+          "name": "identical_router_ingress_ipv4",
+          "passed": true,
+          "expected": "4500001c000100000101a4dd0a0000020a0001020800e5ca12340001",
+          "actual": [
+            "4500001c000100000101a4dd0a0000020a0001020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "source_receives_expected_icmp",
+          "passed": true,
+          "expected": [
+            11,
+            0
+          ],
+          "actual": [
+            [
+              11,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "valid_ip_and_icmp_checksums",
+          "passed": false,
+          "expected": true,
+          "actual": {
+            "decode_errors": [
+              "expected complete IPv4 IHL=5",
+              "expected complete IPv4 IHL=5"
+            ],
+            "invalid_checksums": 0
+          }
+        },
+        {
+          "name": "forwarded_request_or_no_forward",
+          "passed": true,
+          "expected": null,
+          "actual": []
+        },
+        {
+          "name": "router_ethernet_rewrite",
+          "passed": true,
+          "expected": null,
+          "actual": []
+        },
+        {
+          "name": "icmp_payload_or_error_quote",
+          "passed": true,
+          "expected": "0b00f4ff000000004500001c000100000101a4dd0a0000020a0001020800e5ca12340001",
+          "actual": [
+            "0b00f4ff000000004500001c000100000101a4dd0a0000020a0001020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "capture_no_kernel_drops",
+          "passed": true,
+          "expected": 0,
+          "actual": [
+            0,
+            0
+          ]
+        }
+      ],
+      "mismatches": [
+        "valid_ip_and_icmp_checksums"
+      ],
+      "repetition": 1
+    },
+    {
+      "case": "S03",
+      "status": "pass",
+      "checks": [
+        {
+          "name": "fixture_outcome",
+          "passed": true,
+          "expected": "time_exceeded",
+          "actual": "time_exceeded"
+        },
+        {
+          "name": "identical_router_ingress_ipv4",
+          "passed": true,
+          "expected": "4500001c000100000101a4dd0a0000020a0001020800e5ca12340001",
+          "actual": [
+            "4500001c000100000101a4dd0a0000020a0001020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "source_receives_expected_icmp",
+          "passed": true,
+          "expected": [
+            11,
+            0
+          ],
+          "actual": [
+            [
+              11,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "valid_ip_and_icmp_checksums",
+          "passed": true,
+          "expected": true,
+          "actual": {
+            "decode_errors": [],
+            "invalid_checksums": 0
+          }
+        },
+        {
+          "name": "forwarded_request_or_no_forward",
+          "passed": true,
+          "expected": null,
+          "actual": []
+        },
+        {
+          "name": "router_ethernet_rewrite",
+          "passed": true,
+          "expected": null,
+          "actual": []
+        },
+        {
+          "name": "icmp_payload_or_error_quote",
+          "passed": true,
+          "expected": "0b00f4ff000000004500001c000100000101a4dd0a0000020a0001020800e5ca12340001",
+          "actual": [
+            "0b00f4ff000000004500001c000100000101a4dd0a0000020a0001020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "capture_no_kernel_drops",
+          "passed": true,
+          "expected": 0,
+          "actual": [
+            0,
+            0
+          ]
+        }
+      ],
+      "mismatches": [],
+      "repetition": 2
+    },
+    {
+      "case": "S03",
+      "status": "fail",
+      "checks": [
+        {
+          "name": "fixture_outcome",
+          "passed": true,
+          "expected": "time_exceeded",
+          "actual": "time_exceeded"
+        },
+        {
+          "name": "identical_router_ingress_ipv4",
+          "passed": true,
+          "expected": "4500001c000100000101a4dd0a0000020a0001020800e5ca12340001",
+          "actual": [
+            "4500001c000100000101a4dd0a0000020a0001020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "source_receives_expected_icmp",
+          "passed": true,
+          "expected": [
+            11,
+            0
+          ],
+          "actual": [
+            [
+              11,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "valid_ip_and_icmp_checksums",
+          "passed": false,
+          "expected": true,
+          "actual": {
+            "decode_errors": [
+              "expected complete IPv4 IHL=5"
+            ],
+            "invalid_checksums": 0
+          }
+        },
+        {
+          "name": "forwarded_request_or_no_forward",
+          "passed": true,
+          "expected": null,
+          "actual": []
+        },
+        {
+          "name": "router_ethernet_rewrite",
+          "passed": true,
+          "expected": null,
+          "actual": []
+        },
+        {
+          "name": "icmp_payload_or_error_quote",
+          "passed": true,
+          "expected": "0b00f4ff000000004500001c000100000101a4dd0a0000020a0001020800e5ca12340001",
+          "actual": [
+            "0b00f4ff000000004500001c000100000101a4dd0a0000020a0001020800e5ca12340001"
+          ]
+        },
+        {
+          "name": "capture_no_kernel_drops",
+          "passed": true,
+          "expected": 0,
+          "actual": [
+            0,
+            0
+          ]
+        }
+      ],
+      "mismatches": [
+        "valid_ip_and_icmp_checksums"
+      ],
+      "repetition": 3
+    }
+  ],
+  "scope": "IPv4/ICMP forwarding subset; no timing or firmware conformance"
+}

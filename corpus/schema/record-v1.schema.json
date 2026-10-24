@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:wyrlex:corpus:record:v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_id",
+    "target_id",
+    "scenario_id",
+    "status",
+    "evidence_status",
+    "started_at",
+    "finished_at",
+    "repetitions",
+    "target",
+    "scenario",
+    "runner_sources",
+    "environment",
+    "comparison",
+    "artifacts",
+    "limits",
+    "sharing"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "record_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+    },
+    "target_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+    },
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+    },
+    "status": {
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    },
+    "evidence_status": {
+      "const": "locally_verified"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "repetitions": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20
+    },
+    "target": {
+      "type": "object",
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "scenario": {
+      "type": "object",
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "runner_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "environment": {
+      "type": "object",
+      "required": [
+        "wsl_distribution_name",
+        "network"
+      ],
+      "properties": {
+        "wsl_distribution_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "network": {
+          "const": "isolated namespaces and veth only"
+        }
+      },
+      "additionalProperties": false
+    },
+    "comparison": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "sha256",
+          "bytes"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "limits": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "sharing": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

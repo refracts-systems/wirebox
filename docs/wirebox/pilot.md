@@ -15,7 +15,7 @@ Target devices come from users: Linux lab, MikroTik RouterOS, OLT ZTE, ONU Huawe
 
 Visual demos support the presentation of results, but successful decisions use artifacts and expected results that can be checked. H1/H2 does not automatically prove H3/H4.
 
-Status October 23, 2026: H1/G3 passed for headless subset with frozen manual fixture and separate Rust oracle; [evidence](../evidence/phase-3/README.md). [Studio Phase 4 initial integration](../evidence/phase-4/README.md) available; U1–U5 native agent walkthrough passes, including route diagnosis, field/byte, repair branch and Save/close/Open. Update October 24: [G4 technical agent passed](../evidence/phase-4-acceptance/README.md) according to user instructions to complete all tests via agent; Human usability studies remain unknown. Capture Linux G5 comparators are not yet available; H3/H4 pilots have not been tested. The success of the simulator has not graduated the pilot of the device.
+Status October 23, 2026: H1/G3 passed for headless subset with frozen manual fixture and separate Rust oracle; [evidence](../evidence/phase-3/README.md). [Studio Phase 4 initial integration](../evidence/phase-4/README.md) available; U1–U5 native agent walkthrough passes, including route diagnosis, field/byte, repair branch and Save/close/Open. Update October 24: [G4 technical agent passed](../evidence/phase-4-acceptance/README.md) according to user instructions to complete all tests via agent; Human usability studies remain unknown. Initial [Linux WSL2 corpus comparisons](../evidence/corpus-linux/README.md) now cover S01–S03 with three repetitions each; the full G5 gate and H3/H4 pilots remain open. The success of the simulator has not graduated the pilot of the device.
 
 ## Three proof environments
 

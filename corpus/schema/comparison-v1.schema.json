@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:wyrlex:corpus:comparison:v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "scenario_id",
+    "status",
+    "comparisons",
+    "scope"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+    },
+    "status": {
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    },
+    "comparisons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "case",
+          "repetition",
+          "status",
+          "checks",
+          "mismatches"
+        ],
+        "properties": {
+          "case": {
+            "enum": [
+              "S01",
+              "S02",
+              "S03"
+            ]
+          },
+          "repetition": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "status": {
+            "enum": [
+              "pass",
+              "fail"
+            ]
+          },
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "passed",
+                "expected",
+                "actual"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "passed": {
+                  "type": "boolean"
+                },
+                "expected": {},
+                "actual": {}
+              },
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "mismatches": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "comparator_revision": {
+      "type": "integer",
+      "enum": [
+        1,
+        2
+      ]
+    }
+  },
+  "additionalProperties": false
+}

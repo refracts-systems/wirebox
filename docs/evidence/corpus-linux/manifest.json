@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-24",
+  "committed_baseline": "bd1d904c5156df21913d01822ffa0da8bf3bee90",
+  "scope": "Initial Linux WSL2 behavior corpus, schema and negative-control validation",
+  "sources": [
+    {
+      "path": "corpus/scenarios/linux-static-ipv4-v1.json",
+      "sha256": "0a4d95e80382c81090104bb6963aa1a55e4e4df5cf616efd16dd9793325e9c2f",
+      "bytes": 1303
+    },
+    {
+      "path": "corpus/scenarios/linux-static-ipv4-v2.json",
+      "sha256": "baaf7f76ba09c392e5950999c6f837c7348525e53632a05721001de6bea6e4e1",
+      "bytes": 1676
+    },
+    {
+      "path": "corpus/schema/comparison-v1.schema.json",
+      "sha256": "c91b8edb058f887a5ab2bfc772e25a9626e5e44cedfd3d755a6f87a050dba01c",
+      "bytes": 2318
+    },
+    {
+      "path": "corpus/schema/record-v1.schema.json",
+      "sha256": "cfd2855f50f1d83c67eb7539f0282ba31e51222528b02f2d5cdb028573ce6bca",
+      "bytes": 3830
+    },
+    {
+      "path": "corpus/schema/scenario-v1.schema.json",
+      "sha256": "622efd7a52cddb105571bb8bf624f93e9a0278201e9c02673d872490fe1a0078",
+      "bytes": 2700
+    },
+    {
+      "path": "corpus/schema/target-v1.schema.json",
+      "sha256": "fb637c6667bfdcb52a92f61cd89d080b8bbd573c5a4033da0cd60bc140047c63",
+      "bytes": 2189
+    },
+    {
+      "path": "scripts/corpus/compare.py",
+      "sha256": "79a5b6066dd9a21f9e722fecdb5a0f06036799ed1bdb348c5bce215d82060aae",
+      "bytes": 6105
+    },
+    {
+      "path": "scripts/corpus/linux_lab.py",
+      "sha256": "d42ce1e5c66aa5109a0d32159713a0516511a8be8836610e954ac40e8ae21b39",
+      "bytes": 17284
+    },
+    {
+      "path": "scripts/corpus/run-linux-lab.ps1",
+      "sha256": "af4e95d8e1e16913715f5d33c2431281e000a2637abe897fc1d0a1967573bc8c",
+      "bytes": 2993
+    },
+    {
+      "path": "scripts/corpus/test_corpus.py",
+      "sha256": "47acf1650555af0bf53697b987fc851e233deba37d89d26269def4e5d9df7dc8",
+      "bytes": 7992
+    },
+    {
+      "path": "scripts/corpus/validate.py",
+      "sha256": "1bc9462ddb9a633bc2bb5a000c1bc75390c2cd2b032715fb9ef24d5b25e878a5",
+      "bytes": 7752
+    }
+  ],
+  "records": [
+    {
+      "path": "corpus/devices/linux/ubuntu-26.04-wsl2-x86_64/6.18.33.2-microsoft-standard-wsl2-7c656fcc/runs/linux-forwarding-20261024T073901Z-981dc0dc/record.json",
+      "sha256": "15f627777ba219f58af17f2e3433004e8927de0a3eff260475fc2fcef92d1e55",
+      "bytes": 18654,
+      "comparison": "fail"
+    },
+    {
+      "path": "corpus/devices/linux/ubuntu-26.04-wsl2-x86_64/6.18.33.2-microsoft-standard-wsl2-7c656fcc/runs/linux-forwarding-20261024T074115Z-f8a8526f/record.json",
+      "sha256": "dafa9b4757bc92de2e1167ac88cb14393768a152dadbaf8a4230928170e93d08",
+      "bytes": 18740,
+      "comparison": "pass"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/corpus-linux/experiment.log",
+      "sha256": "43ea0db8ae197666f8132822b465983c2649628b3b9a1fd349130dbe3fda88a9",
+      "bytes": 674
+    },
+    {
+      "path": "docs/evidence/corpus-linux/tests.log",
+      "sha256": "813d76deab0f93182fc6bee8a7a3177904201d76c710f899bc05228502e05f47",
+      "bytes": 1979
+    },
+    {
+      "path": "docs/evidence/corpus-linux/validation.json",
+      "sha256": "328f8d605cb4a0f8b2ce44f6ccc2cdcd9bb0530831090ef52ee470cf8663414c",
+      "bytes": 368
+    },
+    {
+      "path": "docs/evidence/corpus-linux/cleanup.json",
+      "sha256": "9d4a79ad35122ffdd31357d83ee7ec17542d114f5863525b7af74b981203e8ea",
+      "bytes": 69
+    }
+  ],
+  "test_count": 14,
+  "passing_experiment_comparisons": 9,
+  "g5_status": "open; broader negative and ARP-failure comparisons remain pending",
+  "engine_changes": false
+}

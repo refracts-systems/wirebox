@@ -17,7 +17,7 @@ One successful ping fulfills a portion of the PoC. Proving the initial idea that
 
 ## Current position
 
-G0/G1 pass for local development Windows x64 debug: [gate report](../evidence/phase-0-1/README.md). [G2](../evidence/phase-2/README.md) proves graph/scheduler/timer/PRNG. [G3](../evidence/phase-3/README.md) proves Ethernet PoC/ARP/IPv4/ICMP and headless byte tracker in the stated subset. Initial integration [Packet Studio Phase 4](studio.md) is already available: copy controller, trace/byte, control, branch and session v2. [G4 technical agent](../evidence/phase-4-acceptance/README.md) passes on scope fixture, multi-run history projection as well as handler-to-render response; Human usability studies remain unknown. [Phase 5 local evidence](../evidence/phase-5/README.md) proves value-owned checkpoint/fork/restore and seeded impairment replay; Linux/driver comparison and real pilots have not been carried out.
+G0/G1 pass for local development Windows x64 debug: [gate report](../evidence/phase-0-1/README.md). [G2](../evidence/phase-2/README.md) proves graph/scheduler/timer/PRNG. [G3](../evidence/phase-3/README.md) proves Ethernet PoC/ARP/IPv4/ICMP and headless byte tracker in the stated subset. Initial integration [Packet Studio Phase 4](studio.md) is already available: copy controller, trace/byte, control, branch and session v2. [G4 technical agent](../evidence/phase-4-acceptance/README.md) passes on scope fixture, multi-run history projection as well as handler-to-render response; Human usability studies remain unknown. [Phase 5 local evidence](../evidence/phase-5/README.md) proves value-owned checkpoint/fork/restore and seeded impairment replay; initial [Linux WSL2 corpus comparisons](../evidence/corpus-linux/README.md) now cover S01–S03. The full G5 gate, device drivers, and real vendor pilots remain open.
 
 Target pilot users: **Linux VM/server, MikroTik RouterOS 7, OLT ZTE C320, ONU Huawei, and ONU VSOL**. The C320 board version as well as the GPON state example are listed as user-reported in [inventory](../../fixtures/inventory/pilot-v1.json). ONU model/firmware, RouterOS minor version, Linux distro/kernel, access, as well as unknown compatible pairs remain G6/G8 dependencies.
 
@@ -91,7 +91,8 @@ User-provided directions recorded on 24 October 2026 are detailed in [verifiable
 | Phase 8 ISP service pilots | Multi-vendor service-transition evidence and initial corpus records | Exact OLT/board/ONU/router versions, operation scope, separate pairing tests, and consent for any shared data |
 | Later development | Incident queries, conditional impact, firmware comparisons, and possible compatibility assessments | Demonstrated operator demand, validated models, and explicit publication/review contracts |
 
-The immediate priority remains real-system fidelity. Temporal claims depend on that fidelity, and corpus value depends on reproducible evidence. These are proposed extensions; portable history, symbolic temporal verification, corpus infrastructure, licensing, pricing, and certification remain unimplemented or undecided. The existing gate definitions still apply.
+The immediate priority remains real-system fidelity. Temporal claims depend on that fidelity, and corpus value depends on reproducible evidence. The initial local corpus exists; portable history, symbolic temporal verification, shared corpus hosting/contribution infrastructure, licensing, pricing, and certification remain unimplemented or undecided. The existing gate definitions still apply.
+
 
 ## How to execute the plan
 

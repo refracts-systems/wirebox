@@ -29,3 +29,5 @@ Lanjutan: [draft, sesi v2 dan retensi trace](phase_4/phase_4_draft_and_retention
 Catatan Phase 5 menjelaskan implementasi checkpoint dan controlled impairment yang sekarang sudah diuji melalui runner headless.
 
 [Hardening Phase 5](phase_5/phase_5_hardening.md) membahas dua regression test yang gagal sebelum perbaikan, titik commit PRNG, lifecycle checkpoint, dan matriks replay.
+
+[Corpus dan pembanding Linux di WSL](phase_5/phase_5_corpus_linux.md) menjelaskan manifest append-only, identitas versi, capture kernel Linux, revisi classifier, dan test yang menolak false success.

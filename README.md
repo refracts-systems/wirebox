@@ -34,6 +34,8 @@ In the Studio window, choose S01–S05, use **Ctrl+R** for Run, **Space** for Pa
 
 Phase 0–3 hardening and the route-validation fix are explained in the [learning notes](docs/learning/hardening_phase_0_3.md), with [test results](docs/evidence/hardening-phase-0-3/README.md).
 
+The first [behavior corpus](corpus/README.md) includes a WSL Linux namespace experiment and version-scoped capture records. [S01–S03 comparison evidence](docs/evidence/corpus-linux/README.md) covers three repetitions per case; the full G5 gate and vendor pilots remain open. Run `./scripts/corpus/run-linux-lab.ps1` to create a new local record.
+
 Personal Cognitive Coverage material (HTML guide, quiz, dashboard, and learning progress) is stored **locally only** in the Git-ignored `cognitive-coverage/` directory. It is not available from GitHub or a fresh clone. If it has been generated locally, open `cognitive-coverage/cognitive-coverage-open.html` in a browser. The project skills and Markdown learning notes remain in the repository; the generated material adds no runtime dependency.
 
 ```powershell

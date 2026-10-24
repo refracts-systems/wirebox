@@ -2,6 +2,8 @@
 
 Recorded 24 October 2026 from a user-provided strategic proposal. Status: **product and research hypothesis**. No shared vendor corpus, certification program, contribution network, commercial offering, or licensing change has been implemented or selected.
 
+Implementation update, 24 October 2026: a [local corpus](../../corpus/README.md) now contains JSON schemas, versioned scenarios, a WSL namespace runner, a validator, and the first Linux target records. The [initial comparison report](../evidence/corpus-linux/README.md) covers S01–S03 with three repetitions each. One initial instrumentation failure is retained alongside the corrected experiment. This is a concrete first step; vendor firmware and interoperability records remain unavailable.
+
 ## Thesis
 
 Wyrlex's most valuable long-term asset could be accumulated knowledge of how real devices behave under reproducible conditions. Semantic fidelity is currently one of the project's largest risks. Systematically investigating that risk could create a durable advantage: a versioned, testable body of evidence per device model, firmware build, feature, and interoperability combination.
@@ -68,4 +70,4 @@ Owning a device does not establish permission to redistribute its firmware or ev
 
 The Phase 5 Linux comparator is the first opportunity to establish a behavior-record workflow. Phase 6 can supply reproducible observation provenance. Phase 7 can link operation and Verify semantics to evidence. Phase 8 pilots can become the first narrowly scoped ISP interoperability records and, if participants consent, the first reviewed contributions.
 
-The next design step is to agree on a small record schema and one reproducible lab case after the initial comparison is available. Corpus hosting, automated contribution ingestion, and commercial certification should follow evidence of demand rather than precede it. No new implementation or commercial gate is marked complete by recording this proposal.
+The initial schema and Linux lab case are now available in the local corpus. Next steps are broader Linux comparison coverage, then version-scoped RouterOS observations and behavior cases in Phase 6. Corpus hosting, automated contribution ingestion, and commercial certification should follow evidence of demand rather than precede it. The Linux record does not pass the full G5 gate or a vendor/commercial gate.
