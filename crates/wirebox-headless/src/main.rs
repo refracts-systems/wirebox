@@ -2,12 +2,17 @@ use std::{error::Error, process::ExitCode};
 use wyrlex_kernel::{ABI_VERSION, BATCH_LIMIT, PROBE_BYTES, Session, ZIG_VERSION};
 mod fixtures;
 mod packet_demo;
+mod phase5;
 mod runtime_demo;
 
 fn run() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args().skip(1).collect();
     if args == ["--check-network"] {
         println!("{}", serde_json::to_string_pretty(&packet_demo::check()?)?);
+        return Ok(());
+    }
+    if args == ["--check-phase5"] {
+        println!("{}", serde_json::to_string_pretty(&phase5::check()?)?);
         return Ok(());
     }
     if args.first().is_some_and(|arg| arg == "--packet-demo") && args.len() <= 2 {
@@ -34,7 +39,7 @@ fn run() -> Result<(), Box<dyn Error>> {
     }
     if !args.is_empty() && args != ["--probe"] {
         return Err(
-            "usage: wyrlex-headless [--probe | --check-fixtures | --scheduler-demo | --check-runtime | --packet-demo [S01..S05|alias] | --check-network]"
+            "usage: wyrlex-headless [--probe | --check-fixtures | --scheduler-demo | --check-runtime | --packet-demo [S01..S05|alias] | --check-network | --check-phase5]"
                 .into(),
         );
     }

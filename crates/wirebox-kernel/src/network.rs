@@ -25,6 +25,30 @@ pub struct Summary {
 }
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct Noise {
+    pub loss_per_million: u32,
+    reserved: u32,
+    pub jitter_ns: u64,
+    pub draws: u64,
+    pub dropped: u64,
+    pub delayed: u64,
+}
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct CheckpointInfo {
+    pub model_version: u32,
+    pub input_kind: u32,
+    pub input_port: u64,
+    pub source_ip: u32,
+    pub destination: u32,
+    reserved: u32,
+    pub now_ns: u64,
+    pub rng_state: u64,
+    pub pending_events: u32,
+    reserved2: u32,
+}
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct Trace {
     pub ordinal: u64,
     pub event_id: u64,
@@ -84,9 +108,14 @@ pub struct Packet {
 unsafe extern "C" {
     fn wb_net_create(version: u32, seed: u64, retention: usize, out: *mut u64) -> u32;
     fn wb_net_destroy(handle: u64) -> u32;
+    fn wb_net_checkpoint(handle: u64, out: *mut u64) -> u32;
+    fn wb_net_checkpoint_destroy(handle: u64) -> u32;
+    fn wb_net_restore(handle: u64, checkpoint: u64) -> u32;
+    fn wb_net_fork(checkpoint: u64, out: *mut u64) -> u32;
     fn wb_net_add(handle: u64, kind: u32, role: u32, a: u64, b: u64, out: *mut u64) -> u32;
     fn wb_net_port(handle: u64, port: u64, mac: u64, ip: u32, prefix: u32, enabled: u32) -> u32;
     fn wb_net_link(handle: u64, link: u64, bitrate: u64, propagation: u64) -> u32;
+    fn wb_net_noise(handle: u64, loss_per_million: u32, jitter_ns: u64) -> u32;
     fn wb_net_alias(handle: u64, device: u64, ip: u32) -> u32;
     fn wb_net_route(
         handle: u64,
@@ -100,6 +129,8 @@ unsafe extern "C" {
     fn wb_net_inject(handle: u64, port: u64, layer: u32, bytes: *const u8, len: usize) -> u32;
     fn wb_net_run(handle: u64, horizon: u64, budget: u64, out: *mut Progress) -> u32;
     fn wb_net_summary(handle: u64, out: *mut Summary) -> u32;
+    fn wb_net_noise_state(handle: u64, out: *mut Noise) -> u32;
+    fn wb_net_checkpoint_info(handle: u64, out: *mut CheckpointInfo) -> u32;
     fn wb_net_packet(handle: u64, version: u64, out: *mut RawPacket) -> u32;
     fn wb_net_tx(handle: u64, id: u64, out: *mut Transmission) -> u32;
     fn wb_net_trace(
@@ -123,6 +154,19 @@ unsafe extern "C" {
 /// std::thread::spawn(move || drop(network));
 /// ```
 pub struct Network {
+    handle: Option<u64>,
+    _thread: PhantomData<Rc<()>>,
+}
+/// Immutable, thread-bound checkpoint owned by Zig. It is a complete copy of
+/// a network at one execution point, including pending work and PRNG state.
+/// It is process-local, not a serialized checkpoint file.
+///
+/// ```compile_fail
+/// let network = wyrlex_kernel::network::Network::new(0, 16).unwrap();
+/// let checkpoint = network.checkpoint().unwrap();
+/// std::thread::spawn(move || drop(checkpoint));
+/// ```
+pub struct Checkpoint {
     handle: Option<u64>,
     _thread: PhantomData<Rc<()>>,
 }
@@ -159,6 +203,11 @@ impl Network {
         // SAFETY: owned live handle and scalar configuration.
         status(unsafe { wb_net_link(self.handle.unwrap(), id, bitrate, propagation) })?;
         Ok(id)
+    }
+    pub fn set_noise(&mut self, loss_per_million: u32, jitter_ns: u64) -> Result<(), Error> {
+        let _guard = api_lock();
+        // SAFETY: scalar configuration is copied synchronously and validated in Zig.
+        status(unsafe { wb_net_noise(self.handle.unwrap(), loss_per_million, jitter_ns) })
     }
     pub fn configure_port(
         &mut self,
@@ -223,6 +272,29 @@ impl Network {
         let code = unsafe { wb_net_run(self.handle.unwrap(), horizon, budget, &mut progress) };
         status(code).map_err(|error| RunError { error, progress })?;
         Ok(progress)
+    }
+    pub fn checkpoint(&self) -> Result<Checkpoint, Error> {
+        let _guard = api_lock();
+        let mut handle = 0;
+        // SAFETY: Zig allocates an independent value copy and returns only an opaque handle.
+        status(unsafe { wb_net_checkpoint(self.handle.unwrap(), &mut handle) })?;
+        Ok(Checkpoint {
+            handle: Some(handle),
+            _thread: PhantomData,
+        })
+    }
+    pub fn restore(&mut self, checkpoint: &Checkpoint) -> Result<(), Error> {
+        let _guard = api_lock();
+        let checkpoint_handle = checkpoint.handle.ok_or(Error::InvalidHandle)?;
+        // SAFETY: both handles are live and Zig copies the complete value-owned state.
+        status(unsafe { wb_net_restore(self.handle.unwrap(), checkpoint_handle) })
+    }
+    pub fn noise(&self) -> Result<Noise, Error> {
+        let _guard = api_lock();
+        let mut out = Noise::default();
+        // SAFETY: initialized output is filled synchronously; no pointer is retained.
+        status(unsafe { wb_net_noise_state(self.handle.unwrap(), &mut out) })?;
+        Ok(out)
     }
     pub fn summary(&self) -> Result<Summary, Error> {
         let _guard = api_lock();
@@ -318,6 +390,37 @@ impl Network {
         Ok(())
     }
 }
+impl Checkpoint {
+    pub fn info(&self) -> Result<CheckpointInfo, Error> {
+        let _guard = api_lock();
+        let mut out = CheckpointInfo::default();
+        let handle = self.handle.ok_or(Error::InvalidHandle)?;
+        // SAFETY: initialized output is filled from the immutable checkpoint.
+        status(unsafe { wb_net_checkpoint_info(handle, &mut out) })?;
+        Ok(out)
+    }
+
+    pub fn fork(&self) -> Result<Network, Error> {
+        let _guard = api_lock();
+        let mut handle = 0;
+        let checkpoint_handle = self.handle.ok_or(Error::InvalidHandle)?;
+        // SAFETY: Zig allocates a separate network copy from the immutable checkpoint.
+        status(unsafe { wb_net_fork(checkpoint_handle, &mut handle) })?;
+        Ok(Network {
+            handle: Some(handle),
+            _thread: PhantomData,
+        })
+    }
+}
+impl Drop for Checkpoint {
+    fn drop(&mut self) {
+        if let Some(handle) = self.handle.take() {
+            let _guard = api_lock();
+            // SAFETY: sole owner destroys the checkpoint exactly once.
+            let _ = unsafe { wb_net_checkpoint_destroy(handle) };
+        }
+    }
+}
 impl Drop for Network {
     fn drop(&mut self) {
         let _ = self.close_inner();
@@ -352,6 +455,7 @@ pub fn reason_name(reason: u32) -> &'static str {
         106 => "icmp_error_suppressed",
         107 => "unsolicited_reply",
         108 => "unsupported_address",
+        109 => "link_loss",
         200 => "connected_route",
         201 => "static_route",
         _ => "unknown",
@@ -423,14 +527,64 @@ pub fn field_name(code: u32) -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::Mutex;
+
+    static TEST_GUARD: Mutex<()> = Mutex::new(());
+
+    fn direct_hosts(seed: u64) -> (Network, u64, u64) {
+        let mut network = Network::new(seed, 1024).unwrap();
+        let left = network.device(DeviceRole::Host).unwrap();
+        let right = network.device(DeviceRole::Host).unwrap();
+        let left_port = network.port(left).unwrap();
+        let right_port = network.port(right).unwrap();
+        network
+            .configure_port(left_port, 0x020000000001, 0x0a000001, 24, true)
+            .unwrap();
+        network
+            .configure_port(right_port, 0x020000000002, 0x0a000002, 24, true)
+            .unwrap();
+        network
+            .link(left_port, right_port, 100_000_000, 1_000)
+            .unwrap();
+        (network, left_port, right_port)
+    }
+
+    fn drain(network: &mut Network) {
+        loop {
+            let progress = network.run_until(5_000_000_000, 512).unwrap();
+            if progress.reason == 1 {
+                break;
+            }
+        }
+    }
+
+    fn observable(network: &Network) -> (Summary, Vec<Packet>, Vec<Trace>) {
+        let summary = network.summary().unwrap();
+        let packets = (1..=summary.packet_versions)
+            .map(|id| network.packet(id).unwrap())
+            .collect();
+        let mut trace = Vec::new();
+        loop {
+            let after = trace.last().map_or(0, |row: &Trace| row.ordinal);
+            let batch = network.trace(after, 256).unwrap();
+            if batch.is_empty() {
+                break;
+            }
+            trace.extend(batch);
+        }
+        (summary, packets, trace)
+    }
     #[test]
     fn layouts_ownership_and_invalid_input_copy() {
+        let _guard = TEST_GUARD.lock().unwrap();
         assert_eq!(std::mem::size_of::<RawPacket>(), 1640);
         assert_eq!(std::mem::offset_of!(RawPacket, bytes), 40);
         assert_eq!(std::mem::size_of::<Trace>(), 96);
         assert_eq!(std::mem::size_of::<Transmission>(), 72);
         assert_eq!(std::mem::size_of::<Summary>(), 80);
         assert_eq!(std::mem::size_of::<Field>(), 24);
+        assert_eq!(std::mem::size_of::<Noise>(), 40);
+        assert_eq!(std::mem::size_of::<CheckpointInfo>(), 56);
         let mut net = Network::new(0, 1024).unwrap();
         let dev = net.device(DeviceRole::Host).unwrap();
         let port = net.port(dev).unwrap();
@@ -446,6 +600,7 @@ mod tests {
     }
     #[test]
     fn raw_registry_rejects_null_and_stale_handles() {
+        let _guard = TEST_GUARD.lock().unwrap();
         let _guard = api_lock();
         // SAFETY: nulls are documented error inputs; all other outputs are valid.
         unsafe {
@@ -464,5 +619,88 @@ mod tests {
             assert_eq!(wb_net_destroy(handle & !(3_u64 << 62)), 3);
             assert_eq!(wb_net_destroy(handle), 0);
         }
+    }
+
+    #[test]
+    fn checkpoint_restore_and_fork_preserve_active_arp_state_and_replay() {
+        let _guard = TEST_GUARD.lock().unwrap();
+        let (mut home, source, _) = direct_hosts(0x51);
+        home.ping(source, 0x0a000002, 64).unwrap();
+        let checkpoint = home.checkpoint().unwrap();
+        assert!(home.summary().unwrap().pending_events > 0);
+
+        let mut branch = checkpoint.fork().unwrap();
+        drain(&mut home);
+        drain(&mut branch);
+        let expected = observable(&home);
+        assert_eq!(expected, observable(&branch));
+
+        home.restore(&checkpoint).unwrap();
+        assert_eq!(
+            home.summary().unwrap().pending_events,
+            checkpoint.fork().unwrap().summary().unwrap().pending_events
+        );
+        drain(&mut home);
+        assert_eq!(expected, observable(&home));
+    }
+
+    #[test]
+    fn seeded_jitter_is_replayed_and_loss_is_recorded_as_input_noise() {
+        let _guard = TEST_GUARD.lock().unwrap();
+        let (mut home, source, _) = direct_hosts(0x1234);
+        home.set_noise(0, 10_000).unwrap();
+        home.ping(source, 0x0a000002, 64).unwrap();
+        let checkpoint = home.checkpoint().unwrap();
+        let mut branch = checkpoint.fork().unwrap();
+        drain(&mut home);
+        drain(&mut branch);
+        assert_eq!(observable(&home), observable(&branch));
+        assert_eq!(home.noise().unwrap(), branch.noise().unwrap());
+        assert!(home.noise().unwrap().draws > 0);
+
+        let (mut lossy, source, _) = direct_hosts(0x1234);
+        lossy.set_noise(1_000_000, 0).unwrap();
+        lossy.ping(source, 0x0a000002, 64).unwrap();
+        drain(&mut lossy);
+        let noise = lossy.noise().unwrap();
+        assert!(noise.dropped > 0);
+        assert_eq!(lossy.summary().unwrap().outcome, 4);
+        assert_eq!(lossy.summary().unwrap().pending_events, 0);
+    }
+
+    #[test]
+    fn impairment_configuration_is_frozen_after_workload_starts() {
+        let _guard = TEST_GUARD.lock().unwrap();
+        let (mut network, source, _) = direct_hosts(7);
+        network.ping(source, 0x0a000002, 64).unwrap();
+        assert_eq!(network.set_noise(1, 1), Err(Error::State));
+    }
+
+    #[test]
+    fn checkpoint_before_workload_survives_source_close_and_branches_diverge() {
+        let _guard = TEST_GUARD.lock().unwrap();
+        let (source, port, _) = direct_hosts(9);
+        let checkpoint = source.checkpoint().unwrap();
+        let before = checkpoint.info().unwrap();
+        assert_eq!((before.input_kind, before.pending_events), (0, 0));
+        source.close().unwrap();
+        let mut healthy = checkpoint.fork().unwrap();
+        let mut lossy = checkpoint.fork().unwrap();
+        lossy.set_noise(1_000_000, 0).unwrap();
+        healthy.ping(port, 0x0a000002, 64).unwrap();
+        lossy.ping(port, 0x0a000002, 64).unwrap();
+        drain(&mut healthy);
+        drain(&mut lossy);
+        assert_eq!(healthy.summary().unwrap().outcome, 1);
+        assert_eq!(lossy.summary().unwrap().outcome, 4);
+        assert_eq!(checkpoint.info().unwrap(), before);
+        lossy.restore(&checkpoint).unwrap();
+        assert_eq!(lossy.noise().unwrap(), Noise::default());
+        assert_eq!(lossy.summary().unwrap().trace_total, 0);
+        // All restored state is editable again because this checkpoint precedes input.
+        lossy.ping(port, 0x0a000002, 64).unwrap();
+        drop(checkpoint);
+        drain(&mut lossy);
+        assert_eq!(observable(&healthy), observable(&lossy));
     }
 }

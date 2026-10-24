@@ -46,6 +46,7 @@ pub const Reason = enum(u32) {
     icmp_error_suppressed,
     unsolicited_reply,
     unsupported_address,
+    link_loss,
 };
 pub fn reason(err: Error) Reason {
     return switch (err) {

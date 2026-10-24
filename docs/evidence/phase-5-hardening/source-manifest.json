@@ -1,0 +1,200 @@
+{
+  "date": "2026-10-24",
+  "platform": "Windows x64 MSVC",
+  "zig": "0.17.0",
+  "rust": "1.99.1",
+  "committed_baseline": "d363c2d9634c3a05238815e250878e1c50bb496b",
+  "state": "Uncommitted Phase 5 implementation plus hardening",
+  "command": "./scripts/verify.ps1",
+  "result": "pass",
+  "g5_status": "incomplete; Linux comparison not run",
+  "sources": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "c58a720fdd9e6f765464bd74d92daafc1e22b075d042d3cc5a6e7f8a7af3c9d7",
+      "bytes": 146412
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "25f9aff8597bbbb9691ef8d429e94ddc31b505a67b5495086486d118a59ab79e",
+      "bytes": 497
+    },
+    {
+      "path": "crates/wirebox-headless/Cargo.toml",
+      "sha256": "0a5b804c30e2e0f1bc54cb2cd38b57456b3d223d5159a482f241949de5ce6324",
+      "bytes": 215
+    },
+    {
+      "path": "crates/wirebox-headless/src/fixtures.rs",
+      "sha256": "02f7c637de731275683ca722229550e9ccd62ada139c86fa4b50343de32c85b5",
+      "bytes": 4625
+    },
+    {
+      "path": "crates/wirebox-headless/src/main.rs",
+      "sha256": "adab27da7a8777918d2b2e2d0efbd8e2b95b1deeacd55bcd612297fc5269721f",
+      "bytes": 2521
+    },
+    {
+      "path": "crates/wirebox-headless/src/packet_demo.rs",
+      "sha256": "30fa64aee1fc2c7db42e81499986f730b13b82e88bc13b8ace4bc6b14c22c80a",
+      "bytes": 22070
+    },
+    {
+      "path": "crates/wirebox-headless/src/phase5.rs",
+      "sha256": "cc570012b5402c6c3530b9442326e9fed2fa1b8b50d0a68b9be997052fcdffa8",
+      "bytes": 14261
+    },
+    {
+      "path": "crates/wirebox-headless/src/runtime_demo.rs",
+      "sha256": "d5ff79aedced1350f897bb29b8bcec06a00675d6386e2f9b9764144e55e3d1b7",
+      "bytes": 7932
+    },
+    {
+      "path": "crates/wirebox-kernel/build.rs",
+      "sha256": "be3f45b0b009a20330e33bdac9921b82c959a754dcd7a35d7cc1ffc3b21e1d24",
+      "bytes": 2183
+    },
+    {
+      "path": "crates/wirebox-kernel/Cargo.toml",
+      "sha256": "97ed7fe85361ddd9a4ce716e3eb1cf4a76b53f88b11b3db632b3aa323ff800d2",
+      "bytes": 208
+    },
+    {
+      "path": "crates/wirebox-kernel/src/lib.rs",
+      "sha256": "591f1af2add90fd7cd65f8938752ccb99721b75eecbd316cea14f5191789b903",
+      "bytes": 8469
+    },
+    {
+      "path": "crates/wirebox-kernel/src/network.rs",
+      "sha256": "4b1852ce9693bd2145a237be60e8be9f3c032be337a13b7f95ef4395ced026c6",
+      "bytes": 24779
+    },
+    {
+      "path": "crates/wirebox-kernel/src/simulation.rs",
+      "sha256": "1c9fea5ef88afd56f4d40ac4901ee210c074adb1fb986ae4e1e989cca042ecae",
+      "bytes": 13585
+    },
+    {
+      "path": "crates/wirebox-studio/Cargo.toml",
+      "sha256": "1aeacaa5573b6e8d5f8ffb31f581f74eccbeab80cf42690a522db2544c5d9853",
+      "bytes": 288
+    },
+    {
+      "path": "crates/wirebox-studio/src/main.rs",
+      "sha256": "c0029075252d121569ef10c9778278e94c74e06d75957177bd8593a8938b3310",
+      "bytes": 50467
+    },
+    {
+      "path": "crates/wirebox-studio/src/model.rs",
+      "sha256": "cd2c190bb33b16a3086e5b2b2ddef6bd60a9171faf2a0a3458a8a0a63a383400",
+      "bytes": 39449
+    },
+    {
+      "path": "fixtures/packets/ipv4-forwarding-v1.json",
+      "sha256": "c8807dc9c85727ec625f5ed4fb3f4725afcb2f35df495d5860720dcc49b7d1b5",
+      "bytes": 730
+    },
+    {
+      "path": "fixtures/scenarios/icmp-static-v1.json",
+      "sha256": "a40d13908e49d9210285c61191818fb9f05f85ca752737b639693d090001d610",
+      "bytes": 3675
+    },
+    {
+      "path": "kernel/include/wirebox.h",
+      "sha256": "63184492c554fec1b3a8bdf7c34a16dac9b0996a22b440f6463fed5ed6cc80bb",
+      "bytes": 998
+    },
+    {
+      "path": "kernel/include/wirebox_net.h",
+      "sha256": "49864821961e7fa04e4da679666bb9688595c179a59afe99c8b257107578e6df",
+      "bytes": 4674
+    },
+    {
+      "path": "kernel/include/wirebox_sim.h",
+      "sha256": "34741d72b97e377786df2bfa0b8d09277f9323e57c4acc34cc267f8690e78fef",
+      "bytes": 2793
+    },
+    {
+      "path": "kernel/src/abi.zig",
+      "sha256": "b35d30fc46b46121bbba3af9778b866a1eaff2ddb457794fc452d1768c79b976",
+      "bytes": 13069
+    },
+    {
+      "path": "kernel/src/codec.zig",
+      "sha256": "a6bc1d5cf31ec679dc0f8ff174ad87743c94a2174d4e9ccb0d92335bd45a1f5e",
+      "bytes": 10236
+    },
+    {
+      "path": "kernel/src/graph.zig",
+      "sha256": "f08d7eb158a1e330896b7c520e1f874629af30dba4c7bbfc106ddaeb8a1357e1",
+      "bytes": 3273
+    },
+    {
+      "path": "kernel/src/net_abi.zig",
+      "sha256": "7eabb6c2538e70cb6d9b58e6d5a516ccfde6cc59715e3cae5e25be75791f612d",
+      "bytes": 21686
+    },
+    {
+      "path": "kernel/src/network.zig",
+      "sha256": "7c3edb974da7b4e9073e81cd6d097c93d525c097464777d342e5a38eec5acc4b",
+      "bytes": 40339
+    },
+    {
+      "path": "kernel/src/network_tests.zig",
+      "sha256": "7b8115eb353f545079cf02252c4f1b0ce22f2440c158e65a606f54b2072de6b6",
+      "bytes": 10479
+    },
+    {
+      "path": "kernel/src/runtime.zig",
+      "sha256": "822ace554131cab95628625cefefb23dbbd5b5ad8961a61c09eed6ebf47ae5f2",
+      "bytes": 12098
+    },
+    {
+      "path": "kernel/src/runtime_tests.zig",
+      "sha256": "da716b48529014ea1162861da3b26d5c0f95fefa4e1487fe5a620d5beba41f80",
+      "bytes": 14076
+    },
+    {
+      "path": "kernel/src/sim_abi.zig",
+      "sha256": "d82d7835392fc2e845dacb64b73c220dddec6f118cb62fd72c38c3724938bd81",
+      "bytes": 8446
+    },
+    {
+      "path": "kernel/tests/layout.c",
+      "sha256": "55f852c52f758b8899ef67ba7f4574b01852da442b80d94786e05be746099ed2",
+      "bytes": 1610
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "d13306be0ecda81ce779baa290ffb417380d525928477f16200884b5169cca33",
+      "bytes": 86
+    },
+    {
+      "path": "scripts/verify.ps1",
+      "sha256": "d4fe058533fa87157ab7b5757bb8be1b7baaf1dc56359d5ecbf3976c89855b8e",
+      "bytes": 2649
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/phase-5-hardening/verification.log",
+      "sha256": "ce2e5f85de7acb191ace9ceec3790810befb7af039b9aad24aed7e9dbebf1ca5",
+      "bytes": 27129
+    },
+    {
+      "path": "docs/evidence/phase-5-hardening/check-phase5.json",
+      "sha256": "d5b09e24e92ebf932114cf5468f77600c0e0cf57f1cd15e8329671e6498b52ae",
+      "bytes": 1050
+    },
+    {
+      "path": "docs/evidence/phase-5-hardening/regressions-before.log",
+      "sha256": "f6a004fa00941338bbbfb45ba6c7605991fce61508238294751daf1150d6aab4",
+      "bytes": 1809
+    }
+  ],
+  "binary": {
+    "path": "target/debug/wyrlex-headless.exe",
+    "sha256": "88e3040a3de2491c63bb6d227aa18b7de53bbd1cfe7686e7ec94646f7a840ef5",
+    "bytes": 3145728
+  }
+}

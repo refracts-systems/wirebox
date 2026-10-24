@@ -1,0 +1,24 @@
+{
+  "checkpoint": {
+    "fork_matches": true,
+    "input_kind": 1,
+    "model_version": 1,
+    "pending_events": 2,
+    "restore_matches": true
+  },
+  "jitter": {
+    "delayed": 4,
+    "draws": 4,
+    "replay_matches": true
+  },
+  "lab_comparison": "not_run",
+  "loss": {
+    "dropped": 3,
+    "loss_per_million": 1000000,
+    "outcome": 4,
+    "reason": 102
+  },
+  "phase": 5,
+  "result": "pass",
+  "scope": "value-owned checkpoint, active ARP queue, deterministic PRNG impairment"
+}

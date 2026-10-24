@@ -1,6 +1,6 @@
 # Wyrlex documentation
 
-This directory contains Wyrlex concepts, design direction, decisions, and development evidence. Phases 0–3 are available, including the headless packet simulator and byte tracker. Packet Studio Phase 4 passed technical agent acceptance for its declared scope; real-device adapters remain on the roadmap.
+This directory contains Wyrlex concepts, design direction, decisions, and development evidence. Phases 0–3 are available, Packet Studio Phase 4 passed technical agent acceptance for its declared scope, and Phase 5 has local checkpoint/replay evidence. Linux and real-device adapters remain on the roadmap.
 
 ## Wyrlex
 
@@ -16,6 +16,8 @@ This directory contains Wyrlex concepts, design direction, decisions, and develo
 - [G3 verification results](evidence/phase-3/README.md)
 - [Packet Studio controls, inspector, and versioned sessions](wirebox/studio.md)
 - [Initial Phase 4 integration and G4 limits](evidence/phase-4/README.md)
+- [Phase 5 checkpoint/replay and impairment evidence](evidence/phase-5/README.md)
+- [Phase 5 hardening, regressions, and replay matrix](evidence/phase-5-hardening/README.md)
 - [G4 completion plan and path to a real pilot](wirebox/phase-4-plan.md)
 - [Walkthrough of actual byte changes](evidence/phase-3/byte-walkthrough.md)
 - [Phase 1–4 learning notes: code decisions and reasons](learning/README.md)

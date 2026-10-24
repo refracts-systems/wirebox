@@ -5,6 +5,7 @@ pub const Error = rt.Error || error{ State, OutOfMemory };
 pub const packet_limit = 128;
 pub const tx_limit = 256;
 pub const trace_limit = 10_000;
+pub const model_version: u32 = 1;
 pub const Packet = extern struct {
     version_id: u64 = 0,
     packet_id: u64 = 0,
@@ -57,6 +58,29 @@ pub const Summary = extern struct {
     reason: u32,
     failed: u32,
     reserved: u32 = 0,
+};
+/// Deterministic link impairment input and counters. The PRNG state is part of
+/// `runtime`, so a checkpoint captures both the configured input and its draw
+/// position. `loss_per_million` is an integer probability in [0, 1_000_000].
+pub const Noise = extern struct {
+    loss_per_million: u32 = 0,
+    reserved: u32 = 0,
+    jitter_ns: u64 = 0,
+    draws: u64 = 0,
+    dropped: u64 = 0,
+    delayed: u64 = 0,
+};
+pub const CheckpointInfo = extern struct {
+    model_version: u32 = 1,
+    input_kind: u32 = 0, // 1 ping, 2 injected packet
+    input_port: u64 = 0,
+    source_ip: u32 = 0,
+    destination: u32 = 0,
+    reserved: u32 = 0,
+    now_ns: u64 = 0,
+    rng_state: u64 = 0,
+    pending_events: u32 = 0,
+    reserved2: u32 = 0,
 };
 pub const Port = struct { id: u64 = 0, mac: u64 = 0, ip: u32 = 0, prefix: u32 = 0, enabled: bool = true };
 const Link = struct { id: u64 = 0, bitrate: u64 = 0, propagation: u64 = 0 };
@@ -111,8 +135,12 @@ pub const Network = struct {
     source_device: u64,
     source_ip: u32,
     destination: u32,
+    input_kind: u32,
+    input_port: u64,
+    model_version_value: u32,
     request_version: u64,
     next_ip_id: u16,
+    noise: Noise,
 
     pub fn init(self: *Network, seed: u64, retention: usize) Error!void {
         if (retention > trace_limit) return error.InvalidArgument;
@@ -122,6 +150,7 @@ pub const Network = struct {
         self.retention = retention;
         self.next_packet = 1;
         self.next_ip_id = 1;
+        self.model_version_value = model_version;
         for (&self.ports) |*port| port.enabled = true;
     }
     fn config(self: *Network) Error!void {
@@ -163,6 +192,12 @@ pub const Network = struct {
             return;
         };
         return error.Capacity;
+    }
+    pub fn setNoise(self: *Network, loss_per_million: u32, jitter_ns: u64) Error!void {
+        try self.config();
+        if (loss_per_million > 1_000_000 or jitter_ns == std.math.maxInt(u64)) return error.InvalidArgument;
+        self.noise.loss_per_million = loss_per_million;
+        self.noise.jitter_ns = jitter_ns;
     }
     pub fn addAlias(self: *Network, device: u64, ip: u32) Error!void {
         try self.config();
@@ -311,14 +346,44 @@ pub const Network = struct {
         const bytes = (try self.packet(version)).data();
         const start = @max(self.runtime.now, self.next_free[pi]);
         const end = std.math.add(u64, start, try rt.serializationDelay(bytes.len, config_link.bitrate)) catch return error.Overflow;
+        // Impairment is deterministic input, never wall-clock noise. Draw only
+        // when the corresponding feature is enabled so a clean run retains the
+        // original PRNG sequence.
+        var next_rng = self.runtime.rng;
+        var next_noise = self.noise;
+        if (next_noise.loss_per_million > 0) {
+            const draw = next_rng.below(1_000_000);
+            next_noise.draws += 1;
+            if (draw < next_noise.loss_per_million) {
+                next_noise.dropped += 1;
+                // Loss is modeled after serialization: even a lost frame
+                // occupies the wire, but has no arrival event or Tx record.
+                self.runtime.rng = next_rng;
+                self.noise = next_noise;
+                self.next_free[pi] = end;
+                self.emit(.{ .kind = 17, .entity = from, .version = version, .reason = @backingInt(c.Reason.link_loss), .detail_a = next_noise.dropped, .detail_b = draw });
+                return;
+            }
+        }
+        const jitter = if (self.noise.jitter_ns > 0) blk: {
+            const value = next_rng.below(self.noise.jitter_ns + 1);
+            next_noise.draws += 1;
+            if (value > 0) next_noise.delayed += 1;
+            break :blk value;
+        } else 0;
         const arrival = std.math.add(u64, end, config_link.propagation) catch return error.Overflow;
+        const delayed_arrival = std.math.add(u64, arrival, jitter) catch return error.Overflow;
         const tx_id = self.tx_count + 1;
         const event_id = self.runtime.next_event_id;
-        _ = try self.runtime.scheduleDomain(peer, arrival, 100, tx_id, self.current.id);
-        self.txs[self.tx_count] = .{ .id = tx_id, .version = version, .from = from, .to = peer, .link = link_id, .start_ns = start, .arrival_ns = arrival, .event_id = event_id, .cause_id = self.current.id };
+        _ = try self.runtime.scheduleDomain(peer, delayed_arrival, 100, tx_id, self.current.id);
+        // Scheduling can reject capacity, IDs or time. Publish random draws
+        // only once an arrival has been successfully reserved.
+        self.runtime.rng = next_rng;
+        self.noise = next_noise;
+        self.txs[self.tx_count] = .{ .id = tx_id, .version = version, .from = from, .to = peer, .link = link_id, .start_ns = start, .arrival_ns = delayed_arrival, .event_id = event_id, .cause_id = self.current.id };
         self.tx_count += 1;
         self.next_free[pi] = end;
-        self.emit(.{ .kind = 10, .entity = from, .version = version, .transmission = tx_id, .detail_a = peer, .detail_b = arrival });
+        self.emit(.{ .kind = 10, .entity = from, .version = version, .transmission = tx_id, .detail_a = peer, .detail_b = delayed_arrival });
     }
     fn encapsulate(self: *Network, port: u64, version: u64, dst_mac: u64) Error!void {
         const p = self.ports[try self.portIndex(port)];
@@ -591,6 +656,8 @@ pub const Network = struct {
         self.source_device = self.owner(port);
         self.source_ip = p.ip;
         self.destination = destination;
+        self.input_kind = 1;
+        self.input_port = port;
         var msg = [_]u8{ 8, 0, 0, 0, 0x12, 0x34, 0, 1 };
         c.write(msg[2..4], c.checksum(&msg));
         const version = try self.newIp(p.ip, destination, @intCast(ttl), &msg, 0);
@@ -604,9 +671,26 @@ pub const Network = struct {
         if (layer != 1 and layer != 2 or bytes.len > c.max_bytes) return error.InvalidArgument;
         try self.validate();
         self.started = true;
+        self.input_kind = 2;
+        self.input_port = port;
         const version = try self.store(layer, bytes, 0, false);
         self.emit(.{ .kind = 1, .entity = port, .version = version });
         if (layer == 1) try self.receiveIp(port, version, false) else try self.receive(port, version, 0);
+    }
+    pub fn noiseState(self: *const Network) Noise {
+        return self.noise;
+    }
+    pub fn checkpointInfo(self: *const Network) CheckpointInfo {
+        return .{
+            .model_version = self.model_version_value,
+            .input_kind = self.input_kind,
+            .input_port = self.input_port,
+            .source_ip = self.source_ip,
+            .destination = self.destination,
+            .now_ns = self.runtime.now,
+            .rng_state = self.runtime.rng.state,
+            .pending_events = @intCast(self.runtime.queue.len),
+        };
     }
     fn dispatch(self: *Network, event: rt.Event) Error!void {
         if (event.action == 100) {
@@ -700,4 +784,70 @@ test "trace retention wraps without trimming scheduler or aliasing packet versio
     try std.testing.expectEqual(@as(usize, 10_000), count);
     try std.testing.expectEqual(@as(usize, 0), net.readTrace(std.math.maxInt(u64), &rows));
     try std.testing.expectEqualSlices(u8, &.{ 0x45, 0x00 }, net.packets[0].data());
+}
+
+fn impairmentFixture(world: *Network) !u64 {
+    try world.init(42, 16);
+    const a = try world.add(.device, 1, 0, 0);
+    const b = try world.add(.device, 1, 0, 0);
+    const pa = try world.add(.port, 0, a, 0);
+    const pb = try world.add(.port, 0, b, 0);
+    const link = try world.add(.link, 0, pa, pb);
+    try world.setLink(link, 100_000_000, 1000);
+    _ = try world.store(2, &@as([60]u8, @splat(0)), 0, false);
+    return pa;
+}
+
+test "phase5 loss consumes egress serialization time even without arrival" {
+    const world = try std.testing.allocator.create(Network);
+    defer std.testing.allocator.destroy(world);
+    const port = try impairmentFixture(world);
+    try world.setNoise(1_000_000, 0);
+    try world.transmit(port, 1);
+    try world.transmit(port, 1);
+    try std.testing.expectEqual(@as(u64, 9600), world.next_free[try world.portIndex(port)]);
+    try std.testing.expectEqual(@as(u64, 2), world.noise.dropped);
+    try std.testing.expectEqual(@as(usize, 0), world.runtime.queue.len);
+    try world.setNoise(0, 0);
+    try world.transmit(port, 1);
+    try std.testing.expectEqual(@as(u64, 9600), world.txs[0].start_ns);
+}
+
+test "phase5 noise boundaries reject invalid inputs without mutation" {
+    const world = try std.testing.allocator.create(Network);
+    defer std.testing.allocator.destroy(world);
+    const port = try impairmentFixture(world);
+    try world.setNoise(1_000_000, std.math.maxInt(u64) - 1);
+    const before = world.noise;
+    try std.testing.expectError(error.InvalidArgument, world.setNoise(1_000_001, 0));
+    try std.testing.expectError(error.InvalidArgument, world.setNoise(0, std.math.maxInt(u64)));
+    try std.testing.expectEqualDeep(before, world.noise);
+    try world.setNoise(0, 0);
+    const rng_before = world.runtime.rng.state;
+    try world.transmit(port, 1);
+    try std.testing.expectEqual(rng_before, world.runtime.rng.state);
+    try std.testing.expectEqual(@as(u64, 0), world.noise.draws);
+    try std.testing.expectEqual(@as(u64, 5800), world.txs[0].arrival_ns);
+}
+
+test "phase5 failed transmit does not consume RNG or noise counters" {
+    const world = try std.testing.allocator.create(Network);
+    defer std.testing.allocator.destroy(world);
+    const port = try impairmentFixture(world);
+    try world.setNoise(0, 10_000);
+    world.runtime.now = std.math.maxInt(u64) - 5000;
+    const rng_before = world.runtime.rng.state;
+    const noise_before = world.noise;
+    try std.testing.expectError(error.Overflow, world.transmit(port, 1));
+    try std.testing.expectEqual(rng_before, world.runtime.rng.state);
+    try std.testing.expectEqualDeep(noise_before, world.noise);
+    try std.testing.expectEqual(@as(usize, 0), world.tx_count);
+    try std.testing.expectEqual(@as(usize, 0), world.runtime.queue.len);
+    world.runtime.now = 0;
+    for (0..rt.pending_limit) |_| _ = try world.runtime.scheduleDomain(port, 1, 100, 1, 0);
+    const runtime_before = world.runtime.snapshot();
+    try std.testing.expectError(error.Capacity, world.transmit(port, 1));
+    try std.testing.expectEqualDeep(runtime_before, world.runtime.snapshot());
+    try std.testing.expectEqualDeep(noise_before, world.noise);
+    try std.testing.expectEqual(@as(u64, 0), world.next_free[try world.portIndex(port)]);
 }

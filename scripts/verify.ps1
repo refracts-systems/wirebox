@@ -37,6 +37,7 @@ try {
     Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wyrlex-headless', '--', '--scheduler-demo')
     Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wyrlex-headless', '--', '--check-runtime')
     Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wyrlex-headless', '--', '--check-network')
+    Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wyrlex-headless', '--', '--check-phase5')
     if (-not $CoreOnly) {
         Invoke-Checked -Exe 'cargo' -ToolArgs @('build', '--locked', '-p', 'wyrlex-studio')
     }

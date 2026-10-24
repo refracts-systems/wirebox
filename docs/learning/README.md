@@ -18,9 +18,14 @@ Urutan yang disarankan:
 | 3 | [Alur paket jaringan](phase_3/phase_3_alur_paket.md) | Mengapa ping melewati ARP, switch, router, lalu kembali? |
 | 3 | [Versi, ABI, dan pembuktian](phase_3/phase_3_tracker_pembuktian.md) | Bagaimana hasil simulasi ditelusuri dan diuji? |
 | 4 | [Controller, snapshot dan inspector Studio](phase_4/phase_4_controller_snapshot.md) | Bagaimana UI membaca hasil konsisten, membatalkan Run, serta memverifikasi sesi yang dibuka? |
+| 5 | [Checkpoint, restore, fork dan replay](phase_5/phase_5_checkpoint_replay.md) | Mengapa state scheduler dan PRNG harus ikut disalin untuk replay? |
 
 Contoh phase 3 memakai fixture sintetis `PC1 — SW1 — R1 — PC2`. Nama kelas dan alamat Packet Tracer dari laporan reverse engineering memberi petunjuk desain, bukan source engine Wyrlex atau bukti kesamaan perilaku vendor. Baca [batas model paket](../wirebox/packets.md) sebelum memakai hasil simulasi untuk keputusan operasional.
 
 Lanjutan: [draft, sesi v2 dan retensi trace](phase_4/phase_4_draft_and_retention.md).
 
 [Acceptance agent, histori 10.000 row dan pengukuran](phase_4/phase_4_acceptance_measurement.md) menjelaskan metode dan batas benchmark Phase 4.
+
+Catatan Phase 5 menjelaskan implementasi checkpoint dan controlled impairment yang sekarang sudah diuji melalui runner headless.
+
+[Hardening Phase 5](phase_5/phase_5_hardening.md) membahas dua regression test yang gagal sebelum perbaikan, titik commit PRNG, lifecycle checkpoint, dan matriks replay.

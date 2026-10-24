@@ -1,8 +1,8 @@
 # Wyrlex Todos per phase
 
-Updated October 23, 2026. Sequence and milestones: [roadmap](roadmap.md). Scenario and scorecard: [pilot](pilot.md). Targets on [contract v1](phase-0-contract.md) remain in effect; Actual results must be linked per gate.
+Updated October 24, 2026. Sequence and milestones: [roadmap](roadmap.md). Scenario and scorecard: [pilot](pilot.md). Targets on [contract v1](phase-0-contract.md) remain in effect; Actual results must be linked per gate.
 
-`[x]` means artifact/result available; `[ ]` means not yet proven complete. G0/G1 local pass on October 20, 2026; [evidence and scope limits](../evidence/phase-0-1/README.md). G2 passes for graph/scheduler/counter model; [evidence G2](../evidence/phase-2/README.md). G3 passed local Windows x64 debug on October 21, 2026 for a subset of headless packages; [evidence G3](../evidence/phase-3/README.md). G4 technical agent graduated on October 24 within the scope of ADR-0010; G5–G9 not tested yet, G10 has gate per epic. Real access inventory is not considered verified by G0.
+`[x]` means artifact/result available; `[ ]` means not yet proven complete. G0/G1 local pass on October 20, 2026; [evidence and scope limits](../evidence/phase-0-1/README.md). G2 passes for graph/scheduler/counter model; [evidence G2](../evidence/phase-2/README.md). G3 passed local Windows x64 debug on October 21, 2026 for a subset of headless packages; [evidence G3](../evidence/phase-3/README.md). G4 technical agent graduated on October 24 within the scope of ADR-0010. Local Phase 5 checkpoint/replay evidence exists, while the G5 Linux lab gate and G6–G9 remain untested; G10 has a gate per epic. Real access inventory is not considered verified by G0.
 
 ## Phase 0 — Evidence and readiness threshold
 
@@ -64,13 +64,13 @@ Gate G4 / MVP: diagnosis–change–comparison workflow can be completed via the
 
 ## Phase 5 — Replay, disruption, and comparison
 
-- [ ] P5-01 — Create checkpoint state of protocol/topology, queue/timer, packet, ID, and PRNG; note the external input as well as the engine/model version.
-- [ ] P5-02 — Implement restore, resume execution, and fork checkpoint; The home and branch states remain separate.
-- [ ] P5-03 — Add controlled loss/jitter and record input noise; repeat with the same and different seeds according to the scenario.
-- [ ] P5-04 — Test checkpoint while ARP/timer/buffer is still active; compare state and continuation with run without restore.
-- [ ] P5-05 — Create a Linux lab fixture and capture/comparison probe; use containerlab when useful, without making it a kernel prerequisite.
-- [ ] P5-06 — Compare supported forwarding/byte invariants; set allowable differences and report mismatches.
-- [ ] P5-07 — Set retention/checkpoint and incomplete log behavior; save the G5 report.
+- [x] P5-01 — Create checkpoint state of protocol/topology, queue/timer, packet, ID, PRNG, external input metadata, and model version; [Phase 5 evidence](../evidence/phase-5/README.md).
+- [x] P5-02 — Implement restore, resume execution, and fork checkpoint; home and branch states remain separate.
+- [x] P5-03 — Add controlled loss/jitter and record input noise; the same seed produces the same observable run.
+- [x] P5-04 — Test checkpoint while ARP/timer/buffer is still active; compare state and continuation with run without restore.
+- [ ] P5-05 — Create a Linux lab fixture and capture/comparison probe; the local direct-host fixture exists, while Linux capture remains open. Use containerlab when useful, without making it a kernel prerequisite.
+- [ ] P5-06 — The local replay comparator checks summary, packet bytes/ancestry, field maps, transmissions, PRNG, noise, and retained traces; independent lab comparisons and tolerances remain pending P5-05. [Hardening evidence](../evidence/phase-5-hardening/README.md).
+- [ ] P5-07 — Bounded checkpoint retention and incomplete-history behavior are documented and tested locally; final G5 report remains pending the lab comparison. [Local Phase 5 evidence](../evidence/phase-5/README.md).
 
 Gate G5: identical replay in the stated environment and behavior according to the comparator in scope. This does not guarantee replay across all engine versions.
 
@@ -148,7 +148,7 @@ Gate G10: set per epic; One demo does not reveal all future capabilities. If the
 
 The execution sequence, output and completion criteria are outlined in [G4 closing plan, 24 October 2026](phase-4-plan.md). This plan has not changed the checklist status or gate results below.
 
-P4-04 and P4-06 have been tested by the agent according to user instructions. P4-07 complete measurement and soak; [evidence acceptance](../evidence/phase-4-acceptance/README.md). G4 technical agent passes the scope of ADR-0010. The next job is Phase 5: checkpoint/replay and Linux lab benchmarking. P0–P3 remain local baselines, not vendor G5 benchmarks. Complete access/firmware separately before P6/P8.
+P4-04 and P4-06 have been tested by the agent according to user instructions. P4-07 complete measurement and soak; [evidence acceptance](../evidence/phase-4-acceptance/README.md). G4 technical agent passes the scope of ADR-0010. Phase 5 local checkpoint/replay and impairment are implemented; the next open job is the Linux lab fixture and capture. P0–P3 and local P5 remain local baselines, not vendor G5 benchmarks. Complete access/firmware separately before P6/P8.
 
 To complete the task, add the change/artifact link and verification results. For gates, use the result record in [pilot](pilot.md). This plan does not constitute authorization to change the device outside the lab/service that will be determined later.
 

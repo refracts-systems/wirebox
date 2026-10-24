@@ -1,0 +1,49 @@
+{
+  "checkpoint": {
+    "fork_matches": true,
+    "input_kind": 1,
+    "model_version": 1,
+    "pending_events": 2,
+    "restore_matches": true
+  },
+  "g5_status": "incomplete; Linux capture and comparison not run",
+  "jitter": {
+    "delayed": 4,
+    "draws": 4,
+    "replay_matches": true
+  },
+  "lab_comparison": "not_run",
+  "loss": {
+    "dropped": 3,
+    "loss_per_million": 1000000,
+    "outcome": 4,
+    "reason": 102
+  },
+  "phase": 5,
+  "replay_matrix": {
+    "checkpoint_cases": 1920,
+    "continuations_compared": 5760,
+    "cut_budgets": [
+      0,
+      1,
+      2,
+      6,
+      12
+    ],
+    "different_seed_timings": "different",
+    "impairments": 4,
+    "incomplete_baseline_histories": 252,
+    "retention_capacities": [
+      0,
+      1,
+      16,
+      1024
+    ],
+    "scenarios": 6,
+    "seeds": 4,
+    "tolerance": "exact",
+    "unresolved_baseline_outcomes": 52
+  },
+  "result": "pass",
+  "scope": "value-owned checkpoint, active ARP queue, deterministic PRNG impairment"
+}

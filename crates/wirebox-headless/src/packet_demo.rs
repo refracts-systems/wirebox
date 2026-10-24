@@ -52,7 +52,15 @@ fn checksum(bytes: &[u8]) -> u16 {
 }
 fn setup(case: &str, retention: usize) -> Result<(Network, BTreeMap<String, u64>)> {
     let fixture: Value = serde_json::from_str(FIXTURE)?;
-    let mut net = Network::new(fixture["clock"]["seed"].as_u64().unwrap(), retention)?;
+    setup_seeded(case, retention, fixture["clock"]["seed"].as_u64().unwrap())
+}
+pub(crate) fn setup_seeded(
+    case: &str,
+    retention: usize,
+    seed: u64,
+) -> Result<(Network, BTreeMap<String, u64>)> {
+    let fixture: Value = serde_json::from_str(FIXTURE)?;
+    let mut net = Network::new(seed, retention)?;
     let mut ids = BTreeMap::new();
     for node in fixture["nodes"].as_array().unwrap() {
         let name = text(node, "id")?;

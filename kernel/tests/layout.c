@@ -20,4 +20,6 @@ _Static_assert(offsetof(wb_packet, bytes) == 40, "packet bytes offset");
 _Static_assert(sizeof(wb_net_trace_record) == 96, "network trace layout");
 _Static_assert(sizeof(wb_transmission) == 72, "transmission layout");
 _Static_assert(sizeof(wb_net_summary_record) == 80, "network summary layout");
+_Static_assert(sizeof(wb_net_noise_record) == 40, "network noise layout");
+_Static_assert(sizeof(wb_checkpoint_info) == 56, "checkpoint info layout");
 _Static_assert(sizeof(wb_field) == 24, "field layout");

@@ -27,12 +27,12 @@ Summary `now_ns` is the requested horizon (5 seconds in the demo), not the ping 
 
 [network.zig](../../kernel/src/network.zig) uses graph, `(time_ns, event_id)` heap, and registry timer [runtime](runtime.md). Event 100 carries the transmission ID for frame reception; event 101 carries the pending ARP ID for retry/timeout. Synchronous initial workload creation at time 0 with `event_id=0`; child events designate the ID of the event that scheduled them as the cause.
 
-One Network is configured before one `ping` or `inject`. After workload starts, graph/address/route/link is frozen; change scenario is created as a new Network. `run_until(horizon, budget)` can be called repeatedly, including a budget of 1 for stepping. Reading the output does not change execution. There are no checkpoints/restores, configuration mutations at run time, or worker threads yet.
+One Network is configured before one `ping` or `inject`. After workload starts, graph/address/route/link is frozen; change scenario is created as a new Network. `run_until(horizon, budget)` can be called repeatedly, including a budget of 1 for stepping. Reading the output does not change execution. Phase 5 adds process-local checkpoint/restore/fork and seeded loss/jitter; configuration mutations during a running workload and worker threads remain unavailable. See [ADR-0013](../adr/0013-phase-5-checkpoint-and-impairment.md).
 
 | Section | Implementation and limits |
 |---|---|
 | Ethernet II | Explicit decode/encode; MAC learning per switch; flood broadcast/unknown destination, forward known unicast. No VLANs, STP, aging, or collisions |
-| Links | Full duplex, serialization queue per egress port; arrival = start + ceil(bytes × 8 × 1e9 / bitrate) + propagation. Start waits for egress to become available. No jitter, controlled loss, congestion/queue drop |
+| Links | Full duplex, serialization queue per egress port; surviving-frame arrival = start + ceil(bytes × 8 × 1e9 / bitrate) + propagation + optional jitter. Loss still reserves egress serialization time. Global seeded loss/jitter is configurable before input. No congestion/queue drop model |
 | ARP | Ethernet/IPv4 request/reply; cache per port; the package is waiting for resolution. Request at 0/1/2 seconds relative lookup, timeout at 3 seconds; timer is canceled if resolved. Without aging/gratuitous ARP |
 | IPv4 | IHL 5, MTU 1500, connected/static route longest-prefix match. Equal prefix selects connected routes first; duplicate static prefix rejected, without ECMP. Forwarding lowers the TTL and recalculates the checksum |
 | ICMP | Echo request/reply code 0, identifier/sequence/data retained; error network unreachable 3/0 and time exceeded 11/0 with quote header + initial 8 bytes. Error suppression for error/broadcast/invalid source |
@@ -58,11 +58,15 @@ Trace records selected route, next-hop, cache lookup/hit/learn, ARP request/repl
 
 [wirebox_net.h](../../kernel/include/wirebox_net.h) and [net_abi.zig](../../kernel/src/net_abi.zig) define `wb_net_*`. [Rust Wrapper](../../crates/wirebox-kernel/src/network.rs) has `Network`, copies all input/output and destroys Zig allocations via Zig. `close`/Drop only closes once; `Network` is `!Send + !Sync`. The same host mutex serializes probes, runtime counters, and networks. C callers are required to enforce process-wide serialization as well as the validity/alignment/length/non-overlap of their own pointers.
 
-The opaque handle has an upper two-bit namespace: probe `00`, counter `10`, network `11`; 30 bit generation and 32 bit index+1. Slots are retired when the generation runs out. This replaces phase 2's internal bit division; handle is only valid as long as the process/owner is alive, it should not be saved in persistence format.
+The opaque handle has an upper two-bit namespace: probe `00`, checkpoint `01`, counter `10`, network `11`; 30 bit generation and 32 bit index+1. Slots are retired when the generation runs out. This replaces phase 2's internal bit division; handle is only valid as long as the process/owner is alive, it should not be saved in persistence format.
 
 | API | Contract |
 |---|---|
 | create/destroy | Version 1, seed, retention; maximum 4 networks simultaneously |
+| checkpoint/checkpoint_destroy | Up to 4 immutable process-local copies, independent of source lifetime; their handles occupy namespace `01` |
+| restore/fork | Restore a live network or allocate a new independent network. Configuration is editable only if the checkpoint precedes workload. Failure state is copied too; discard old timeline projections/cursors after restore |
+| checkpoint_info/noise_state | Copy input/model/clock/PRNG metadata or impairment configuration/counters. Invalid checkpoint info output is zeroed |
+| noise | Before workload, set loss in `[0,1000000]` parts per million and jitter in `[0,UINT64_MAX-1]` ns; surviving frames sample delay in `[0,jitter_ns]` |
 | add/port/link/alias/route | Configuration before workload; IP/MAC is a number, not a native wire struct |
 | ping/inject | One workload; inject layer 1=IPv4 or 2=Ethernet, copy up to 1600 bytes |
 | run | Horizon/budget, copy progress; queue after horizon remains pending |
@@ -76,10 +80,12 @@ Dispatch failure can occur after an event is removed from the heap and some stat
 
 Layout Windows x64 alignment 8: Packet 1640 bytes (payload at offset 40), Trace 96, Transmission 72, Summary 80, Field 24, Progress 24. C/Zig/Rust tested the layout. The struct is an in-process transport, not a package format or file format that is promised to be stable.
 
+Phase 5 adds Noise (40 bytes, `jitter_ns` at offset 8) and CheckpointInfo (56 bytes, `now_ns` at offset 32). All new calls use the same synchronous ownership, process-wide serialization, pointer alignment, non-overlap, and error-code contracts. The source must remain alive for checkpoint creation; the allocated checkpoint then owns an independent heap copy and is freed by Zig. There is no checkpoint file import/export or cross-version restore. `link_loss` is reason 109; its drop trace records drop count/draw in `detail_a/detail_b`, and creates no Tx or arrival record. Jitter may reorder arrivals. Disabled features consume no PRNG draws; transmit publishes PRNG/counters only after time checks and arrival reservation, or together with a committed loss.
+
 Capacity of each Network: 128 entities, 32 static routes, 16 aliases, 64 ARP entries and 64 MACs, 16 pending ARPs with 8 packets each, 128 byte versions, 256 transmissions, 256 pending events/timers. Storage packets do not overwrite history. Full produces a terminal error when the workload has already started. Only journals use rings; `trace_dropped` and gap ordinal indicate retention. Journal retention 0/1/16/1024 was shown to not change bytes, transmissions, clocks, or throughput.
 
 ## Limits of proof
 
 [Acceptance runner](../../crates/wirebox-headless/src/packet_demo.rs) reads frozen fixtures and checks golden headers before/after, separate Rust checksums, fields/bits, ICMP quote/correlation, delay, serialization, ancestry, as well as ARP timing. Each case is compared between batch, single event budget, repeat, and multiple retention. Zig adds multiport flooding, LPM routing, odd payload, ICMP suppression, and ABI/resource limits tests.
 
-These results prove independent PoC in the above subset. The cache state has not been exported as a complete snapshot; decision trace is not an audit of all states. Initial integration of Studio and persistence via the rerun command is available in Phase 4; Active state checkpoint/replay, real OS comparisons, and cross-vendor pilots remain the next phase.
+These results prove independent PoC in the above subset. The cache state has not been exported as a complete host-readable snapshot; decision trace is not an audit of all states. Phase 4 supplies Studio persistence by rerunning a scenario. Phase 5 supplies opaque active-state checkpoint/replay through kernel/headless APIs, with [hardening evidence](../evidence/phase-5-hardening/README.md). A copied failed state stays failed. ICMP echo timeout is not modeled: loss after ARP resolution can leave outcome 0 with no pending work, which remains unresolved rather than evidence of reachability. Real OS comparisons and cross-vendor pilots remain unproven.

@@ -22,6 +22,7 @@ cargo run --locked -p wyrlex-headless -- --scheduler-demo
 cargo run --locked -p wyrlex-headless -- --check-runtime
 cargo run --locked -p wyrlex-headless -- --packet-demo S01
 cargo run --locked -p wyrlex-headless -- --check-network
+cargo run --locked -p wyrlex-headless -- --check-phase5
 cargo run --locked -p wyrlex-studio
 ```
 
