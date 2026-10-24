@@ -13,7 +13,7 @@ use std::{
 pub const ABI_VERSION: u32 = 1;
 pub const PAYLOAD_LIMIT: usize = 64;
 pub const BATCH_LIMIT: usize = 16;
-pub const ZIG_VERSION: &str = env!("WIREBOX_ZIG_VERSION");
+pub const ZIG_VERSION: &str = env!("WYRLEX_ZIG_VERSION");
 static API: Mutex<()> = Mutex::new(());
 
 fn api_lock() -> MutexGuard<'static, ()> {
@@ -102,7 +102,7 @@ pub struct ProbeEvent {
 /// A session is deliberately !Send and !Sync; separate sessions are serialized too.
 ///
 /// ```compile_fail
-/// let session = wirebox_kernel::Session::new().unwrap();
+/// let session = wyrlex_kernel::Session::new().unwrap();
 /// std::thread::spawn(move || drop(session));
 /// ```
 pub struct Session {
@@ -181,7 +181,7 @@ impl Drop for Session {
 }
 
 /// Shared input fixture for CLI and UI; these are probe bytes, not a simulated packet.
-pub const PROBE_BYTES: &[u8] = b"Wirebox / Zig to Rust / ABI v1";
+pub const PROBE_BYTES: &[u8] = b"Wyrlex / Zig to Rust / ABI v1";
 
 #[cfg(test)]
 mod tests {

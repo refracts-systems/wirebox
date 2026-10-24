@@ -1,45 +1,45 @@
-# Implikasi untuk Wirebox
+# Implications for Wyrlex
 
-Bagian ini berisi usulan desain dari diskusi, bukan temuan tentang implementasi Packet Tracer.
+This section contains design suggestions from discussions, not findings about Packet Tracer implementation.
 
-Pembahasan produk dan keputusan yang lebih lengkap tersedia pada [dokumentasi Wirebox](../wirebox/README.md). Catatan ini berfokus pada hubungan hasil RE dengan usulan desain.
+A more complete product discussion and results are available at [Wyrlex documentation](../wirebox/README.md). This note focuses on the relationship of RE results to design proposals.
 
-## Fondasi yang dapat diadaptasi
+## Adaptable foundation
 
-- Model dunia: perangkat, port, link, konfigurasi, dan state protokol.
-- Scheduler waktu virtual dengan urutan event yang stabil dan identitas timer.
-- Komponen perilaku protokol yang dapat disusun.
-- Trace keputusan dengan packet ID, event ID, dan sebab yang dapat ditelusuri.
-- Pemisahan queue eksekusi, jurnal, serta tampilan Event List.
+- World model: devices, ports, links, configurations, and protocol states.
+- Virtual time scheduler with stable event sequence and timer identity.
+- Composable protocol behavior components.
+- Trace decisions with packet ID, event ID, and traceable causes.
+- Separation of execution queue, journal and Event List display.
 
-Tidak perlu mengikuti layout memori, multiple inheritance, nama class, atau alamat fungsi PT untuk menerapkan pola tersebut.
+There is no need to follow memory layout, multiple inheritance, class names, or PT function addresses to implement the pattern.
 
-## Simulasi mandiri
+## Standalone simulation
 
-Perangkat fisik maupun image OS vendor tidak diperlukan untuk mengimplementasikan perilaku yang didefinisikan oleh model sendiri. Perangkat virtual tetap memerlukan state dan aturan perilaku. Pengujian terhadap spesifikasi, OS vendor, atau hardware diperlukan sesuai tingkat kesetaraan yang ingin diklaim.
+Neither the physical device nor the vendor's OS image is required to implement the behavior defined by the model itself. Virtual devices still require state and behavioral rules. Testing of specifications, vendor OS, or hardware is required according to the level of equality you wish to claim.
 
 ## Byte tracker
 
-Kebutuhan Wirebox untuk menampilkan setiap byte lebih jauh daripada prototipe yang terutama menyimpan field semantik. Usulan representasinya:
+Wyrlex's need to display each byte goes further than the prototype which primarily stores semantic fields. Proposed representation:
 
-1. Buffer paket sebagai sumber byte.
-2. View protokol yang memetakan field ke rentang byte/bit.
-3. Versi atau snapshot paket dan catatan perubahan: before, after, event, proses, alasan.
+1. Packet buffer as byte source.
+2. View the protocol that maps fields to byte/bit ranges.
+3. Package versions or snapshots and change notes: before, after, event, process, reason.
 
-Layout native struct tidak otomatis sama dengan wire format. Endianness, alignment, variable-length header, dan input validation harus ditangani eksplisit.
+The native struct layout is not automatically the same as the wire format. Endianness, alignment, variable-length headers, and input validation must be handled explicitly.
 
-## Arah bahasa dari diskusi
+## Language direction of the discussion
 
-Rekomendasi sementara adalah Zig untuk kernel/codec dan Rust untuk runtime aplikasi serta UI GPUI. Ini belum diimplementasikan oleh pekerjaan dokumentasi ini.
+Temporary recommendations are Zig for kernel/codec and Rust for application runtime and GPUI UI. This has not been implemented by this documentation work.
 
-Zig dapat mengekspor C ABI kecil; Rust membungkusnya dengan kontrak ownership, panjang buffer, error, dan thread yang jelas. Keamanan memory pada implementasi Zig tidak otomatis dibuktikan oleh borrow checker Rust.
+Zig can export a small C ABI; Rust wraps it up with clear ownership, buffer length, error, and thread contracts. Memory safety in the Zig implementation is not automatically proven by Rust's borrow checker.
 
-## Replay dan hubungan dengan dunia nyata
+## Replay and connection with the real world
 
-Replay deterministik memerlukan state perangkat/protokol, event/timer tertunda, buffer, state PRNG, dan input eksternal. Log GUI serta seed saja belum menjamin checkpoint dan restore lengkap.
+Deterministic replay requires device/protocol state, pending events/timers, buffers, PRNG state, and external input. GUI logs and seeds alone do not guarantee complete checkpoint and restore.
 
-Observed state, desired state, dan simulated state harus dibedakan. Hasil simulasi tidak otomatis menjadi fakta tentang produksi. Adapter perangkat menjalankan operasi dan membaca kembali hasilnya.
+Observed state, desired state, and simulated state must be distinguished. Simulation results do not automatically become facts about production. The device adapter performs the operation and reads back the results.
 
-## Tahap pertama yang disarankan
+## Recommended first stage
 
-Port skenario PC1–SW1–R1–PC2 ke kernel baru. Mulai dari Ethernet, ARP, IPv4, dan ICMP dengan trace perubahan byte. Tambahkan skenario route hilang, TTL habis, dan pembatalan timer. Gunakan contoh ini untuk menguji model dan UI sebelum memperluas cakupan protokol atau vendor.
+Port the PC1–SW1–R1–PC2 scenario to the new kernel. Starting from Ethernet, ARP, IPv4, and ICMP with byte change traces. Add lost route, TTL timeout, and timer cancellation scenarios. Use this example to test the model and UI before expanding the protocol or vendor scope.

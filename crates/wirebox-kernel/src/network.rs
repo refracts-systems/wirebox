@@ -119,7 +119,7 @@ unsafe extern "C" {
 }
 /// A thread-bound network with a frozen configuration after its first workload.
 /// ```compile_fail
-/// let network = wirebox_kernel::network::Network::new(0, 1024).unwrap();
+/// let network = wyrlex_kernel::network::Network::new(0, 1024).unwrap();
 /// std::thread::spawn(move || drop(network));
 /// ```
 pub struct Network {

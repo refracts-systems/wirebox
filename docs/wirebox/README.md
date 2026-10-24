@@ -1,65 +1,65 @@
-# Apa itu Wirebox?
+# What is Wyrlex?
 
-Wirebox adalah rancangan **studio dan runtime infrastruktur berbasis model semantik bersama**. Engineer dapat melihat objek infrastruktur, memeriksa state dan paketnya, mencoba perubahan di simulasi, lalu merencanakan operasi pada perangkat nyata melalui adapter.
+Wyrlex is an **infrastructure studio and runtime built around a shared semantic model**. Engineers can inspect infrastructure objects, examine state and packets, try changes in simulation, and plan operations on real devices through adapters.
 
-Kata *semantik* berarti model menyatakan makna: interface, route, VLAN, layanan, dependency, dan kemampuan perangkat. Perintah CLI atau protokol manajemen menjadi cara membaca atau mengubah objek tersebut.
+*Semantic* means that the model expresses meaning: interfaces, routes, VLANs, services, dependencies, and device capabilities. A vendor CLI or management protocol is one way to read or change those objects.
 
-Dokumen ini merangkum pembicaraan sampai 21 Oktober 2026. Fondasi build, probe Zig/Rust, preview GPUI, runtime graph/waktu virtual, serta [simulasi paket headless](packets.md) sudah tersedia. Ethernet/ARP/IPv4/ICMP, routing statis, dan versi byte diuji pada [G3](../evidence/phase-3/README.md). Integrasi Studio dan adapter perangkat nyata masih mengikuti roadmap. Bukti sebelumnya: [phase 0/1](../evidence/phase-0-1/README.md) dan [phase 2](../evidence/phase-2/README.md).
+Updated 24 October 2026. The build foundation, Zig/Rust/GPUI boundary, graph and virtual-time runtime, and [headless packet simulation](packets.md) are available. Ethernet/ARP/IPv4/ICMP, static routing, and byte versions were tested at [G3](../evidence/phase-3/README.md). The initial [Packet Studio](studio.md) integration connects trace/byte data to UI controls; [Phase 4 technical agent acceptance](../evidence/phase-4-acceptance/README.md) passed for the declared fixture and handler-to-render scope, while human usability remains unknown. Real-device adapters remain on the roadmap. Earlier evidence is in [Phase 0/1](../evidence/phase-0-1/README.md) and [Phase 2](../evidence/phase-2/README.md).
 
-Wirebox tidak membuat ulang OS. Istilah kernel berarti inti engine simulasi; Linux, RouterOS, dan firmware perangkat tetap berjalan sebagai sistem masing-masing pada lab nyata.
+Wyrlex does not recreate an operating system. *Kernel* means the simulation engine core; Linux, RouterOS, and device firmware remain their own systems in a real lab.
 
-## Masalah yang ingin diselesaikan
+## Problem
 
-Satu jaringan muncul dalam banyak bentuk: diagram, CLI vendor, monitoring, konfigurasi, capture paket, dan catatan insiden. Hubungan antara perubahan konfigurasi, perilaku jaringan, dan byte yang lewat sering harus disusun ulang secara manual.
+A network appears in many forms: diagrams, vendor CLI output, monitoring, configuration, packet captures, and incident notes. The relationship between a configuration change, network behaviour, and transmitted bytes often has to be reconstructed manually.
 
-Wirebox ingin mempertahankan hubungan itu dalam satu model:
+Wyrlex keeps that relationship in one model:
 
 ```text
 Infrastruktur = graph + state + behavior + constraints + time
 ```
 
-Contohnya, ketika route berubah, pengguna dapat melihat objek yang berubah, alasan pemilihan next-hop, paket yang terdampak, dan hasil simulasi sebelum menyiapkan perubahan nyata.
+For example, when a route changes, a user can inspect the changed object, the next-hop decision, affected packets, and simulation result before preparing the real change.
 
-## Pengalaman produk yang dituju
+## Intended product experience
 
-| Mode | Pertanyaan pengguna | Hasil yang dituju |
+| Mode | User question | Intended result |
 |---|---|---|
-| Inspect | Apa yang ada, bagaimana kondisinya, dan dari mana informasinya? | Topologi, state, observation, dependency, dan provenance |
-| Simulate | Apa yang terjadi jika route, link, atau konfigurasi berubah? | Cabang simulasi, trace keputusan, byte paket, dan hasil sesuai cakupan model |
-| Execute | Operasi apa yang diperlukan dan apakah hasilnya sesuai? | Plan, operasi adapter, catatan eksekusi, dan verifikasi ulang |
+| Inspect | What exists, what is its condition, and where did the information come from? | Topology, state, observations, dependencies, and provenance |
+| Simulate | What happens if a route, link, or configuration changes? | A simulation branch, decision trace, packet bytes, and a model-scoped result |
+| Execute | What operation is needed and did it produce the expected result? | A plan, adapter operations, execution records, and re-verification |
 
-Alur yang dibayangkan: **record → replay → modify → simulate → apply → verify**. Replay dari data produksi hanya dapat memulihkan hal yang tercatat; simulasi lanjutan memakai asumsi model yang harus terlihat.
+The intended flow is **record → replay → modify → simulate → apply → verify**. A replay can restore only what was recorded; further simulation uses model assumptions that must remain visible.
 
-Inspirasi yang dibahas: interaksi perangkat seperti Winbox, topologi dan simulasi seperti Packet Tracer, inspeksi protokol seperti Wireshark, intent deklaratif seperti Terraform, serta langkah eksekusi dan inspeksi state seperti debugger. Ini analogi pengalaman, bukan daftar fitur yang sudah diimplementasikan.
+The discussed inspirations are device interaction like Winbox, topology and simulation like Packet Tracer, protocol inspection like Wireshark, declarative intent like Terraform, and debugger-style execution/state inspection. These are experience analogies, not a list of implemented features.
 
-## Satu fondasi, beberapa domain
+## One foundation, multiple domains
 
-Router, switch, firewall, Linux host, server, OLT, dan ONU adalah calon domain awal atau lanjutan. PLC, UPS, gateway IoT, radio, dan storage merupakan perluasan dalam visi awal, dengan model perilaku masing-masing.
+Routers, switches, firewalls, Linux hosts, servers, OLTs, and ONUs are candidate early or later domains. PLCs, UPS systems, IoT gateways, radios, and storage are extensions in the initial vision, each with its own behaviour model.
 
-OLT adalah satu domain yang kaya untuk menguji model: PON, ONU, VLAN, GEM, TCONT, alarm, dan kondisi optik. Dukungan field optik tidak dengan sendirinya menyediakan simulasi fisika optik.
+An OLT is a rich domain for testing the model: PON, ONU, VLAN, GEM, TCONT, alarms, and optical conditions. Supporting optical fields does not by itself provide optical-physics simulation.
 
-UI yang dibahas meliputi topology canvas, object inspector, byte/packet inspector, event timeline, state diff, dan operation planner. Layout UI hanya menyimpan posisi tampilan; koneksi dan dependency operasional berada pada model domain.
+The planned UI includes a topology canvas, object inspector, byte/packet inspector, event timeline, state diff, and operation planner. UI layout stores display positions only; operational connections and dependencies belong to the domain model.
 
-## Mengapa idenya masuk akal?
+## Why the idea is plausible
 
-Bagian penyusunnya dapat dibuat: model objek, scheduler event, codec paket, state machine protokol, adapter perangkat, dan UI inspeksi. [Mini-simulator eksternal](../packet-tracer/mini-simulator.md) sudah memperagakan skenario jaringan terbatas tanpa hardware. [Proyek pembanding](positioning.md) menunjukkan bahwa model jaringan, intent, dan validasi sudah menjadi pendekatan nyata.
+The parts are buildable: an object model, event scheduler, packet codecs, protocol state machines, device adapters, and inspection UI. The [external mini-simulator](../packet-tracer/mini-simulator.md) demonstrates a limited network scenario without hardware. [Comparison projects](positioning.md) show that network models, intent, and validation are established approaches.
 
-Tantangan utamanya adalah menjaga makna yang konsisten antara model, simulator, dan vendor. Kesetaraan tidak otomatis muncul karena semuanya memakai nama operasi yang sama. Setiap kemampuan perlu kontrak dan cakupan validasi.
+The main challenge is preserving consistent meaning between the model, simulator, and vendors. Equal names for operations do not create equivalence. Each capability needs a contract and a declared validation scope.
 
-Pembeda yang ingin diuji adalah hubungan yang dapat ditelusuri dari **intent → state → keputusan protokol → byte → hasil**, dalam satu ruang kerja. Nilai pembeda itu masih hipotesis produk sampai dibuktikan lewat penggunaan.
+The differentiator to test is a traceable relationship from **intent → state → protocol decision → byte → result** in one workspace. That value remains a product hypothesis until usage demonstrates it.
 
-## Cakupan awal
+## Initial scope
 
-Simulasi PC1–SW1–R1–PC2 sudah berjalan headless: Ethernet, ARP, IPv4, ICMP, waktu virtual, dan inspeksi perubahan byte. Langkah berikutnya menghubungkan hasil tersebut dengan Studio, kemudian replay, validasi lab, serta adapter secara bertahap.
+The PC1–SW1–R1–PC2 simulation runs headless and is connected to Studio: Ethernet, ARP, IPv4, ICMP, virtual time, and byte-change inspection. The next work is MVP acceptance and measurement, followed by checkpoint/replay, lab validation, and adapters in stages.
 
-Emulasi seluruh chipset, kesetaraan semua firmware, pengelolaan semua vendor, simulasi upgrade firmware, dan rollback universal belum menjadi janji produk. Keberhasilan impor `.pkt` juga bukan prasyarat engine mandiri.
+Emulation of every chipset, equivalence with every firmware version, support for every vendor, firmware-upgrade simulation, and universal rollback are not product promises. Successful `.pkt` import is not a prerequisite for the standalone engine.
 
-## Peta bacaan
+## Reading map
 
-- [Arsitektur](architecture.md): model bersama dan hubungan dengan dunia nyata.
-- [Simulasi](simulation.md) serta [byte tracker](byte-tracker.md): cara membangun dan menjelaskan perilaku.
-- [Teknologi](technology.md): pertimbangan Zig/Rust dan GPUI/GPUix.
-- [Roadmap](roadmap.md) serta [keputusan](decisions.md): pekerjaan yang diusulkan dan hal yang belum dipilih.
-- [Todos per phase](todos.md) dan [rencana pilot](pilot.md): checklist, skenario, serta bukti sukses PoC, MVP, pilot inti Linux/MikroTik, dan pilot ISP ZTE dengan ONU Huawei/VSOL.
+- [Architecture](architecture.md): the shared model and its relationship to the real world.
+- [Simulation](simulation.md) and the [byte tracker](byte-tracker.md): how behaviour is built and explained.
+- [Technology](technology.md): Zig/Rust and GPUI/GPUix considerations.
+- [Roadmap](roadmap.md) and [decisions](decisions.md): proposed work and choices still open.
+- [Phase todos](todos.md) and the [pilot plan](pilot.md): checklists, scenarios, and success evidence for the PoC, MVP, Linux/MikroTik core pilot, and ZTE with Huawei/VSOL ONU pilot.
 
-Sumber visi lengkap: [naskah Wirebox awal](../packet-tracer/sources/01-wirebox-vision.txt). Tambahan desain pada dokumen tematik ditandai sebagai usulan agar tidak dianggap sebagai permintaan atau fitur yang sudah disetujui.
+The full vision source is the [initial Wyrlex document](../packet-tracer/sources/01-wirebox-vision.txt). Design additions in thematic documents are marked as proposals so they are not mistaken for user requirements or approved features.

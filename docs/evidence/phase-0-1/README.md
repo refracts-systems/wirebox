@@ -1,63 +1,63 @@
-# Hasil gate G0 dan G1 — 20 Oktober 2026
+# G0 and G1 gate results — October 20, 2026
 
-## Keputusan gate
+## Gate decision
 
-| Gate | Status | Scope yang terbukti |
+| Gate | Status | Proven scope |
 |---|---|---|
-| G0 | Lulus untuk development lokal, baseline v1 | Scope/expected result dibekukan, fixture konsisten, inventaris user-reported beserta unknown tersedia, mesin dan protokol pembuktian dicatat |
-| G1 | Lulus lokal pada Windows x64 debug | Build Zig/Rust/GPUI, copy batch melalui ABI, ownership/error/lifecycle, pemeriksaan fixture, interaksi desktop, dan source export baru |
-| G2–G9 | Belum diuji | Scheduler, protokol, MVP, replay, adapter, intent executor, dan pilot perangkat nyata belum tersedia |
+| G0 | Passed for local development, baseline v1 | Scope/expected results are frozen, fixtures are consistent, user-reported inventory along with unknowns are available, machines and proofing protocols are recorded |
+| G1 | Local pass on Windows x64 debug | Zig/Rust/GPUI build, batch copy via ABI, ownership/error/lifecycle, fixture check, desktop interaction, and new source export |
+| G2–G9 | Not tested | Scheduler, protocol, MVP, replay, adapter, intent executor, and real device pilot not yet available |
 
-G0 tidak menyatakan akses ke VM/server atau hardware telah diuji. Dependency model/firmware/access yang tersisa tetap tercatat di [inventaris](../../../fixtures/inventory/pilot-v1.json), untuk G6/G8. Dasar scope ini ditetapkan pada [ADR-0005](../../adr/0005-pilot-scope.md) dan [kontrak v1](../../wirebox/phase-0-contract.md).
+G0 does not indicate access to the VM/server or hardware has been tested. The remaining model/firmware/access dependencies remain logged in [inventory](../../../fixtures/inventory/pilot-v1.json), for G6/G8. The basis of this scope is set in [ADR-0005](../../adr/0005-pilot-scope.md) and [contract v1](../../wirebox/phase-0-contract.md).
 
-## Lingkungan dan identitas
+## Environment and identity
 
-[environment.json](environment.json) merekam OS, CPU/RAM/GPU, compiler, dan target aktual. Source belum memiliki commit; [source-manifest.json](source-manifest.json) menyimpan SHA-256 berkas build/kernel/host/fixture/ADR terkait. Cargo.lock menyimpan versi dan checksum dependency. Binary tidak dimasukkan ke repository.
+[environment.json](environment.json) records the OS, CPU/RAM/GPU, compiler, and actual target. Source has no commits yet; [source-manifest.json](source-manifest.json) stores the SHA-256 of the associated build/kernel/host/fixture/ADR files. Cargo.lock stores versions and dependency checksums. Binaries are not included in the repository.
 
-## Verifikasi otomatis
+## Automatic verification
 
-Command aktual: `./scripts/verify.ps1`. Hasil disimpan pada [verification.log](verification.log).
+Actual command: `./scripts/verify.ps1`. Results are stored in [verification.log](verification.log).
 
-| Pemeriksaan | Hasil |
+| Examination | Results |
 |---|---|
-| Rustfmt workspace dan Zig fmt | Lulus |
-| Unit test Zig | 3 lulus: layout/copy, stale handle, kapasitas session dan reuse |
-| Compile C11 layout header | Lulus: sizeof, alignof, offset, dan handle width |
-| Unit test Rust wrapper | 5 lulus: copy/lifetime, batch/order/capacity, error, ABI/null/stale handle, layout |
-| Unit test fixture | 2 lulus: fixture consistency dan deteksi checksum rusak |
-| Compile-fail doctest | 1 lulus: Session tidak dapat dipindahkan melalui thread::spawn |
-| Clippy workspace/all-targets dengan `-D warnings` | Lulus untuk source workspace |
-| Runner `--probe` | 30 byte yang dikirim Rust disalin Zig dan dibaca kembali; session ditutup; result pass |
-| Runner `--check-fixtures` | 4 node/5 skenario tervalidasi sebagai fixture; checksum expected header valid; tidak menjalankan simulasi |
-| Build desktop debug | Lulus dengan GPUI 0.2.2 pada Windows MSVC |
+| Rustfmt workspace and Zig fmt | Pass |
+| Zig unit tests | 3 passes: layout/copy, stale handle, session capacity and reuse |
+| Compile C11 layout header | Pass: sizeof, alignof, offset, and handle width |
+| Rust wrapper unit tests | 5 passes: copy/lifetime, batch/order/capacity, error, ABI/null/stale handle, layout |
+| Unit test fixtures | 2 passes: fixture consistency and broken checksum detection |
+| Compile-fail doctest | 1 pass: Session cannot be moved via thread::spawn |
+| Clippy workspace/all-targets with `-D warnings` | Pass to source workspace |
+| Runner `--probe` | The 30 bytes that Rust sends are copied by Zig and read back; session closed; result pass |
+| Runner `--check-fixtures` | 4 nodes/5 scenarios validated as fixtures; checksum expected header valid; not running simulation |
+| Build debug desktop | Passed with GPUI 0.2.2 on Windows MSVC |
 
-Total test: 3 Zig + 7 Rust unit + 1 compile-fail doctest. Angka ini bukan jumlah skenario jaringan yang sudah dijalankan.
+Total tests: 3 Zig + 7 Rust units + 1 compile-fail doctest. This figure is not the number of network scenarios that have been run.
 
-Cargo melaporkan future-incompatibility pada dependency transitif `proc-macro-error2 2.0.1` (private re-export proc_macro, E0365). Build pada Rust 1.99.1 tetap berhasil. Ini dicatat sebagai dependency follow-up saat upgrade toolchain; tidak disembunyikan dengan perubahan lint source atau patch third-party yang belum diuji.
+Cargo reports future-incompatibility in transitive dependency `proc-macro-error2 2.0.1` (private re-export proc_macro, E0365). Build on Rust 1.99.1 still works. This is recorded as a follow-up dependency when upgrading the toolchain; not hidden by lint source changes or untested third-party patches.
 
-## Source export baru
+## New export source
 
-Command: `./scripts/verify-clean-export.ps1`. [clean-export.log](clean-export.log) merekam build workspace, ABI probe, serta fixture validation dari direktori source baru di TEMP. Tidak ada .git, target, Zig static library, atau artifact source-side yang disalin.
+Command: `./scripts/verify-clean-export.ps1`. [clean-export.log](clean-export.log) records the build workspace, ABI probe, and validation fixture from the new source directory in TEMP. No .git, targets, Zig static libraries, or source-side artifacts are copied.
 
-Dependency serta compiler cache lokal digunakan kembali melalui CARGO_TARGET_DIR. Ini pembuktian fresh-source build **dengan cache**, bukan cold-cache install atau remote CI run. Workflow Windows sudah dibuat pada [.github/workflows/verify.yml](../../../.github/workflows/verify.yml), tetapi belum dijalankan di GitHub.
+Dependencies as well as the local compiler cache are reused via CARGO_TARGET_DIR. This is proof of a fresh-source build **with cache**, not a cold-cache install or remote CI run. The Windows workflow has been created in [.github/workflows/verify.yml](../../../.github/workflows/verify.yml), but has not been run on GitHub.
 
-## Verifikasi runtime GPUI
+## Verify GPUI runtime
 
-Window target dipilih melalui Computer Use. Hasil yang diamati:
+The target window is selected via Computer Use. Observed results:
 
-- Node R1 terpilih dan inspector menunjukkan alamat fixture.
-- Link SW1–R1 terpilih dan inspector menjelaskan link fixture.
-- Byte offset 0 terpilih dan menunjukkan 0x57 / decimal 87 dari buffer Zig.
-- Ctrl+R menaikkan event ID dari 4 ke 5 dan membaca salinan batch baru.
-- Escape mengembalikan selection ke PC1.
-- Ctrl+Q menutup window; log mencatat `window_closed` dan `session_destroyed`.
+- Node R1 is selected and the inspector shows the fixture address.
+- Link SW1–R1 is selected and the inspector explains the link fixture.
+- Byte offset 0 is selected and represents 0x57 / decimal 87 of the Zig buffer.
+- Ctrl+R increases the event ID from 4 to 5 and reads a new batch copy.
+- Escape returns selection to PC1.
+- Ctrl+Q closes the window; log records `window_closed` and `session_destroyed`.
 
-[ui-interaction.log](ui-interaction.log) juga mencatat interaksi sebelum langkah automation yang aktornya tidak ditentukan; bukti automation spesifik adalah urutan di atas. Setelah perbaikan tinggi minimum window agar footer terlihat, build akhir diinspeksi ulang dan tombol close native diuji. [ui-final.log](ui-final.log) mencatat sesi akhir tersebut dan penghancuran session. Kedua stderr run kosong; tidak ditemukan crash pada run tersebut.
+[ui-interaction.log](ui-interaction.log) also logs interactions before an automation step for which the actor is not specified; specific evidence of automation is the sequence above. After fixing the minimum window height to make the footer visible, the final build was re-inspected and the native close button was tested. [ui-final.log](ui-final.log) logs the final session and session destruction. Both stderr runs are empty; no crashes were found in that run.
 
 ![Preview native Wirebox phase 1](ui-preview.jpg)
 
-Tampilan adalah topology fixture dan transport probe, bukan animasi simulasi jaringan. Screenshot hanya memuat window Wirebox. Build GUI awal memerlukan pemakaian API judul window yang sesuai paket GPUI yang dipin; perbaikan telah masuk source dan build akhir lulus.
+The display is the fixture topology and probe transport, not a network simulation animation. The screenshot only contains the Wirebox window. Initial GUI builds require the use of window title APIs appropriate to the pinned GPUI package; the fix has entered source and the final build passed.
 
-## Batas pembuktian
+## Limits of proof
 
-Belum ada packet scheduler, codec/field mapping protokol, ping simulator, snapshot/replay, login perangkat, mutation jaringan, benchmark p95, sesi 30 menit, release packaging, atau pengujian lintas platform. G1 membuktikan batas stack/data dan input dasar. Berikutnya adalah P2-01 dan implementasi semantics waktu pada [ADR-0003](../../adr/0003-virtual-time-and-trace.md).
+There is no packet scheduler, codec/field mapping protocol, ping simulator, snapshot/replay, device login, network mutation, p95 benchmark, 30 minute sessions, release packaging, or cross-platform testing. G1 proves basic stack/data and input limits. Next is P2-01 and the implementation of time semantics in [ADR-0003](../../adr/0003-virtual-time-and-trace.md).

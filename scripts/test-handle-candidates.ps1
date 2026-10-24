@@ -1,4 +1,4 @@
-param([string]$Zig = $env:WIREBOX_ZIG)
+param([string]$Zig = $env:WYRLEX_ZIG)
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
 if (-not $Zig) { $Zig = Join-Path $env:LOCALAPPDATA 'Programs\Zig\zig-x86_64-windows-0.17.0\zig.exe' }

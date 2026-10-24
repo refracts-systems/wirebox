@@ -4,7 +4,7 @@ pub const c = @import("codec.zig");
 pub const Error = rt.Error || error{ State, OutOfMemory };
 pub const packet_limit = 128;
 pub const tx_limit = 256;
-pub const trace_limit = 1024;
+pub const trace_limit = 10_000;
 pub const Packet = extern struct {
     version_id: u64 = 0,
     packet_id: u64 = 0,
@@ -235,7 +235,9 @@ pub const Network = struct {
     }
     pub fn readTrace(self: *Network, after: u64, out: []Trace) usize {
         const count = @min(self.trace_total, self.retention);
-        var ordinal = self.trace_total - count + 1;
+        if (after >= self.trace_total) return 0;
+        // Seek directly into the ring. Reading in batches must not rescan old rows.
+        var ordinal = @max(self.trace_total - count + 1, after + 1);
         var n: usize = 0;
         while (ordinal <= self.trace_total and n < out.len) : (ordinal += 1) {
             if (ordinal <= after) continue;
@@ -669,3 +671,33 @@ pub const Network = struct {
         };
     }
 };
+
+test "trace retention wraps without trimming scheduler or aliasing packet versions" {
+    const net = try std.testing.allocator.create(Network);
+    defer std.testing.allocator.destroy(net);
+    try net.init(1, trace_limit);
+    const version = try net.store(1, &.{ 0x45, 0x00 }, 0, false);
+    // Synthetic journal stress: this tests storage, not 10,257 protocol events.
+    for (0..10_257) |i| net.emit(.{ .kind = 1, .version = version, .detail_a = i });
+    const summary = net.summary();
+    try std.testing.expectEqual(@as(u64, 257), summary.trace_dropped);
+    try std.testing.expectEqual(@as(u64, 0), summary.executed);
+    try std.testing.expectEqual(@as(u32, 0), summary.pending_events);
+    var rows: [127]Trace = undefined;
+    var after: u64 = 0;
+    var count: usize = 0;
+    while (true) {
+        const n = net.readTrace(after, &rows);
+        if (n == 0) break;
+        for (rows[0..n]) |row| {
+            try std.testing.expectEqual(@as(u64, 258) + count, row.ordinal);
+            try std.testing.expectEqual(version, row.version);
+            try std.testing.expectEqual(row.ordinal - 1, row.detail_a);
+            count += 1;
+            after = row.ordinal;
+        }
+    }
+    try std.testing.expectEqual(@as(usize, 10_000), count);
+    try std.testing.expectEqual(@as(usize, 0), net.readTrace(std.math.maxInt(u64), &rows));
+    try std.testing.expectEqualSlices(u8, &.{ 0x45, 0x00 }, net.packets[0].data());
+}

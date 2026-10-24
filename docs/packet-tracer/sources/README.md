@@ -1,22 +1,22 @@
-# Arsip sumber
+# Source archive
 
-Salinan berikut dipertahankan byte-for-byte dari bahan yang tersedia pada 19 Oktober 2026. [manifest.json](manifest.json) mencatat lokasi asal, ukuran, dan SHA-256. Hash salinan dibandingkan dengan sumber pada saat penyalinan.
+The following copies are preserved byte-for-byte from material available on 19 October 2026. [manifest.json](manifest.json) records the original location, size, and SHA-256. Copy hashes were compared with the source at copy time.
 
-| Berkas | Isi dan kedudukan |
+| File | Content and role |
 |---|---|
-| [01-wirebox-vision.txt](01-wirebox-vision.txt) | Ide Wirebox yang diberikan pengguna; konteks produk, bukan bukti RE |
-| [02-static-analysis.txt](02-static-analysis.txt) | Tahap PE/RTTI/string/resource; sejumlah unknown kemudian dijawab atau direvisi |
-| [03-ghidra-architecture.txt](03-ghidra-architecture.txt) | Ringkasan analisis arsitektur melalui Ghidra |
-| [04-pkt-addendum.txt](04-pkt-addendum.txt) | Ringkasan decoder dokumen, pengujian corpus, dan koreksi lanjut |
-| [REPORT_addendum.original.md](REPORT_addendum.original.md) | Laporan lengkap yang tersedia pada direktori prototipe, termasuk bagian historis dan koreksi §7 |
-| [ptmini-README.original.md](ptmini-README.original.md) | Penjelasan prototipe, pemetaan ke bukti PT, dan simplifikasi |
+| [01-wirebox-vision.txt](01-wirebox-vision.txt) | User-supplied Wirebox idea; product context, not RE evidence |
+| [02-static-analysis.txt](02-static-analysis.txt) | PE/RTTI/string/resource stage; several unknowns were later answered or revised |
+| [03-ghidra-architecture.txt](03-ghidra-architecture.txt) | Ghidra architecture-analysis summary |
+| [04-pkt-addendum.txt](04-pkt-addendum.txt) | Document decoder, corpus-test, and later-correction summary |
+| [REPORT_addendum.original.md](REPORT_addendum.original.md) | Full report available in the prototype directory, including historical sections and §7 corrections |
+| [ptmini-README.original.md](ptmini-README.original.md) | Prototype explanation, PT-evidence mapping, and simplifications |
 
-## Cara memakai arsip
+## Using the archive
 
-Dokumen asal adalah laporan investigasi yang diberikan pengguna atau ditemukan di lokasi prototipe yang disebut dalam percakapan. Penyalinan tidak berarti seluruh klaimnya telah diaudit ulang. Label CONFIRMED pada arsip mempertahankan tingkat keyakinan penulis laporan asal.
+The original documents are investigation reports supplied by the user or found in the prototype location named in the conversation. Copying does not mean that every claim was audited again. The archive's CONFIRMED labels preserve the confidence of the original report author.
 
-Arsip dapat memiliki tautan/path yang menunjuk ke direktori kerja asal dan tidak tersedia di repository ini. Gunakan [ringkasan terkini](../README.md) untuk menavigasi dokumen yang memang disimpan di sini.
+The archive may contain links/paths to the original working directory that are unavailable in this repository. Use the [current summary](../README.md) to navigate documents stored here.
 
-Klaim lama yang telah dikoreksi tetap dipertahankan untuk provenance. Khusus format .pkt, baca [catatan koreksi](../pkt-format.md) dan §7 addendum sebelum bagian kriptografi yang lebih awal.
+Corrected historical claims remain for provenance. For the .pkt format, read the [correction note](../pkt-format.md) and addendum §7 before the earlier cryptography sections.
 
-Binary PT, hasil dekompilasi lengkap, keystream, decoder executable, dan corpus topologi XML tidak diarsipkan di sini. Catatan ini tidak menggantikan artifact bukti asal tersebut.
+The PT binary, complete decompilation, keystream, executable decoder, and XML topology corpus are not archived here. This note does not replace those original evidence artifacts.

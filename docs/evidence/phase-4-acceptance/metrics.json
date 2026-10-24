@@ -1,0 +1,37 @@
+{
+  "method": "Action-handler/scripted-dispatch entry through GPUI post-render callback; includes synchronous engine/FFI/snapshot work for scripted actions; excludes OS input transport and compositor presentation",
+  "workload": "Four nodes; 10000 retained rows from 160 independent kernel runs, rebased IDs; one additional live kernel owner processes bounded events and save/load",
+  "selection": {
+    "samples": 900,
+    "p50_ms": 54.281,
+    "p95_ms": 65.093,
+    "max_ms": 101.056
+  },
+  "pause": {
+    "samples": 900,
+    "p50_ms": 55.235,
+    "p95_ms": 73.062,
+    "max_ms": 97.285
+  },
+  "native_selection": {
+    "samples": 14,
+    "p50_ms": 43.6,
+    "p95_ms": 56.647,
+    "max_ms": 56.647
+  },
+  "native_pause": {
+    "samples": 1,
+    "p50_ms": 37.591,
+    "p95_ms": 37.591,
+    "max_ms": 37.591
+  },
+  "complete": true,
+  "failures": [],
+  "memory": {
+    "elapsed_seconds": 1830.138758,
+    "peak_working_set_bytes": 71462912,
+    "failure": null,
+    "all_responding": true
+  },
+  "pass": true
+}

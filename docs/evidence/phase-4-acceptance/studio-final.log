@@ -1,0 +1,18 @@
+   Compiling wirebox-studio v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-studio)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.07s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running unittests src\main.rs (target\debug\deps\wirebox_studio-b6213442d6ce02d4.exe)
+
+running 9 tests
+test model::tests::acceptance_history_preserves_all_rebased_references ... ok
+test model::tests::draft_subnet_routes_links_and_legacy_session ... ok
+test model::tests::horizon_with_pending_work_is_never_success ... ok
+test model::tests::branch_repairs_missing_route_without_changing_source ... ok
+test model::tests::explicit_longest_prefix_route_wins_and_removal_changes_outcome ... ok
+test model::tests::configuration_errors_and_packet_field_intersection ... ok
+test model::tests::presets_batch_step_and_owned_frames_match ... ok
+test model::tests::repaired_bundle_validates_baseline_and_keeps_active_report ... ok
+test model::tests::save_load_partial_complete_and_invalid_files ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.52s

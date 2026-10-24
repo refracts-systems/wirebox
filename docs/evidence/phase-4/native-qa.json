@@ -1,0 +1,176 @@
+{
+  "date": "2026-10-23",
+  "platform": "Windows x64 MSVC",
+  "method": "Computer Use via node_repl and @oai/sky",
+  "tested_window": "Wirebox · Packet Studio",
+  "final_native_executable_sha256": "bad23f5725069e115c524d3c9e3b12e58d44cd26ec6f208fa2d1351e814cd0f9",
+  "build_note": "Tracker/route/save-load walkthrough preceded the playback-mode addition. The production model/persistence code was unchanged; pause/reset/address tests used the final fast/slow build. Full verifier passed on final source.",
+  "tests": [
+    {
+      "id": "U1",
+      "result": "pass_scripted_agent",
+      "actual": {
+        "scenario": "S01",
+        "outcome": "echo_reply",
+        "events": 12,
+        "trace_rows": 63,
+        "packet_versions": 16
+      }
+    },
+    {
+      "id": "U2",
+      "result": "pass_scripted_agent",
+      "actual": {
+        "scenario": "S02",
+        "device": "R1",
+        "reason": "no_route",
+        "visible_steps": [
+          "drop",
+          "icmp_error"
+        ]
+      },
+      "evidence": "no-route.jpg"
+    },
+    {
+      "id": "U3",
+      "result": "pass_scripted_agent",
+      "actual": {
+        "byte": 8,
+        "field": "ipv4.ttl",
+        "bidirectional_selection": true,
+        "ttl_before": 64,
+        "ttl_after": 63,
+        "checksum_before": "65dd",
+        "checksum_after": "66dd"
+      },
+      "evidence": [
+        "ttl-before.jpg",
+        "ttl-after.jpg"
+      ]
+    },
+    {
+      "id": "U4",
+      "result": "pass_scripted_agent",
+      "actual": {
+        "invalid_gateway": "10.0.9.2",
+        "rejected_without_replacement": true,
+        "repaired_gateway": "10.0.1.2",
+        "source_outcome": "unreachable",
+        "new_outcome": "echo_reply"
+      },
+      "evidence": [
+        "route-repaired.jpg",
+        "native-session.wb.json"
+      ]
+    },
+    {
+      "id": "U5",
+      "result": "pass_scripted_agent",
+      "actual": {
+        "save_native_dialog": true,
+        "graceful_close": true,
+        "fresh_process": true,
+        "open_native_dialog": true,
+        "loaded_verified": true,
+        "reopened_packet_bytes": true,
+        "preserved_baseline": true
+      },
+      "evidence": "session-reopened.jpg"
+    },
+    {
+      "id": "forged_report",
+      "result": "pass",
+      "actual": {
+        "altered_outcome": 7,
+        "rejected": true,
+        "active_session_retained": true
+      },
+      "evidence": "invalid-session-rejected.jpg"
+    },
+    {
+      "id": "pause_step_resume",
+      "result": "pass",
+      "actual": {
+        "mode": "slow",
+        "event_budget": 1,
+        "playback_delay_ms": 1000,
+        "paused_events": 7,
+        "paused_time_ns": 40600,
+        "paused_pending": 2,
+        "stable_after_observation": true,
+        "after_step_events": 8,
+        "resumed_outcome": "echo_reply",
+        "resumed_events": 12
+      },
+      "evidence": "paused-pending.jpg"
+    },
+    {
+      "id": "reset_active",
+      "result": "pass",
+      "actual": {
+        "scenario": "S04",
+        "executed_before_reset": 6,
+        "executed_after_reset": 0,
+        "trace_after_reset": 0,
+        "packet_versions_after_reset": 0,
+        "stale_continuation_did_not_mutate_new_owner": true
+      },
+      "evidence": "reset-active-run.jpg"
+    },
+    {
+      "id": "invalid_packet",
+      "result": "pass",
+      "actual": {
+        "scenario": "S05",
+        "raw_hex": "4500",
+        "field_view": "InvalidPacket",
+        "reason": "truncated_ipv4"
+      },
+      "evidence": "invalid-packet.jpg"
+    },
+    {
+      "id": "config_viewport",
+      "result": "pass",
+      "actual": {
+        "pc2_port_enabled": true,
+        "pc1_address": "10.0.0.3/24",
+        "outcome": "echo_reply",
+        "filter_link": "L2",
+        "horizontal_pan": true,
+        "card_zoom": true
+      },
+      "evidence": "address-branch.jpg"
+    }
+  ],
+  "native_session": {
+    "path": "native-session.wb.json",
+    "sha256": "f473e21c26029804e4bb15b779dcebc31d15bafcf4464ffbbe99515bdc590430",
+    "bytes": 132408
+  },
+  "evidence_file_hashes": {
+    "address-branch.jpg": "1dab4d2414b495330899c84405a368338ca3511fdc7cc585abc10c2b70bbffd1",
+    "clippy-final.log": "d91f90e235c36cf9478ccc87f7f3b2a673340c4535eeee49cd8244ee81585cf7",
+    "invalid-packet.jpg": "58389f236560d4e76a67c61cc1770553e5b8bf687ab4bdd833e222b5d1708603",
+    "invalid-session-rejected.jpg": "0ae5205a9fdb072f281f6c4cbc4f0d573f13ba4d63398125099645d970f939d3",
+    "no-route.jpg": "89c383e8ef0c29deed3f99b8a6ba6fc2b4e245e6704a38bf4e9f0358fa07b2c7",
+    "paused-pending.jpg": "760ff34033d87a9967d1abea4e59e92ded5d02d25eff66d97d31cd4e0428ee36",
+    "reset-active-run.jpg": "44d0d84745a078c071d65c66947c09c782814bd789723c8a1798dd99935ab5e2",
+    "route-repaired.jpg": "2efdb9b4830da483564bd9787edef2826b973401c97a78a7e14b39d18d6276d4",
+    "session-reopened.jpg": "10fd1dcb4c7094b9826a6777a1b93c4788f4783c0c9a5ba9bd74d1f28a23582a",
+    "studio-build-final.log": "e8b243e4cf6c085edba94971fffadeceb5ba6e8796697bd423d8a617ae0c365f",
+    "studio-tests.log": "26ed1109b82710b95c15ac315d19d631c0c8703cd92bee2b3f05a738dca1556d",
+    "ttl-after.jpg": "002b3759b856f50b705c57e22d423c0a762af40b77c77fb455221abb87134617",
+    "ttl-before.jpg": "468ba3237be5681877318985272544fae721fba7de5229cd050c7175cd8f76df",
+    "ui-interaction.log": "0987115c1aad51deccbc8ad6d766700b12ac5bfbfd79aa796fae101e057e96a4",
+    "verification-exe-locked.log": "68d0939ad21d42c55ccb2e054950a95e7acd5584cc568a33df9de6a05021af11",
+    "verification-initial.log": "08c332b7ae3ad845a0f04b9bc535a59836b5234ec10a90339a4465eb2c3fce91",
+    "verification.log": "ced317888234c4458076ba8c802554994fde8b92b129272fdad1fc464946461e"
+  },
+  "limitations": [
+    "Agent walkthrough is not a human usability study.",
+    "No 10000-row p95 benchmark or scripted 30-minute stability measurement.",
+    "Not every input/dialog failure combination was tested.",
+    "No vendor/device comparison or remote CI claim."
+  ],
+  "gate_G4": "not_complete"
+}

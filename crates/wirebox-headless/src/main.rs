@@ -1,5 +1,5 @@
 use std::{error::Error, process::ExitCode};
-use wirebox_kernel::{ABI_VERSION, BATCH_LIMIT, PROBE_BYTES, Session, ZIG_VERSION};
+use wyrlex_kernel::{ABI_VERSION, BATCH_LIMIT, PROBE_BYTES, Session, ZIG_VERSION};
 mod fixtures;
 mod packet_demo;
 mod runtime_demo;
@@ -34,7 +34,7 @@ fn run() -> Result<(), Box<dyn Error>> {
     }
     if !args.is_empty() && args != ["--probe"] {
         return Err(
-            "usage: wirebox-headless [--probe | --check-fixtures | --scheduler-demo | --check-runtime | --packet-demo [S01..S05|alias] | --check-network]"
+            "usage: wyrlex-headless [--probe | --check-fixtures | --scheduler-demo | --check-runtime | --packet-demo [S01..S05|alias] | --check-network]"
                 .into(),
         );
     }

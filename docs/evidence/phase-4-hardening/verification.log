@@ -1,0 +1,173 @@
+0.17.0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+1/38 abi.test_0...OK
+2/38 abi.test.ABI layout is fixed and data is copied before the caller changes it...OK
+3/38 abi.test.destroyed handle cannot access a reused slot...OK
+4/38 abi.test.session exhaustion is reported and released slots can be used again...OK
+5/38 abi.test.handle boundary generation 1...
+g=0x00000001 old=0x0000000100000001 destroy=0 stored=0x00000002 create=0 next=0x0000000200000001 lookup(next)=true
+OK
+6/38 abi.test.handle boundary generation 0x3ffffffe...
+g=0x3ffffffe old=0x3ffffffe00000001 destroy=0 stored=0x3fffffff create=0 next=0x3fffffff00000001 lookup(next)=true
+OK
+7/38 abi.test.handle boundary generation 0x3fffffff...
+g=0x3fffffff old=0x3fffffff00000001 destroy=0 stored=0x00000000 create=0 next=0x0000000100000002 lookup(next)=true
+OK
+8/38 abi.test.handle boundary generation 0x40000000...
+g=0x40000000 old=0x4000000000000001 destroy=3 stored=0x40000000 create=0 next=0x0000000100000002 lookup(next)=true
+OK
+9/38 abi.test.handle boundary generation 0x7fffffff...
+g=0x7fffffff old=0x7fffffff00000001 destroy=3 stored=0x7fffffff create=0 next=0x0000000100000002 lookup(next)=true
+OK
+10/38 abi.test.handle layout rejects zero index generation and every foreign discriminator...OK
+11/38 abi.test.handle stale history stays invalid across reuse and final retirement...OK
+12/38 abi.test.handle property namespace and reuse over boundary neighborhoods and random generations...OK
+13/38 runtime_tests.test.runtime C layouts...OK
+14/38 runtime_tests.test.graph validates references and endpoint exclusivity; cascade cancels every removed owner...OK
+15/38 runtime_tests.test.stable heap order matches independent linear selection after arbitrary cancellations...OK
+16/38 runtime_tests.test.same-time recurrence keeps causal IDs and yields at event budget...OK
+17/38 runtime_tests.test.capacity and cancellation reclaim space without consuming IDs on failure...OK
+18/38 runtime_tests.test.overflow is atomic for time, counter, RNG, IDs and execution count...OK
+19/38 runtime_tests.test.failed later event exposes successful run prefix; future event remains queued...OK
+20/38 runtime_tests.test.pinned SplitMix64 golden values and explicit state continuation...OK
+21/38 runtime_tests.test.retention and read cadence do not change state, RNG, IDs or execution order...OK
+22/38 runtime_tests.test.serialization delay rounds up with checked wide arithmetic...OK
+23/38 runtime_tests.test.hardening interleaved schedule cancel step matches linear reference model...OK
+24/38 network_tests.test.codec golden header decrement preserves payload and validates checksum...OK
+25/38 network_tests.test.truncated inputs never read outside packet; unsupported stays explicit...OK
+26/38 network_tests.test.hardening codec mutation corpus bounds every successful field view...OK
+27/38 network_tests.test.hardening staged port changes must revalidate routes before workload starts...OK
+28/38 network_tests.test.network echo runs through shared scheduler and immutable packet versions...OK
+29/38 network_tests.test.switch flood branches share bytes with distinct transmissions and later unicast...OK
+30/38 network_tests.test.static LPM overrides connected route; disabled egress and off-link gateway rejected...OK
+31/38 network_tests.test.echo preserves odd-length data and field values...OK
+32/38 network_tests.test.ICMP error suppression for error-of-error and L2 broadcast...OK
+33/38 network.test.trace retention wraps without trimming scheduler or aliasing packet versions...OK
+34/38 sim_abi.test.hardening runtime registry retires at namespace boundary and rejects foreign handles...OK
+35/38 sim_abi.test.runtime ABI rejects null, wrong versions, stale worlds and short graph outputs...OK
+36/38 sim_abi.test.runtime world capacity and release...OK
+37/38 net_abi.test.hardening network registry retires at namespace boundary without leaking allocation...OK
+38/38 net_abi.test.network ABI allocation capacity, pointer errors and failed resource state...OK
+All 38 tests passed.
+1/38 abi.test_0...OK
+2/38 abi.test.ABI layout is fixed and data is copied before the caller changes it...OK
+3/38 abi.test.destroyed handle cannot access a reused slot...OK
+4/38 abi.test.session exhaustion is reported and released slots can be used again...OK
+5/38 abi.test.handle boundary generation 1...
+g=0x00000001 old=0x0000000100000001 destroy=0 stored=0x00000002 create=0 next=0x0000000200000001 lookup(next)=true
+OK
+6/38 abi.test.handle boundary generation 0x3ffffffe...
+g=0x3ffffffe old=0x3ffffffe00000001 destroy=0 stored=0x3fffffff create=0 next=0x3fffffff00000001 lookup(next)=true
+OK
+7/38 abi.test.handle boundary generation 0x3fffffff...
+g=0x3fffffff old=0x3fffffff00000001 destroy=0 stored=0x00000000 create=0 next=0x0000000100000002 lookup(next)=true
+OK
+8/38 abi.test.handle boundary generation 0x40000000...
+g=0x40000000 old=0x4000000000000001 destroy=3 stored=0x40000000 create=0 next=0x0000000100000002 lookup(next)=true
+OK
+9/38 abi.test.handle boundary generation 0x7fffffff...
+g=0x7fffffff old=0x7fffffff00000001 destroy=3 stored=0x7fffffff create=0 next=0x0000000100000002 lookup(next)=true
+OK
+10/38 abi.test.handle layout rejects zero index generation and every foreign discriminator...OK
+11/38 abi.test.handle stale history stays invalid across reuse and final retirement...OK
+12/38 abi.test.handle property namespace and reuse over boundary neighborhoods and random generations...OK
+13/38 runtime_tests.test.runtime C layouts...OK
+14/38 runtime_tests.test.graph validates references and endpoint exclusivity; cascade cancels every removed owner...OK
+15/38 runtime_tests.test.stable heap order matches independent linear selection after arbitrary cancellations...OK
+16/38 runtime_tests.test.same-time recurrence keeps causal IDs and yields at event budget...OK
+17/38 runtime_tests.test.capacity and cancellation reclaim space without consuming IDs on failure...OK
+18/38 runtime_tests.test.overflow is atomic for time, counter, RNG, IDs and execution count...OK
+19/38 runtime_tests.test.failed later event exposes successful run prefix; future event remains queued...OK
+20/38 runtime_tests.test.pinned SplitMix64 golden values and explicit state continuation...OK
+21/38 runtime_tests.test.retention and read cadence do not change state, RNG, IDs or execution order...OK
+22/38 runtime_tests.test.serialization delay rounds up with checked wide arithmetic...OK
+23/38 runtime_tests.test.hardening interleaved schedule cancel step matches linear reference model...OK
+24/38 network_tests.test.codec golden header decrement preserves payload and validates checksum...OK
+25/38 network_tests.test.truncated inputs never read outside packet; unsupported stays explicit...OK
+26/38 network_tests.test.hardening codec mutation corpus bounds every successful field view...OK
+27/38 network_tests.test.hardening staged port changes must revalidate routes before workload starts...OK
+28/38 network_tests.test.network echo runs through shared scheduler and immutable packet versions...OK
+29/38 network_tests.test.switch flood branches share bytes with distinct transmissions and later unicast...OK
+30/38 network_tests.test.static LPM overrides connected route; disabled egress and off-link gateway rejected...OK
+31/38 network_tests.test.echo preserves odd-length data and field values...OK
+32/38 network_tests.test.ICMP error suppression for error-of-error and L2 broadcast...OK
+33/38 network.test.trace retention wraps without trimming scheduler or aliasing packet versions...OK
+34/38 sim_abi.test.hardening runtime registry retires at namespace boundary and rejects foreign handles...OK
+35/38 sim_abi.test.runtime ABI rejects null, wrong versions, stale worlds and short graph outputs...OK
+36/38 sim_abi.test.runtime world capacity and release...OK
+37/38 net_abi.test.hardening network registry retires at namespace boundary without leaking allocation...OK
+38/38 net_abi.test.network ABI allocation capacity, pointer errors and failed resource state...OK
+All 38 tests passed.
+   Compiling wirebox-kernel v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-kernel)
+   Compiling wirebox-headless v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-headless)
+   Compiling wirebox-studio v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-studio)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.44s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running unittests src\main.rs (target\debug\deps\wirebox_headless-42e2aaa4ac20b13c.exe)
+
+running 4 tests
+test fixtures::tests::checksum_or_mutation_regression_in_golden_is_detected ... ok
+test fixtures::tests::frozen_fixture_set_is_consistent ... ok
+test runtime_demo::tests::acceptance_matrix_runs_through_real_zig_ffi ... ok
+test packet_demo::tests::frozen_network_scenarios_and_negative_inputs ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running unittests src\lib.rs (target\debug\deps\wirebox_kernel-e5272c5ebaa74415.exe)
+
+running 12 tests
+test simulation::tests::c_layouts_match ... ok
+test tests::layout_matches_c_and_zig ... ok
+test network::tests::raw_registry_rejects_null_and_stale_handles ... ok
+test simulation::tests::raw_runtime_handles_cannot_alias_probe_handles ... ok
+test tests::copied_data_survives_mutation_and_owner_shutdown ... ok
+test network::tests::layouts_ownership_and_invalid_input_copy ... ok
+test tests::invalid_inputs_do_not_change_queue ... ok
+test tests::raw_boundary_rejects_null_mismatched_abi_and_stale_handles ... ok
+test simulation::tests::graph_lifecycle_and_periodic_budget_through_ffi ... ok
+test simulation::tests::runtime_ffi_copies_survive_close_and_trace_cursor_is_execution_ordinal ... ok
+test simulation::tests::run_error_preserves_prefix_and_failed_event_can_be_cancelled ... ok
+test tests::partial_batches_preserve_order_and_failed_submit_does_not_consume_ids ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\main.rs (target\debug\deps\wirebox_studio-b6213442d6ce02d4.exe)
+
+running 8 tests
+test model::tests::branch_repairs_missing_route_without_changing_source ... ok
+test model::tests::explicit_longest_prefix_route_wins_and_removal_changes_outcome ... ok
+test model::tests::presets_batch_step_and_owned_frames_match ... ok
+test model::tests::configuration_errors_and_packet_field_intersection ... ok
+test model::tests::horizon_with_pending_work_is_never_success ... ok
+test model::tests::draft_subnet_routes_links_and_legacy_session ... ok
+test model::tests::repaired_bundle_validates_baseline_and_keeps_active_report ... ok
+test model::tests::save_load_partial_complete_and_invalid_files ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+
+   Doc-tests wirebox_kernel
+
+running 3 tests
+test crates\wirebox-kernel\src\lib.rs - Session (line 104) - compile fail ... ok
+test crates\wirebox-kernel\src\simulation.rs - simulation::World (line 128) - compile fail ... ok
+test crates\wirebox-kernel\src\network.rs - network::Network (line 121) - compile fail ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+
+   Compiling wirebox-kernel v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-kernel)
+    Checking wirebox-headless v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-headless)
+    Checking wirebox-studio v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-studio)
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> crates\wirebox-studio\src\model.rs:121:36
+    |
+121 |     pub fn route_entries(&self) -> Result<Vec<(String, String, u32, u32, u32)>> {
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#type_complexity
+    = note: `-D clippy::type-complexity` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: could not compile `wirebox-studio` (bin "wirebox-studio") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `wirebox-studio` (bin "wirebox-studio" test) due to 1 previous error

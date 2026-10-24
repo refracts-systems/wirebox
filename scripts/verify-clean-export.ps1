@@ -1,7 +1,7 @@
 param()
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
-$export = Join-Path ([IO.Path]::GetTempPath()) ('wirebox-clean-source-' + [guid]::NewGuid().ToString('N'))
+$export = Join-Path ([IO.Path]::GetTempPath()) ('wyrlex-clean-source-' + [guid]::NewGuid().ToString('N'))
 $previousTarget = $env:CARGO_TARGET_DIR
 
 Push-Location $repo
@@ -21,13 +21,13 @@ try {
     Set-Location $export
     & cargo build --workspace --locked --offline
     if ($LASTEXITCODE -ne 0) { throw 'Fresh-source build failed' }
-    & cargo run --locked --offline -p wirebox-headless -- --probe
+    & cargo run --locked --offline -p wyrlex-headless -- --probe
     if ($LASTEXITCODE -ne 0) { throw 'Fresh-source ABI probe failed' }
-    & cargo run --locked --offline -p wirebox-headless -- --check-fixtures
+    & cargo run --locked --offline -p wyrlex-headless -- --check-fixtures
     if ($LASTEXITCODE -ne 0) { throw 'Fresh-source fixture validation failed' }
-    & cargo run --locked --offline -p wirebox-headless -- --check-runtime
+    & cargo run --locked --offline -p wyrlex-headless -- --check-runtime
     if ($LASTEXITCODE -ne 0) { throw 'Fresh-source runtime validation failed' }
-    & cargo run --locked --offline -p wirebox-headless -- --check-network
+    & cargo run --locked --offline -p wyrlex-headless -- --check-network
     if ($LASTEXITCODE -ne 0) { throw 'Fresh-source network validation failed' }
     Write-Output 'Fresh-source build passed with cached dependencies; not a cold-cache or remote CI run.'
 } finally {

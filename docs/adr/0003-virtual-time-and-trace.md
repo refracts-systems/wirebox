@@ -1,24 +1,24 @@
-# ADR-0003 — Waktu virtual dan trace yang dapat direproduksi
+# ADR-0003 — Reproducible virtual time and trace
 
-- Tanggal: 20 Oktober 2026
-- Status: Accepted, diimplementasikan phase 2; rincian budget/PRNG/retensi di ADR-0006 dan bukti pada laporan G2.
+- Date: 20 October 2026
+- Status: Accepted, implemented in Phase 2; budget/PRNG/retention details are in ADR-0006 and the G2 report.
 
-## Konteks
+## Context
 
-Scheduler PT dan log GUI dilaporkan terpisah. Wirebox juga membutuhkan urutan kausal serta restore yang lebih kuat daripada memutar ulang animasi.
+The PT scheduler and GUI log are reported as separate components. Wyrlex also needs causal ordering and stronger restore semantics than replaying an animation.
 
-## Keputusan
+## Decision
 
-Gunakan tick `u64` dalam nanodetik, mulai dari nol, dengan urutan `(time_ns, sequence)`. Sequence monotonic dan overflow diperiksa. Penjadwalan ke masa lalu ditolak. `step()` memproses satu record scheduler berikutnya; antrean kosong tidak memajukan jam. `runUntil(t)` mengeksekusi record bertimestamp `<= t`, lalu memajukan jam ke `t`; `t < now` error. Batas event/cancel mencegah timer periodik memblokir eksekusi.
+Use `u64` nanosecond ticks starting at zero, ordered by `(time_ns, sequence)`. Sequence monotonicity and overflow are checked. Scheduling in the past is rejected. `step()` processes one scheduler record; an empty queue does not advance time. `runUntil(t)` executes records timestamped `<= t`, then advances time to `t`; `t < now` is an error. Event/cancel bounds prevent a periodic timer from blocking execution.
 
-Mulai dengan satu pemilik eksekusi state. Event tertunda menggunakan record/ID stabil yang dapat diserialisasi, bukan menyimpan pointer fungsi/closure native dalam checkpoint. Timer memiliki ID dan lifecycle cancellation. Algoritme PRNG dipin bersama implementasi phase 2 sebelum mengklaim determinisme random; seed dan state termasuk checkpoint.
+Start with one owner of state execution. Pending events use serialisable stable records/IDs rather than native function or closure pointers in a checkpoint. Timers have IDs and a cancellation lifecycle. Pin the PRNG algorithm with the Phase 2 implementation before claiming random determinism; seed and state belong in a checkpoint.
 
-Pisahkan queue scheduler, jurnal, dan visible event list. Retensi GUI tidak mengubah eksekusi. Untuk delay serialisasi gunakan pembulatan integer ke atas dari bit/bitrate dan periksa overflow. Waktu GUI/realtime hanya mengatur pacing.
+Separate the scheduler queue, journal, and visible event list. GUI retention must not change execution. For serialisation delay, use integer ceiling from bits/bitrate and check overflow. GUI/realtime time only controls pacing.
 
-## Alternatif dan konsekuensi
+## Alternatives and consequences
 
-Floating-point time dan wall clock langsung mudah dipakai tetapi memperumit reproduksibilitas. Callback arbitrary memudahkan prototipe namun menyulitkan checkpoint. Record bertipe memerlukan dispatch eksplisit, sebagai biaya untuk replay yang dapat diperiksa.
+Floating-point time and direct wall-clock use are easy but complicate reproducibility. Arbitrary callbacks help a prototype but make checkpoints difficult. Typed records require explicit dispatch as the cost of inspectable replay.
 
-Ini konvensi Wirebox, bukan peniruan semantics `runUntil` mini-sim lama. Replay dijamin hanya pada versi model/build/lingkungan yang dinyatakan sampai kompatibilitas lintas versi dibuktikan.
+This is a Wyrlex convention, not an imitation of the old mini-simulator's `runUntil` semantics. Replay is guaranteed only for the declared model/build/environment until cross-version compatibility is demonstrated.
 
-Rujukan: [simulasi](../wirebox/simulation.md), [mini-simulator dan batasnya](../packet-tracer/mini-simulator.md).
+References: [simulation](../wirebox/simulation.md), [mini-simulator and limits](../packet-tracer/mini-simulator.md).

@@ -1,69 +1,69 @@
-# Arsitektur simulasi yang dilaporkan
+# Reported simulation architecture
 
-## Metode dan batas
+## Methods and limits
 
-Target laporan adalah PacketTracer.exe 9.0.1 x64. Tahap awal memakai pemeriksaan PE, string, RTTI MSVC, dan ekstraksi resource. Tahap berikutnya memakai proyek Ghidra 12.1.4 headless. Nama fungsi FUN_* adalah label analisis pada binary tersebut; nama method tertentu direkonstruksi melalui RTTI dan string anchoring, tanpa PDB.
+The report target is PacketTracer.exe 9.0.1 x64. The initial stage uses PE, string, RTTI MSVC inspection, and resource extraction. The next stage uses the Ghidra 12.1.4 headless project. The function name FUN_* is the analysis label on the binary; Certain method names are reconstructed via RTTI and string anchoring, without PDB.
 
-REA dilaporkan tidak menyediakan provider decompiler PE native pada sesi investigasi asal. Dekompilasi dikerjakan melalui Ghidra; Frida digunakan pada investigasi runtime format dokumen. Ini bukan klaim bahwa REA sendiri mendekompilasi target.
+REA reportedly does not provide a native PE decompiler provider in the original investigation session. Decompilation is done via Ghidra; Frida is used in runtime investigation of document formats. This is not a claim that REA itself decompiles targets.
 
-## Dunia simulasi
+## Simulation world
 
-| Objek | Peran | Bukti dalam laporan |
+| Object | Role | Evidence in the report |
 |---|---|---|
-| CNetwork / CNetworkFile | Topologi dan serialisasi dokumen | RTTI, serializer, parser |
-| CWorkspaceList | Menambah/menghapus perangkat dan link | Nama operasi dan referensi terkait |
-| Device::CDevice | Perangkat polymorphic | RTTI/vftable, descriptor, factory |
-| Port::CPort | Titik kirim/terima | Kelas port dan label send/receive |
-| Link::CLink / CCable | Koneksi dan pengiriman tertunda | RTTI, source-path string, timer kabel |
-| CProcess | Pemrosesan protokol | processSend/processReceive/processNoConnection, higher/lower vectors |
-| Traffic::CPdu | Representasi paket dalam memori | RTTI, kelas header, getDecapsulationInfo |
-| CFrameInstance | Representasi instance untuk tampilan/animasi | RTTI dan slot animasi |
+| CNetwork / CNetworkFile | Document topology and serialization | RTTI, serializer, parser |
+| CWorkspaceList | Add/remove devices and links | Operation name and associated references |
+| Device::CDevice | Polymorphic devices | RTTI/vftable, descriptor, factory |
+| Port::CPort | Send/receive point | Port class and send/receive labels |
+| Link::CLink / CCable | Delayed connection and delivery | RTTI, source-path string, cable timer |
+| CProcess | Protocol processing | processSend/processReceive/processNoConnection, higher/lower vectors |
+| Traffic::CPdu | In-memory package representation | RTTI, header class, getDecapsulationInfo |
+| CFrameInstance | Instance representation for views/animations | RTTI and animated slots |
 
-CNetwork dilaporkan memakai vector CDevice* pada +0xF0/+0xF8 dan ordered map koneksi pada +0x170. Offset ini adalah hasil analisis versi target, bukan kontrak layout untuk Wirebox.
+CNetwork reportedly uses a CDevice* vector at +0xF0/+0xF8 and an ordered connection map at +0x170. This offset is the result of target version analysis, not a layout contract for Wyrlex.
 
 ## Scheduler
 
-Addendum melaporkan CScheduler::destructor FUN_141d1d3e0 dengan loop sift-down serta operasi pop_heap/pop_back.
+The addendum reports CScheduler::destructor FUN_141d1d3e0 with a shift-down loop as well as pop_heap/pop_back operations.
 
-| Lokasi relatif | Isi yang dilaporkan | Interpretasi |
+| Relative location | Reported content | Interpretation |
 |---|---|---|
-| +0x18 | std::vector<CNTTimerPointer>, elemen 16 byte | Penyimpanan binary heap untuk timer berikutnya |
-| +0x48 / +0x50 | QWaitCondition / QSemaphore | Primitif sinkronisasi; detail lifecycle worker masih perlu pemeriksaan langsung |
-| +0x58 | QTimer | Berkaitan dengan pacing realtime menurut laporan |
-| +0x70 | shared_ptr ke registry ordered map | Lookup timer berdasarkan ID |
+| +0x18 | std::vector<CNTTimerPointer>, 16 byte element | Binary heap storage for next timer |
+| +0x48 / +0x50 | QWaitCondition / QSemaphore | Synchronization primitives; worker lifecycle details still need direct inspection |
+| +0x58 | QTimer | Regarding realtime pacing according to reports |
+| +0x70 | shared_ptr to registry ordered map | Lookup timer based on ID |
 
-Komparator CIpcTimer dilaporkan mengurutkan waktu primer + sekunder lalu ID. Heap menjawab timer berikutnya; registry menjawab pencarian/penghapusan berdasarkan ID. Bentuk registry tidak mengharuskan antrean event menggunakan multimap.
+CIpcTimer comparator reportedly sorts primary + secondary time then ID. Heap answers the next timer; registry answers search/deletion based on ID. The registry form does not require event queues to use multimap.
 
-getIpcTimer, FUN_141d22cf0, dilaporkan melakukan lookup dan dynamic_cast ke CIpcTimer, dengan error SimulationTimer atau getIpcTimer implementation error jika gagal.
+getIpcTimer, FUN_141d22cf0, reportedly performs a lookup and dynamic_cast to CIpcTimer, with a SimulationTimer error or getIpcTimer implementation error if it fails.
 
-Laporan juga menyebut multiple inheritance CIpcTimer, vftable sekunder +0x50, serta CSimulation sebagai QObject dan Ipc::CParser. Detail inheritance ini tidak diperlukan untuk menyalin pola scheduler ke engine baru.
+The report also mentions multiple inheritance of CIpcTimer, secondary vftable +0x50, as well as CSimulation as QObject and Ipc::CParser. This inheritance detail is not required to copy the scheduler pattern to a new engine.
 
-## Rantai pemrosesan paket
+## Packet processing chain
 
-Model umum yang didukung laporan:
+Common models supported by the report:
 
-1. Proses pengirim membentuk PDU.
-2. Proses enkapsulasi menyiapkan header link.
-3. Port dan link menjadwalkan pengiriman.
-4. Port tujuan menyerahkan PDU ke proses penerima.
-5. Proses melakukan dekapsulasi dan dispatch ke protokol berikutnya.
+1. The sending process forms a PDU.
+2. The encapsulation process prepares the link header.
+3. Port and link schedule delivery.
+4. The destination port hands over the PDU to the receiving process.
+5. The process of decapsulating and dispatching to the next protocol.
 
-init() dan addEntryToMapTable() menghubungkan higher/lower processes. String error pada CHdlcProcess::init dan method protokol lain menguatkan struktur ini. Urutan setiap jalur dan seluruh kondisi khusus belum dipulihkan.
+init() and addEntryToMapTable() connect higher/lower processes. The error string in CHdlcProcess::init and other protocol methods reinforces this structure. The order of each path and all special conditions have not been restored.
 
-## Routing dan instrumentasi
+## Routing and instrumentation
 
-FUN_14094c530, yang diidentifikasi sebagai CRoutingProcess, dilaporkan berisi lookup RIB, penerimaan lokal, TTL expiry, kegagalan enkapsulasi, dan pembuatan ICMP.
+FUN_14094c530, identified as CRoutingProcess, reportedly contains RIB lookup, local receive, TTL expiry, encapsulation failure, and ICMP generation.
 
-Kode CROUTINGPROCESS_FC_*, CARPPROCESS_FC_*, CMACSWITCHER_FC_*, dan CTcpConnection_FC_* membantu memetakan keputusan. Laporan tahap Ghidra menyebut 1.404 kode langkah secara keseluruhan. Keberadaan nama langkah tidak membuktikan seluruh transisi atau perilaku protokol sudah diimplementasikan ulang.
+The codes CROUTINGPROCESS_FC_*, CARPPROCESS_FC_*, CMACSWITCHER_FC_*, and CTcpConnection_FC_* help map decisions. Ghidra's stage report mentions 1,404 step codes in all. The existence of a step name does not prove that all transitions or protocol behavior have been reimplemented.
 
-PDUDefinition.json sekitar 183.638 byte berisi sekitar 170 layout tampilan; catatan resource menyebut lebih dari 250 implementasi getDecapsulationInfo. Resource tampilan tidak sama dengan implementasi parser wire yang lengkap.
+PDUDefinition.json is approximately 183,638 bytes containing approximately 170 display layouts; resource notes mention over 250 implementations of getDecapsulationInfo. View resources are not the same as a complete wire parser implementation.
 
-## Waktu dan GUI
+## Time and GUI
 
-Waktu simulasi dipisahkan dari wall clock. GUI memiliki mode paused/stepped dan realtime. Pengaturan delay/jitter memberikan bukti adanya parameter model timing, tetapi belum mengungkap seluruh formula atau distribusi random PT.
+Simulation time is separated from the wall clock. The GUI has paused/stepped and realtime modes. The delay/jitter settings provide evidence of the timing model parameters, but do not reveal the entire formula or random PT distribution.
 
-Event List milik CBaseSimulationPanel merupakan log GUI berbatas. FUN_142580fc0/FUN_142582f00 dikaitkan dengan buffer penuh, kontrol list, dan pengaturan delay. Scheduler queue harus dapat terus dikelola terpisah dari kebijakan penyimpanan log.
+CBaseSimulationPanel's Event List is a delimited GUI log. FUN_142580fc0/FUN_142582f00 is associated with buffer full, list control, and delay settings. The scheduler queue must be able to continue to be managed separately from the log retention policy.
 
-Tombol Back dan slot animationDone tidak cukup untuk membuktikan restore seluruh state engine. Hubungan satu Capture/Forward dengan satu pop scheduler tetap sebagian inferensi pada laporan asal.
+The Back button and animationDone slot are not enough to prove the restore of the entire state engine. The relationship of a Capture/Forward to a pop scheduler remains partial inference to the original report.
 
-Sumber: [laporan Ghidra](sources/03-ghidra-architecture.txt), [addendum lengkap](sources/REPORT_addendum.original.md), dan [evidence ledger](evidence-ledger.md).
+Sources: [Ghidra report](sources/03-ghidra-architecture.txt), [full addendum](sources/REPORT_addendum.original.md), and [evidence ledger](evidence-ledger.md).

@@ -1,6 +1,6 @@
 use serde_json::{Value, json};
 use std::{collections::BTreeMap, error::Error};
-use wirebox_kernel::simulation::{Action, DeviceRole, Entity, Snapshot, Trace, World};
+use wyrlex_kernel::simulation::{Action, DeviceRole, Entity, Snapshot, Trace, World};
 
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
 const TOPOLOGY: &str = include_str!("../../../fixtures/scenarios/icmp-static-v1.json");

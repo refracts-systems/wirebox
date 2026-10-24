@@ -1,22 +1,22 @@
-# ADR-0001 — Model semantik bersama dan provenance state
+# ADR-0001 — Shared semantic model and state provenance
 
-- Tanggal: 20 Oktober 2026
-- Status: Accepted; arah model, implementasi domain menyusul phase 2/6/7.
+- Date: 20 October 2026
+- Status: Accepted; model direction chosen, domain implementation follows in Phases 2/6/7.
 
-## Konteks
+## Context
 
-Visi pengguna menghubungkan inspeksi, simulasi, diagnosis, dan eksekusi. Menyatukan semuanya sebagai satu nilai “current state” dapat mengubah prediksi menjadi fakta yang tampak teramati.
+The product vision connects inspection, simulation, diagnosis, and execution. Treating all of them as one “current state” could turn a prediction into an apparently observed fact.
 
-## Keputusan
+## Decision
 
-Gunakan entity, relation, capability, property, resource, constraint, intent, operation, event, dan observation sebagai vocabulary bersama. Simpan observation asli dengan sumber/waktu; pisahkan observed, desired, dan simulated state. State turunan merujuk evidence dan asumsi. Unknown/stale/conflict tidak diisi diam-diam dari simulasi.
+Use entity, relation, capability, property, resource, constraint, intent, operation, event, and observation as shared vocabulary. Store raw observations with source/time; separate observed, desired, and simulated state. Derived state references evidence and assumptions. Unknown, stale, and conflict values must not be silently filled from simulation.
 
-Kernel memiliki state simulasi yang dapat dimutasi. Host/UI mengirim command dan menerima salinan snapshot/trace; koordinat tampilan tidak menjadi koneksi operasional. Operation IR dibagi simulator dan adapter lewat makna serta pre/postcondition, bukan string CLI yang sama.
+The kernel owns mutable simulated state. Host/UI sends commands and receives copied snapshots/traces; display coordinates are not operational connections. Operation IR is shared by simulator and adapters through meaning and pre/postconditions, not identical CLI strings.
 
-## Alternatif dan konsekuensi
+## Alternatives and consequences
 
-UI yang langsung mengubah field internal lebih sederhana untuk demo, tetapi menyulitkan headless testing dan replay. Model vendor terpisah sepenuhnya memudahkan integrasi pertama, tetapi menggandakan logika intent. Model bersama dipilih dengan capability extension, sehingga tidak memaksa semua vendor memiliki fitur identik.
+UI that mutates internal fields directly is simpler for a demo but makes headless testing and replay harder. Completely separate vendor models simplify the first integration but duplicate intent logic. The shared model uses capability extensions, so vendors do not need identical features.
 
-Operasi adalah unit logis, tidak menjamin transaksi atomik lintas perangkat. Schema detail belum menjadi API publik; dukungan tipe/relasi ditambahkan bersama fixture dan pengujiannya.
+An operation is a logical unit and does not guarantee an atomic cross-device transaction. The detailed schema is not yet a public API; types and relations are added with fixtures and tests.
 
-Rujukan: [arsitektur](../wirebox/architecture.md), [visi asli](../packet-tracer/sources/01-wirebox-vision.txt).
+References: [architecture](../wirebox/architecture.md), [initial vision](../packet-tracer/sources/01-wirebox-vision.txt).

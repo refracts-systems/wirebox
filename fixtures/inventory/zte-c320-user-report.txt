@@ -1,5 +1,5 @@
 Source: user-provided CLI excerpt, received 2026-10-20 Asia/Bangkok.
-Observation has not been repeated by Wirebox. Original prompt contained SAAS-SIM;
+Observation has not been repeated by Wyrlex. Original prompt contained SAAS-SIM;
 the prompt alone does not establish physical hardware, firmware authenticity, or simulator fidelity.
 Subscriber name/description and full serial are redacted.
 No access address or credential was supplied.

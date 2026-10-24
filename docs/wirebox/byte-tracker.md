@@ -1,53 +1,53 @@
-# Byte tracker dan replay
+# Byte tracker and replay
 
-Kebutuhan pengguna adalah memahami paket hingga byte per byte: nilainya, arti field, proses yang membacanya, dan alasan sebuah perubahan. Kemampuan ini berasal dari desain representasi dan instrumentasi; Zig maupun Rust dapat menjadi implementasinya.
+The user's need is to understand the packet byte by byte: its value, the meaning of fields, the process that reads them, and the reason for a change. This capability comes from representation and instrumentation design; Zig or Rust can be implementations.
 
-Status 21 Oktober 2026: [tracker headless phase 3](packets.md) menyediakan salinan byte immutable, protocol field mapping, packet/transmission ID, dan trace keputusan/mutasi. [Walkthrough aktual](../evidence/phase-3/byte-walkthrough.md) memakai hasil Zig. Inspector GPUI masih probe phase 1; integrasi tampilan paket adalah phase 4.
+Status October 23, 2026: [tracker headless phase 3](packets.md) provides immutable byte copy, protocol field mapping, packet/transmission ID, and decision/mutation trace. [Actual walkthrough](../evidence/phase-3/byte-walkthrough.md) uses Zig results. Initial integration [Packet Studio Phase 4](studio.md) links traces, protocol fields and hex bytes via a copy of Rust; [evidence](../evidence/phase-4/README.md) limits G4 state.
 
-## Tiga representasi yang saling terhubung
+## Three interconnected representations
 
-| Representasi | Isi | Kegunaan |
+| Representation | Contents | Uses |
 |---|---|---|
-| Byte buffer | Urutan byte paket pada suatu versi | Hex view, decode, dan perbandingan nilai |
-| Protocol view | Field, offset byte/bit, panjang, endianness, serta hasil validasi | Menghubungkan tampilan semantik dengan buffer |
-| Mutation/decision record | Event penyebab, proses, alasan, versi sebelum/sesudah | Menjelaskan perubahan dan keputusan tanpa perubahan byte |
+| Byte buffer | Packet byte order in a version | Hex view, decode, and value comparison |
+| Protocol view | Field, byte/bit offset, length, endianness, and validation results | Linking semantic views with buffer |
+| Mutation/decision records | Event cause, process, reason, version before/after | Explains changes and decisions without byte changes |
 
-Decoder membaca byte dengan batas yang diperiksa. Encoder menghasilkan wire format secara eksplisit. Alignment dan padding struct native tidak menjadi definisi header jaringan.
+The decoder reads bytes with checked boundaries. The encoder generates the wire format explicitly. Native struct alignment and padding do not become network header definitions.
 
-Phase 3 memakai salinan penuh per versi, tetap dapat dibaca setelah engine melanjutkan eksekusi. Flooding dapat berbagi versi yang sama melalui beberapa transmisi. Copy-on-write atau delta menjadi opsi optimasi berikutnya; sejarah tidak boleh menunjuk memori yang sudah berubah.
+Phase 3 uses a full copy per version, remaining readable after the engine resumes execution. Flooding can share the same version over multiple transmissions. Copy-on-write or delta is the next optimization option; history should not refer to memories that have changed.
 
-## Identitas dan hubungan sebab
+## Identity and causal relationships
 
-Schema phase 3 menetapkan packet_id, version_id/parent_version, transmission ID, entity, event_id/cause_id, dan ordinal trace. Kontrak serta arti tiap ID dijelaskan pada [model paket](packets.md).
+Schema phase 3 specifies packet_id, version_id/parent_version, transmission ID, entity, event_id/cause_id, and ordinal trace. The contract and the meaning of each ID are explained in [package model](packets.md).
 
-Flooding dapat menciptakan beberapa transmisi dari satu paket. Encapsulation, retransmission, dan echo reply juga memerlukan hubungan yang dapat ditelusuri. Jangan menganggap satu ID tanpa hubungan parent/child cukup untuk semua kasus tersebut.
+Flooding can create multiple transmissions of a single packet. Encapsulation, retransmission, and echo reply also require traceable relationships. Don't assume a single ID without a parent/child relationship is sufficient for all such cases.
 
-Keputusan seperti route lookup, cache hit, drop karena policy, atau antrean penuh dapat tidak mengubah byte. Tracker tetap harus mencatat state/input yang relevan serta alasan hasilnya.
+Decisions such as route lookup, cache hit, drop due to policy, or queue full may not change bytes. The tracker must still record the relevant states/inputs and the reasons for the results.
 
-## Contoh perilaku yang ingin terlihat
+## Examples of the behavior you want to see
 
-Pada skenario forwarding IPv4 sederhana:
+In a simple IPv4 forwarding scenario:
 
-1. Pengguna memilih event penerimaan frame di router.
-2. Inspector menampilkan byte frame dan pemetaan Ethernet/IPv4/ICMP yang berhasil didekode.
-3. Langkah routing menjelaskan route dan interface yang dipilih.
-4. Versi paket berikutnya menunjukkan TTL berubah, checksum IPv4 yang menyesuaikan, serta header Ethernet untuk hop berikutnya.
-5. Pengguna dapat kembali membaca versi sebelumnya dan event yang menyebabkan perubahan.
+1. The user selects the frame reception event on the router.
+2. Inspector displays the frame bytes and Ethernet/IPv4/ICMP mapping that were successfully decoded.
+3. The routing step explains the selected route and interface.
+4. The next version of the packet shows the changed TTL, the adjusted IPv4 checksum, as well as the Ethernet header for the next hop.
+5. Users can go back to reading previous versions and events that caused changes.
 
-Data untuk alur ini sudah tersedia pada runner headless; navigasi visual belum terintegrasi. Byte frame mencakup destination MAC hingga padding, tanpa preamble/SFD/FCS/IFG; [batas representasi](packets.md) berlaku pada semua hasil.
+Data for this flow is already available on the headless runner; Visual navigation is not yet integrated. Byte frame includes destination MAC to padding, without preamble/SFD/FCS/IFG; [representation limits](packets.md) applies to all results.
 
-## Tampilan yang diusulkan
+## Proposed view
 
-Topology canvas menunjukkan lokasi event; timeline memilih waktu/event; inspector memperlihatkan state perangkat dan keputusan; hex view menyorot rentang field. Memilih field menyorot byte terkait, dan memilih byte menunjukkan field atau rentang yang belum dikenali.
+The canvas topology shows the location of the event; timeline selects time/event; inspector shows device state and decisions; hex view highlights a range of fields. Selecting a field highlights the associated byte, and selecting a byte reveals an unrecognized field or range.
 
-UI sebaiknya menerima snapshot atau batch trace dengan ID stabil. Pengiriman satu panggilan FFI untuk setiap byte akan menambah overhead dan mempersulit konsistensi tampilan. Detail kontrak ada pada [pilihan teknologi](technology.md).
+The UI should accept snapshots or batch traces with stable IDs. Sending one FFI call for each byte adds overhead and makes display consistency difficult. Contract details are at [technology options](technology.md).
 
-## Replay dan time travel
+## Replay and time travel
 
-Ada dua kemampuan berbeda yang harus disebut jelas: membaca ulang rekaman dan melanjutkan simulasi dari state historis. Kemampuan kedua memerlukan checkpoint yang cukup lengkap atau rekonstruksi deterministik dari awal.
+There are two distinct capabilities that should be mentioned clearly: rereading recordings and continuing simulations of historical states. The second capability requires a fairly complete checkpoint or deterministic reconstruction from scratch.
 
-State yang perlu dipertimbangkan meliputi konfigurasi/topologi, cache ARP/MAC, state protokol, queue dan timer tertunda, buffer paket, counter/ID, PRNG, input eksternal, serta versi engine/model. Seed saja tidak cukup bila urutan konsumsi random atau input berubah.
+States that need to be considered include configuration/topology, ARP/MAC cache, protocol state, queue and pending timer, packet buffer, counter/ID, PRNG, external input, and engine/model version. Seeds alone are not enough if the order of consumption is random or the input changes.
 
-Usulan awal adalah checkpoint + replay event dengan urutan stabil. Branch dari suatu checkpoint membuat state simulasi terpisah; perubahan cabang tidak mengubah snapshot asal atau perangkat nyata.
+The initial proposal was checkpoint + event replay with a stable order. Branches from a checkpoint create separate simulation states; branch changes do not change the origin snapshot or the real device.
 
-Rekaman produksi sering parsial. Wirebox harus membedakan state yang benar-benar teramati, yang direkonstruksi, dan yang diasumsikan. Kebijakan checkpoint, retensi, serta jaminan replay lintas versi masih terbuka.
+Production footage is often partial. Wyrlex must distinguish between actually observed, reconstructed, and assumed states. Checkpoint policies, retention, and cross-version replay guarantees are still open.

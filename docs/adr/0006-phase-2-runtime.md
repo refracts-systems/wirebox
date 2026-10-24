@@ -1,34 +1,34 @@
-# ADR-0006 — Kontrak runtime phase 2
+#ADR-0006 — Phase 2 runtime contract
 
-- Tanggal: 20 Oktober 2026
-- Status: Accepted; implementasi dan bukti gate ditautkan dari laporan phase 2.
+- Date: 20 October 2026
+- Status: Accepted; implementation and gate evidence are linked from the Phase 2 report.
 
-Perluasan 21 Oktober 2026: [ADR-0007](0007-packet-model.md) menambahkan dispatch domain paket dan namespace handle. Kontrak atomic counter firing pada dokumen ini tetap berlaku untuk action counter; kegagalan dispatch network memiliki failed-state tersendiri.
+Expansion on 21 October 2026: [ADR-0007](0007-packet-model.md) adds packet-domain dispatch and a handle namespace. The atomic counter-firing contract remains valid for counter actions; network-dispatch failures have a separate failed state.
 
-## Keputusan
+##Decision
 
-Runtime Zig menyimpan **simulated state**. Entity device, port, dan link memakai satu namespace ID `u64` monotonic per dunia; nol invalid dan ID tidak dipakai ulang. Role host/switch/router merupakan metadata. Port mempunyai satu owner device. Link point-to-point menghubungkan dua port berbeda yang belum terhubung; koordinat UI tidak masuk graph.
+The Zig runtime stores **simulated state**. Device, port, and link entities use one monotonic per-world `u64` ID namespace; zero is invalid and IDs are never reused. Host/switch/router role is metadata. Each port has one device owner. A point-to-point link joins two distinct unlinked ports; UI coordinates are not part of the graph.
 
-Menghapus device menghapus port miliknya serta link yang menyentuh port tersebut. Menghapus port menghapus link terkait. Semua event/timer milik entity yang dihapus dibatalkan sebelum storage dapat digunakan lagi. Penghapusan link tidak menghapus endpoint.
+Deleting a device deletes its ports and links touching those ports. Deleting a port deletes its links. All events/timers owned by a deleted entity are canceled before storage is reused. Deleting a link does not delete endpoints.
 
-Scheduler memakai binary min-heap `(time_ns, event_id)`; event ID sekaligus sequence. Registry timer menyimpan satu event pending per timer. Interval nol berarti one-shot; interval positif menjadwalkan firing berikutnya dari waktu firing sebelumnya, dengan ID event baru dan `cause_id` event yang baru dieksekusi. Schedule dari host mempunyai cause nol. Cancel membuang event dari heap secara langsung; tidak menyisakan tombstone yang memakan kapasitas.
+The scheduler uses a binary min-heap `(time_ns, event_id)`; event ID is also the sequence. The timer registry keeps one pending event per timer. A zero interval is one-shot; a positive interval schedules the next firing from the previous firing time, with a new event ID and the newly executed event as `cause_id`. Host schedules use cause zero. Cancel removes the event from the heap directly and leaves no capacity-consuming tombstone.
 
-Konvensi waktu mengikuti ADR-0003. `runUntil(t, budget)` hanya maju ke t bila semua event due selesai. Jika budget habis dan masih ada event due, hasil `budget_exhausted` dengan waktu event terakhir; budget nol sah. `step` kosong tidak maju. Panggilan bounded dapat diselingi cancel/remove; tidak ada worker atau async interrupt dalam phase ini.
+Time follows ADR-0003. `runUntil(t, budget)` advances to `t` only after all due events have finished. If the budget ends while an event is still due, it returns `budget_exhausted` at the last event time; a zero budget is valid. An empty `step` does not advance. Bounded calls may be interleaved with cancel/remove; this phase has no worker or asynchronous interrupt.
 
-Overflow waktu, ID, counter, dan counter eksekusi diperiksa. Firing periodik yang tidak dapat dijadwalkan ulang ditolak **sebelum** dequeue, perubahan state, PRNG, waktu, atau jurnal. Run dapat telah menyelesaikan event sebelumnya ketika event berikutnya gagal; output progress dan snapshot menunjukkan prefix yang berhasil.
+Time, ID, counter, and execution-counter overflow are checked. A periodic firing that cannot be rescheduled is rejected **before** dequeue, state change, PRNG use, time change, or journaling. A run may have completed earlier events when a later event fails; progress output and snapshots show the successful prefix.
 
-PRNG dipin **SplitMix64-v1**: state awal sama dengan seed; increment wrapping `0x9e3779b97f4a7c15`, mixer `0xbf58476d1ce4e5b9` dan `0x94d049bb133111eb`, shift 30/27/31. Ini sesuai implementasi yang diperiksa pada `lib/std/Random/SplitMix64.zig` Zig 0.17.0 lokal. Sampling `[0, upper)` memakai rejection atas threshold `(0 -% upper) % upper`; upper nol invalid. Seed dan state dapat diinspeksi, tetapi restore/checkpoint lengkap tetap phase 5.
+The PRNG is pinned to **SplitMix64-v1**: initial state equals the seed; wrapping increment `0x9e3779b97f4a7c15`, mixers `0xbf58476d1ce4e5b9` and `0x94d049bb133111eb`, and shifts 30/27/31. This matches the inspected Zig 0.17.0 `lib/std/Random/SplitMix64.zig`. Sampling `[0, upper)` uses rejection with threshold `(0 -% upper) % upper`; zero upper is invalid. Seed/state are inspectable, but complete restore/checkpoint remains Phase 5.
 
-Action phase 2 hanya `add_counter` dan `random_add_counter`: event bertipe untuk membuktikan dispatch/state/PRNG, bukan protokol jaringan. Randomness dikonsumsi saat eksekusi, tidak saat schedule/cancel/read.
+Phase 2 actions are only `add_counter` and `random_add_counter`: typed events prove dispatch/state/PRNG, not network protocols. Randomness is consumed at execution, never during schedule/cancel/read.
 
-Queue, jurnal eksekusi, dan daftar tampilan terpisah. Jurnal menyimpan ID/waktu/target/timer/cause/action/argumen serta counter sebelum/sesudah. Retensi ring dapat 0–256; overwrite menaikkan dropped count tanpa mengubah eksekusi. Read bersifat copy tanpa consume. Event ber-ID besar dapat dieksekusi lebih dahulu karena timestamp lebih kecil; cursor read menggunakan **ordinal eksekusi** `ordinal`. Cause boleh menunjuk event yang sudah terbuang oleh retensi. Jurnal terbatas bukan checkpoint lengkap.
+The queue, execution journal, and display list are separate. The journal stores ID/time/target/timer/cause/action/arguments and before/after counters. Ring retention is 0–256; overwrite increments dropped count without changing execution. Reads copy without consuming. A high-ID event can execute first when its timestamp is lower; read cursors use the execution ordinal `ordinal`. A cause may refer to a record already evicted by retention. A bounded journal is not a complete checkpoint.
 
-## ABI dan kapasitas awal
+## ABI and initial capacity
 
-Probe ABI v1 tetap tersedia. Runtime memiliki ABI terpisah `wb_sim_*`, versi 1, handle registry terpisah, ownership salinan dan mutex process-wide yang sama pada host Rust. Kontrak field, pointer, error, layout, serta ownership ada pada [runtime phase 2](../wirebox/runtime.md).
+The ABI v1 probe remains available. The runtime has a separate ABI `wb_sim_*`, version 1, separate registry handles, copy ownership and the same process-wide mutex on the Rust host. Field, pointer, error, layout, and ownership contracts are in [runtime phase 2](../wirebox/runtime.md).
 
-Batas eksplisit: 8 dunia, 128 entity per dunia, 256 timer/event pending, 256 record jurnal maksimum. Storage bounded milik Zig, tanpa allocator menyeberangi ABI. `capacity` adalah error yang terlihat, bukan drop diam-diam. Ini batas fondasi phase 2; perlu evaluasi kapasitas sebelum target MVP besar.
+Explicit limits: 8 worlds, 128 entities per world, 256 pending timers/events, 256 maximum journal records. Zig's storage bounded, no allocator across the ABI. `capacity` is a visible error, not a silent drop. This is the foundation limit for phase 2; need to evaluate capacity before the MVP target is large.
 
-## Alternatif dan konsekuensi
+## Alternatives and consequences
 
-Registry linear dan cancellation O(n) cukup untuk batas ini, dengan heap O(log n) pada schedule/pop. Struktur dinamis/index hash dapat ditambahkan setelah kebutuhan skala diukur. Event berupa record memungkinkan evolusi serialization; layout C bukan format persistence. Tidak ada klaim save/load, restore, fidelity vendor, atau simulasi paket dari hasil gate ini.
+A linear registry and O(n) cancellation are sufficient for this limit, with an O(log n) heap on schedule/pop. Dynamic structures/hash indices can be added once scale requirements are measured. Events in the form of records enable the evolution of serialization; C layout is not a persistence format. There are no claims of save/load, restore, vendor fidelity, or package simulation from the results of this gate.

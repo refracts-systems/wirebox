@@ -1,0 +1,42 @@
+{
+  "scope": "Process memory and Windows responding flag only; not input latency or scripted workflow acceptance",
+  "process_id": 27940,
+  "process_started_utc": "2026-10-23T23:38:46.4559995Z",
+  "requested_seconds": 5,
+  "elapsed_seconds": 5.0866199,
+  "peak_working_set_bytes": 67280896.0,
+  "within_1gib": true,
+  "failure": null,
+  "samples": [
+    {
+      "seconds": 0.0037233,
+      "working_set_bytes": 67280896,
+      "private_bytes": 65097728,
+      "responding": true
+    },
+    {
+      "seconds": 1.0149512,
+      "working_set_bytes": 67280896,
+      "private_bytes": 65097728,
+      "responding": true
+    },
+    {
+      "seconds": 2.0276024,
+      "working_set_bytes": 67280896,
+      "private_bytes": 65097728,
+      "responding": true
+    },
+    {
+      "seconds": 3.0396365,
+      "working_set_bytes": 67280896,
+      "private_bytes": 65097728,
+      "responding": true
+    },
+    {
+      "seconds": 4.0497381,
+      "working_set_bytes": 67280896,
+      "private_bytes": 65097728,
+      "responding": true
+    }
+  ]
+}

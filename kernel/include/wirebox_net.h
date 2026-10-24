@@ -1,5 +1,5 @@
-#ifndef WIREBOX_NET_H
-#define WIREBOX_NET_H
+#ifndef WYRLEX_NET_H
+#define WYRLEX_NET_H
 #include "wirebox_sim.h"
 #define WB_NET_VERSION 1u
 #define WB_NET_BYTES 1600u

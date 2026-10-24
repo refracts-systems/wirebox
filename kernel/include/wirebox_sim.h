@@ -1,5 +1,5 @@
-#ifndef WIREBOX_SIM_H
-#define WIREBOX_SIM_H
+#ifndef WYRLEX_SIM_H
+#define WYRLEX_SIM_H
 #include "wirebox.h"
 
 #define WB_SIM_VERSION 1u

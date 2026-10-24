@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "recorded_on": "2026-10-20",
-  "authority": "user-reported; not accessed or verified by Wirebox",
+  "authority": "user-reported; not accessed or verified by Wyrlex",
   "linux": {
     "environment": "VM/server",
     "distro": null,

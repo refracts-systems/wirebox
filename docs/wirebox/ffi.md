@@ -1,33 +1,33 @@
 # C ABI v1 — transport probe phase 1
 
-Kontrak normatif: [wirebox.h](../../kernel/include/wirebox.h). Implementasi: [Zig](../../kernel/src/abi.zig) dan [wrapper Rust](../../crates/wirebox-kernel/src/lib.rs). Alasan desain: [ADR-0002](../adr/0002-zig-rust-abi.md).
+Normative contract: [wirebox.h](../../kernel/include/wirebox.h). Implementation: [Zig](../../kernel/src/abi.zig) and [Rust wrapper](../../crates/wirebox-kernel/src/lib.rs). Design rationale: [ADR-0002](../adr/0002-zig-rust-abi.md).
 
-Dokumen ini khusus probe. API graph/scheduler tersedia terpisah sebagai [runtime ABI v1](runtime.md), protokol melalui [network ABI v1](packets.md). Revisi phase 3 pada ADR-0007 memakai dua bit atas handle: probe 00, counter 10, network 11, dengan generation 30 bit. Ini menggantikan pembagian satu bit/31 bit phase 2; handle tidak dipersist atau ditransfer antarproses.
+This document is probe specific. The graph/scheduler API is available separately as [runtime ABI v1](runtime.md), protocol via [network ABI v1](packets.md). The phase 3 revision of the ADR-0007 uses two bits above the handle: probe 00, counter 10, network 11, with generation 30 bits. This replaces the one bit/31 bit phase 2 split; handles are not persisted or transferred between processes.
 
-## API dan error
+## API and errors
 
-| Fungsi | Kontrak |
+| Function | Contract |
 |---|---|
-| `wb_abi_version` | Mengembalikan 1; query tanpa mutasi |
-| `wb_create(version, out_handle)` | Membuat session kosong; out_handle wajib valid dan diset nol pada kegagalan version/capacity |
-| `wb_destroy(handle)` | Menutup session, menghapus antrean, menginvalidasi generation; destroy kedua menghasilkan invalid_handle |
-| `wb_probe_submit(handle, data, length)` | Copy sinkron 1–64 byte; enqueue satu record kind=1; input tidak disimpan sebagai pointer |
-| `wb_probe_read(handle, out, capacity, out_count)` | Copy dan consume sampai min(queue length, capacity), capacity 0–16; capacity nol tidak menguras antrean |
+| `wb_abi_version` | Returns 1; query without mutation |
+| `wb_create(version, out_handle)` | Create an empty session; out_handle is required to be valid and is set to zero on version/capacity | failure
+| `wb_destroy(handle)` | Close session, delete queue, invalidate generation; the second destroy results in invalid_handle |
+| `wb_probe_submit(handle, data, length)` | Synchronous copy 1–64 bytes; enqueue one record kind=1; input is not stored as a pointer |
+| `wb_probe_read(handle, out, capacity, out_count)` | Copy and consume until min(queue length, capacity), capacity 0–16; zero capacity does not drain the queue |
 
-Status `u32`: 0 ok, 1 invalid_argument, 2 abi_mismatch, 3 invalid_handle, 4 capacity. Output count diset nol jika pointer count valid sebelum validasi handle/buffer. Submit gagal tidak mengonsumsi event ID. Antrean penuh tidak menimpa data. ID event mulai 1 per session, tanpa waktu virtual.
+Status `u32`: 0 ok, 1 invalid_argument, 2 abi_mismatch, 3 invalid_handle, 4 capacity. The count output is set to zero if the count pointer is valid before handle/buffer validation. Submit failure does not consume event ID. A full queue does not overwrite data. Event IDs start at 1 per session, without virtual time.
 
-`wb_probe_event`: id u64 offset 0, kind u32 offset 8, length u32 offset 12, bytes[64] offset 16. Total 80 byte, alignment 8 pada target Windows x64. Byte setelah length diinisialisasi nol. Ini format ABI in-process, **bukan** wire format jaringan atau file persistence.
+`wb_probe_event`: id u64 offset 0, kind u32 offset 8, length u32 offset 12, bytes[64] offset 16. Total 80 bytes, alignment 8 on Windows x64 target. The bytes after length are initialized to zero. This is an in-process ABI format, **not** a network wire format or persistence file.
 
-## Ownership, pointer, dan thread
+## Ownership, pointers, and threads
 
-Registry memiliki 16 slot; antrean tiap session memiliki 16 record. Handle berisi generation dan index; slot dengan generation exhausted dipensiunkan. Registry memakai penyimpanan statis bounded tanpa heap allocation atau deallocator lintas bahasa pada tahap ini.
+The Registry has 16 slots; The queue for each session has 16 records. Handle contains generation and index; slots with generation exhausted are retired. The registry uses bounded static storage without heap allocation or cross-language deallocators at this stage.
 
-Caller harus menjamin pointer non-null valid, aligned, cukup panjang, dan tidak overlap dengan output lain. Null data invalid; null out hanya diperbolehkan jika capacity nol. API tidak menjanjikan recovery dari arbitrary pointer atau memory corruption. Header dan wrapper harus berubah bersama jika layout berubah.
+The caller must guarantee that the non-null pointer is valid, aligned, long enough, and does not overlap with other output. Null data is invalid; null out is only allowed if capacity is zero. The API does not promise recovery from arbitrary pointer or memory corruption. The header and wrapper must change together if the layout changes.
 
-C caller wajib menserialisasi semua panggilan registry secara process-wide dan tidak melakukan reentrancy. Rust wrapper menegakkan serialisasi dengan mutex dan membatasi Session pada thread pembuatnya; session lain tetap melewati mutex yang sama. Kernel tidak memanggil host, tidak unwind ke Rust, dan tidak menyimpan pointer caller.
+The C caller is required to serialize all registry calls process-wide and not perform reentrancy. The rust wrapper enforces serialization with mutexes and limits the Session to the thread that created it; other sessions still pass through the same mutex. The kernel doesn't call the host, doesn't unwind to Rust, and doesn't save the caller pointer.
 
-`Session::read_probe` mengembalikan `Vec<ProbeEvent>` milik Rust; hasil tetap valid setelah mutasi, read berikutnya, atau close. `Session::close` memberikan hasil destroy; Drop menjadi fallback tanpa panic. Batas queue/handle adalah batas probe, bukan desain kapasitas simulator phase 2/3.
+`Session::read_probe` returns Rust's `Vec<ProbeEvent>`; results remain valid after mutation, next read, or close. `Session::close` returns destroy; Drop becomes a fallback without panic. The queue/handle limit is a probe limit, not the design capacity of the phase 2/3 simulator.
 
-## Verifikasi yang diwajibkan phase 1
+## Verification required by phase 1
 
-Layout C/Zig/Rust; payload tetap benar setelah caller mengubah input; snapshot bertahan sesudah owner ditutup; partial batch menjaga urutan; zero capacity tidak menguras; input invalid tidak mengubah queue; versi salah dan null output ditolak; handle lama tidak mengakses slot baru. Compile-fail doctest membuktikan wrapper tidak dapat dipindahkan lewat `thread::spawn`.
+Layout C/Zig/Rust; payload remains correct after caller changes input; snapshot persists after owner is closed; partial batch preserves order; zero capacity does not drain; invalid input does not change the queue; incorrect version and null output rejected; the old handle does not access the new slot. Compile-fail doctest proves the wrapper cannot be moved via `thread::spawn`.

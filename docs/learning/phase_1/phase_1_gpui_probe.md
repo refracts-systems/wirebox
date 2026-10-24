@@ -8,4 +8,4 @@
 
 **Mengapa fase ini dibuat lebih awal.** Engine yang berjalan headless saja belum membuktikan bahwa Zig, Rust, dan GPUI dapat dikompilasi serta berinteraksi pada Windows target. Spike menutup risiko build, input dasar, rendering, dan shutdown sebelum UI berisi workflow simulator. [Evidence G1](../../evidence/phase-0-1/README.md) merekam interaksi window aktual. Build GPUI juga diperiksa pada G3, tetapi UI belum menerima trace paket phase 3; integrasi itu ada di phase 4.
 
-**Coba sendiri.** Jalankan `cargo run --locked -p wirebox-studio`. Pilih node, link, dan byte; gunakan Ctrl+R untuk probe baru. Bandingkan ID event/byte dengan output `cargo run --locked -p wirebox-headless -- --probe`. Kesamaan data membuktikan jalur salinan ABI yang dipakai UI, bukan akurasi jaringan.
+**Coba sendiri.** Jalankan `cargo run --locked -p wyrlex-studio`. Pilih node, link, dan byte; gunakan Ctrl+R untuk probe baru. Bandingkan ID event/byte dengan output `cargo run --locked -p wyrlex-headless -- --probe`. Kesamaan data membuktikan jalur salinan ABI yang dipakai UI, bukan akurasi jaringan.

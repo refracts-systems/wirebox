@@ -1,34 +1,34 @@
-# Catatan reverse engineering Cisco Packet Tracer 9.0.1
+# Cisco Packet Tracer 9.0.1 reverse engineering notes
 
-## Kesimpulan yang dapat dipakai
+## Conclusions that can be used
 
-Laporan menunjukkan model simulasi berbasis objek perangkat, port, link, PDU, proses protokol, dan scheduler waktu virtual. Mini-simulator lokal memperagakan bahwa sebagian perilaku tersebut dapat diimplementasikan tanpa perangkat fisik dan tanpa image OS vendor.
+The report shows object-based simulation models of devices, ports, links, PDUs, protocol processes, and virtual time schedulers. The local mini-simulator demonstrates that some of these behaviors can be implemented without a physical device and without a vendor OS image.
 
-Temuan arsitektur merupakan acuan desain. Temuan tersebut belum membuktikan kesetaraan implementasi baru dengan semua perilaku Packet Tracer atau perangkat produksi.
+Architectural findings are design references. The findings do not yet prove the equivalence of the new implementation to all Packet Tracer behavior or production devices.
 
-## Status pengetahuan
+## Knowledge status
 
-| Kategori | Arti |
+| Category | Meaning |
 |---|---|
-| Dilaporkan terkonfirmasi | Laporan menyebut bukti RTTI, resource, dekompilasi, atau pengujian runtime; bukti asal belum seluruhnya diaudit ulang di repository ini. |
-| Diverifikasi lokal | Source atau executable mini-simulator diperiksa dalam sesi dokumentasi ini. |
-| Inferensi | Penjelasan yang konsisten dengan bukti tetapi belum ditunjukkan langsung. |
-| Usulan | Keputusan desain untuk Wirebox, bukan hasil RE Packet Tracer. |
-| Unknown | Bukti belum cukup atau implementasi belum berhasil direproduksi. |
+| Reported confirmed | Reports mention evidence of RTTI, resource, decompilation, or runtime testing; Evidence of provenance has not been completely re-audited in this repository. |
+| Verified local | The mini-simulator source or executable is examined in this documentation session. |
+| Inference | An explanation that is consistent with the evidence but has not been demonstrated directly. |
+| Proposal | A design decision for Wyrlex, not a result of RE Packet Tracer. |
+| Unknown | Evidence is insufficient or implementation has not been successfully reproduced. |
 
-## Koreksi yang harus dibaca lebih dahulu
+## Corrections that must be read first
 
-1. Scheduler queue dan Event List GUI adalah komponen terpisah. Jumlah baris trace tidak sama dengan jumlah event scheduler.
-2. Hipotesis AES/Rijndael + Mash sebagai enkripsi container .pkt digantikan oleh laporan decoder dokumen Twofish/EAX. Jalur atribut terenkripsi harus dibedakan dari container dokumen.
-3. Pencarian passphrase default container .pkt tidak lagi menjadi kesimpulan akhir. Laporan terakhir menyebut key dan nonce konstan untuk keluarga dokumen yang diuji.
-4. Reader offline masih bergantung pada keystream hasil capture; reproduksi cipher mandiri belum berhasil. Pembacaan sampel tidak membuktikan writer atau round-trip sudah tersedia.
-5. Pasangan konstanta 0xBA/0xBE dilaporkan berkaitan dengan metadata uuid/nets, bukan terbukti sebagai decoder extension.
-6. Nama class dan kode flow-chart bukan pemulihan seluruh algoritme. Bukti yang tersedia juga belum merupakan audit semua jalur socket OS.
+1. Scheduler queue and Event List GUI are separate components. The number of trace lines is not the same as the number of scheduler events.
+2. Hypothesis of AES/Rijndael + Mash as .pkt container encryption replaced by Twofish/EAX document decoder report. The encrypted attribute path must be distinguished from the document container.
+3. Searching the default passphrase of the .pkt container is no longer the final conclusion. The final report calls key and nonce constant for the family of documents tested.
+4. Offline readers still depend on the captured keystream; independent cipher reproduction has not been successful. Sample reading does not prove writer or round-trip is available.
+5. The 0xBA/0xBE constant pair is reported to be related to uuid/nets metadata, not proven to be a decoder extension.
+6. The class name and flow-chart code are not a recovery of the entire algorithm. The available evidence also does not constitute an audit of all OS socket paths.
 
-## Urutan baca
+## Reading order
 
-Mulai dari [arsitektur](architecture.md), lalu [evidence ledger](evidence-ledger.md) dan [mini-simulator](mini-simulator.md). Baca [format .pkt](pkt-format.md) untuk konteks interoperabilitas. [Implikasi Wirebox](wirebox-implications.md) memisahkan usulan implementasi dari temuan.
+Starting from [architecture](architecture.md), then [evidence ledger](evidence-ledger.md) and [mini-simulator](mini-simulator.md). Read [.pkt format](pkt-format.md) for interoperability context. [Wyrlex Implications](wirebox-implications.md) separates implementation proposals from findings.
 
-[Audit lokal REA/Ghidra dan smoke runtime PT](../evidence/pt-comparison/README.md) mencatat pemeriksaan ulang 21 Oktober 2026. [Runbook pembanding](comparison-tests.md) membedakan smoke, kesetaraan subset protokol, dan klaim keunggulan.
+[REA/Ghidra local audit and PT runtime smoke](../evidence/pt-comparison/README.md) noted re-examination October 21, 2026. [Comparison runbook](comparison-tests.md) differentiates smoke, protocol subset equivalence, and superiority claims.
 
-Laporan historis disimpan apa adanya di [sources](sources/README.md), termasuk klaim lama yang kemudian dikoreksi. Ringkasan tematik di direktori ini menjadi panduan status terkini dari bahan yang tersedia.
+Historical reports are stored as is at [sources](sources/README.md), including older claims that were later corrected. The thematic summaries in this directory serve as a guide to the current status of available materials.

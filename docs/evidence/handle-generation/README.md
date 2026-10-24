@@ -1,59 +1,59 @@
 # Boundary audit: bounded transport probe handles
 
-21 Oktober 2026, Zig 0.17.0, Windows x64. Target: `kernel/src/abi.zig`. Implementasi awal file ini sudah Kandidat B. Perubahan production hanya mengganti literal maksimum dengan konstanta yang diturunkan dari layout; lookup, create, dan kebijakan rollover B dipertahankan.
+21 October 2026, Zig 0.17.0, Windows x64. Target: `kernel/src/abi.zig`. The initial implementation of this file was already Candidate B. The production change simply replaced the maximum literal with a layout-derived constant; B's lookup, create, and rollover policies are maintained.
 
-## Invariant dan penurunan batas
+## Invariants and lower bounds
 
-`handle: u64 = (u64(generation) << 32) | index`. Index menempati bit 31..0 dan valid dalam `1..session_limit`; generation menempati bit 61..32. Bit 63..62 harus nol.
+`handle: u64 = (u64(generation) << 32) | index`. The index occupies bits 31..0 and is valid in `1..session_limit`; generation occupies bits 61..32. Bits 63..62 must be zero.
 
-Karena `handle >> 62 = generation >> 30`, syarat namespace mengharuskan `generation < 2^30`. Jadi maksimum **2^30−1 = 1.073.741.823 = 0x3fffffff**. Generation aktif valid `1..max`; generation nol menandai slot retired dan tidak dipilih create. Empty reusable slot mempunyai context null dan generation nonzero dalam domain itu. Active slot mempunyai context nonnull.
+Because of `handle >> 62 = generation >> 30`, the namespace requirement requires `generation < 2^30`. So the maximum **2^30−1 = 1,073,741,823 = 0x3ffffffff**. Valid active generation `1..max`; generation zero marks the retired slot and create is not selected. Empty reusable slots have context null and generation nonzero in that domain. Active slot has a nonnull context.
 
-Transisi B saat destroy: context menjadi null; `g<max → g+1`, `g=max → 0`. Generation tidak turun selama reusable dan tidak wrap ke 1. Karena index tetap dan generation lama tidak diulang, handle lama tidak bisa alias context baru. Setelah max, create melewati slot retired. Ini argumen untuk seluruh lifecycle reachable; pengujian tidak mengiterasi satu miliar lifetime.
+Transition B on destroy: context becomes null; `g<max → g+1`, `g=max → 0`. Generation never decreases while reusable and never wraps to 1. Because the index stays fixed and an old generation is never repeated, an old handle cannot alias new context. After max, create skips retired slots. This is an argument for the entire reachable lifecycle; testing does not iterate over a billion lifetimes.
 
-Check `handle & (u64(1)<<63)` redundan apabila `handle >> 62 != 0` sudah dilakukan. Bit 63 aktif berarti hasil shift adalah 2 atau 3; bit 62 saja menghasilkan 1 dan juga ditolak oleh shift. Menghapus check bit 63 tidak memperlonggar namespace.
+Check `handle & (u64(1)<<63)` is redundant if `handle >> 62 != 0` has already been performed. Bit 63 is active meaning the shift result is 2 or 3; bit 62 alone produces 1 and is also rejected by shift. Removing check bit 63 does not relax the namespace.
 
-## Test yang ditambahkan
+## Added tests
 
-Delapan test baru di [abi.zig](../../../kernel/src/abi.zig):
+Eight new tests in [abi.zig](../../../kernel/src/abi.zig):
 
-- Lima boundary terpisah: 1, `0x3ffffffe`, `0x3fffffff`, `0x40000000`, `0x7fffffff`; setiap kasus menjalankan lookup input, destroy, create berikutnya, lookup output, dan pemeriksaan namespace/state.
-- Layout/index/generation nol, seluruh discriminator asing 01/10/11, serta destroy asing tidak merusak handle sah.
-- Riwayat 256 create/destroy pada slot yang sama; semua stale handles diperiksa setelah setiap lifetime, termasuk penolakan submit. Lalu generation dilompati maju ke dua lifetime terakhir, retirement diuji dengan 32 create gagal dan output nol, seluruh riwayat tetap invalid.
-- Property sampling deterministik 12.000 nilai: rentang generation valid, lingkungan 512 nilai dekat batas (di bawah dan di atas), dan sampel u32 termasuk namespace asing. Memeriksa rollover/reuse, output namespace, lookup dan stale. B menyelesaikan semua sampel; A berhenti pada counterexample pertama. Ini property sampling, bukan exhaustive fuzzing ruang u32.
+- Five separate boundaries: 1, `0x3ffffffe`, `0x3fffffff`, `0x40000000`, `0x7fffffff`; each case performs input lookup, destroy, next create, output lookup, and namespace/state check.
+- Layout/index/generation zero, all foreign discriminators 01/10/11, as well as foreign destroyers do not damage valid handles.
+- History of 256 create/destroy operations on the same slot; all stale handles are checked after each lifetime, including rejected submissions. Then generation is advanced to the final two lifetimes, retirement is tested with 32 failed creates and zero output, and the entire history remains invalid.
+- Property deterministic sampling of 12,000 values: valid generation range, neighborhood of 512 values ​​near limits (below and above), and u32 samples including foreign namespaces. Checks rollover/reuse, namespace output, lookup and stale. B completes all samples; A stops at the first counterexample. This is property sampling, not exhaustive fuzzing of the u32 space.
 
-State disuntikkan hanya dari test di module yang sama; registry disimpan/dipulihkan dengan defer, termasuk pada assertion gagal. Tidak ada API test yang diekspor. Untuk boundary, slot 1 dibuat **aktif** pada generation yang diuji, slot 2 kosong generation 1, slot lain retired. Maka create berikutnya menunjukkan apakah slot 1 reusable atau dilewati. Untuk dua generation asing, lookup/destroy harus menolak input tanpa mengubah slot; create memilih slot 2.
+State is injected only from tests in the same module; registry is saved/restored with defer, including on failed assertions. No API tests are exported. For boundaries, slot 1 is made **active** in the generation being tested, slot 2 is empty in generation 1, other slots are retired. Then the next create shows whether slot 1 is reusable or skipped. For two foreign generations, lookup/destroy must reject input without changing slots; create selects slot 2.
 
-Angka generation asing disuntikkan untuk menguji penolakan handle. Itu bukan state reusable yang dapat dihasilkan B. Membuat slot **kosong** dengan generation >max melalui korupsi/injeksi internal juga akan membuat `wb_create` yang sama pada kedua kandidat mengeluarkan handle asing. Ketahanan terhadap korupsi internal tersebut bukan klaim kelulusan ini; initialization dan semua transisi B menjaga generation dalam 0..max. Tidak ditambahkan desain recovery state baru.
+Foreign generation numbers are injected to test handle rejection. It's not a reusable state that can be generated by B. Creating an **empty** slot with generation >max via internal corruption/injection will also make the same `wb_create` on both candidates output a foreign handle. Such resistance to internal corruption is not a passing claim; initialization and all B transitions keep generation within 0..max. No new recovery state design added.
 
-## Hasil boundary yang dieksekusi
+## Executed boundary results
 
-`ok=0`, `invalid_handle=3`, `capacity=4`. Semua handle berikut memakai index 1 kecuali suffix `...00000002` yang memakai fallback slot 2.
+`ok=0`, `invalid_handle=3`, `capacity=4`. All of the following handles use index 1 except for the suffix `...00000002` which uses fallback slot 2.
 
-| Generation input | Destroy A/B | Stored A | Handle berikut A | Lookup A | Stored B | Handle berikut B | Lookup B |
+| Generation input | Destroy A/B | Stored A | The following handle A | Lookup A | Stored B | The following handle B | Lookup B |
 |---|---|---|---|---|---|---|---|
-| `1` | ok / ok | `3` | `0x0000000300000001` | terima | `2` | `0x0000000200000001` | terima |
-| `0x3ffffffe` | ok / ok | `0` | `0x0000000100000002` | terima, salah slot | `0x3fffffff` | `0x3fffffff00000001` | terima |
-| `0x3fffffff` | ok / ok | `0x40000001` | `0x4000000100000001` | **tolak** | `0` | `0x0000000100000002` | terima |
-| `0x40000000` | invalid / invalid | tidak berubah | `0x0000000100000002` | terima | tidak berubah | `0x0000000100000002` | terima |
-| `0x7fffffff` | invalid / invalid | tidak berubah | `0x0000000100000002` | terima | tidak berubah | `0x0000000100000002` | terima |
+| `1` | ok / okay | `3` | `0x0000000300000001` | accept | `2` | `0x0000000200000001` | accept |
+| `0x3ffffffe` | ok / okay | `0` | `0x0000000100000002` | accept, wrong slot | `0x3fffffff` | `0x3fffffff00000001` | accept |
+| `0x3fffffff` | ok / okay | `0x40000001` | `0x4000000100000001` | **reject** | `0` | `0x0000000100000002` | accept |
+| `0x40000000` | invalid / invalid | unchanged | `0x0000000100000002` | accept | unchanged | `0x0000000100000002` | accept |
+| `0x7fffffff` | invalid / invalid | unchanged | `0x0000000100000002` | accept | unchanged | `0x0000000100000002` | accept |
 
-Input lookup menerima tiga baris pertama dan menolak dua baris terakhir pada kedua kandidat. Pada baris terakhir, kondisi A terhadap `0x7fffffff` di destroy tidak pernah tercapai dari handle yang diterima lookup.
+The lookup input accepts the first three rows and rejects the last two rows on both candidates. In the last line, condition A against `0x7fffffff` is destroyed and never reached from the handle received by the lookup.
 
-**A salah:** kedua assignment dieksekusi berurutan. Pada max−1, assignment pertama menghasilkan max lalu assignment kedua meretire slot sebelum lifetime max digunakan (pelanggaran reuse). Pada max, assignment pertama menghasilkan `0x40000000`, assignment kedua menjadi `0x40000001`; create mengembalikan ok namun bit 62 aktif dan lookup menolak hasilnya (pelanggaran namespace dan validity). Perubahan 1→3 sendiri hanya membuang generation; test tidak menganggap increment dua otomatis melanggar invariant yang hanya meminta generation baru.
+**A is incorrect:** both assignments are executed sequentially. At max−1, the first assignment produces max then the second assignment retire the slot before the lifetime max is used (reuse violation). At max, the first assignment produces `0x40000000`, the second assignment becomes `0x40000001`; create returns ok but 62 bit is active and lookup rejects the result (namespace and validity violation). The change 1→3 itself just throws out generation; test does not assume increment two automatically violates the invariant it just asks for a new generation.
 
-**B benar untuk invariant lifecycle registry:** increment sekali sampai max, kemudian retired permanen. Tidak ada ABA ditemukan pada riwayat yang diuji, dan argumen monotonic/no-wrap menutup lifetime yang tidak diiterasi. Kegagalan test riwayat A adalah retirement terlalu awal; hasil ini tidak mengklaim menemukan ABA pada A. A sudah gugur oleh reuse/namespace.
+**B is correct for invariant lifecycle registry:** increment once until max, then permanently retired. No ABA is found in the tested history, and the monotonic/no-wrap argument closes lifetimes that are not iterated. History test failure A is retirement too early; this result does not claim to find ABA on A. A is already invalidated by reuse/namespace.
 
-## Reproduksi dan evidence
+## Reproduction and evidence
 
-Dari root repository:
+From the root repository:
 
 ```powershell
 ./scripts/test-handle-candidates.ps1
 ./scripts/verify.ps1 -CoreOnly
 ```
 
-[Runner](../../../scripts/test-handle-candidates.ps1) menyalin source ke `artifacts/handle-generation/A` dan `B`, lalu menyisipkan dua assignment dan check bit 63 persis Kandidat A hanya pada salinan A. Fixture/tests/create sama. Source kerja tidak diganti oleh runner. Mode Debug, ReleaseSafe, dan ReleaseFast memakai assertion test yang sama. Exit 1 A adalah kegagalan invariant yang diharapkan, bukan compiler error; runner juga memeriksa empat kegagalan yang diharapkan dan B harus lulus.
+[Runner](../../../scripts/test-handle-candidates.ps1) copies source to `artifacts/handle-generation/A` and `B`, then inserts two assignments and check bit 63 exactly Candidate A only on copy A. Fixture/tests/create is the same. The working source is not replaced by the runner. Debug, ReleaseSafe, and ReleaseFast modes use the same assertion tests. Exit 1 A is an expected invariant failure, not a compiler error; The runner also checks for four expected failures and B must pass.
 
-[results.json](results.json) mencatat hasil per mode dan hash source. Log setiap kandidat/mode merekam counterexample boundary. Log [core-verify.log](core-verify.log) merekam verifikasi core setelah penambahan test. Manifest gate lama tidak ditulis ulang.
+[results.json](results.json) logs results per mode and source hash. Each candidate/mode log records the counterexample boundary. Log [core-verify.log](core-verify.log) records core verification after adding tests. The old gate manifest was not rewritten.
 
-Hasil aktual pada **ketiga mode**: A 6 passed / 4 failed (exit 1); B 10 passed / 0 failed (exit 0). Sepuluh hasil filtered mencakup delapan test baru, satu stale-handle test lama, dan import aggregator. Verifikasi core lulus: 32 hasil test Zig, 16 unit test Rust, 3 doctest, format/layout/Clippy serta acceptance runtime/network.
+Actual results in **all three modes**: A 6 passed / 4 failed (exit 1); B 10 passed / 0 failed (exit 0). The ten filtered results include eight new tests, one old stale-handle test, and an import aggregator. Core verification passed: 32 Zig test results, 16 Rust unit tests, 3 doctests, format/layout/Clippy and runtime/network acceptance.

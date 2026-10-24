@@ -1,42 +1,42 @@
-# Model semantik dan runtime
+# Semantic and runtime models
 
-Status: model domain mengikuti [ADR](../adr/README.md). [Runtime phase 2](runtime.md) menyediakan graph device/port/link, counter, scheduler, timer, dan jurnal. [Phase 3](packets.md) menambahkan simulated state ARP/MAC/route, perilaku Ethernet/IPv4/ICMP, serta versi byte. Observed/desired state, planner, dan operation executor perangkat masih mengikuti roadmap. [ABI transport probe](ffi.md) phase 1 tetap terpisah.
+Status: domain model follows [ADR](../adr/README.md). [Runtime phase 2](runtime.md) provides graph device/port/link, counter, scheduler, timer, and journal. [Phase 3](packets.md) adds simulated ARP/MAC/route state, Ethernet/IPv4/ICMP behavior, as well as byte versioning. The device's observed/desired state, planner, and operation executor still follow the roadmap. [ABI transport probe](ffi.md) phase 1 remains separate.
 
-## Infrastruktur sebagai objek yang dapat ditanya
+## Infrastructure as a queryable object
 
-Analogi *Infrastructure DOM* berarti objek dan relasinya dapat ditelusuri secara terstruktur. Contoh konseptual: cari semua ONU pada suatu PON yang sinyalnya rendah dan layanan internetnya tidak aktif. Ini tidak mengharuskan pemakaian DOM browser atau JavaScript.
+The *Infrastructure DOM* analogy means that objects and their relationships can be explored in a structured manner. Conceptual example: find all ONUs on a PON whose signal is low and whose internet service is not active. This does not require the use of browser DOM or JavaScript.
 
-Sepuluh primitive dari visi awal:
+Ten primitives of early vision:
 
-| Primitive | Makna | Contoh |
+| Primitives | Meaning | Example |
 |---|---|---|
-| Entity | Sesuatu dengan identitas stabil | Router, interface, ONU, process |
-| Capability | Kemampuan dengan cakupan yang diketahui | Routing IPv4, switching, observasi optik |
-| Property | Nilai pada suatu objek | Address, admin state, rx power |
-| Relation | Hubungan bertipe | `attached_to`, `member_of`, `depends_on` |
-| Resource | Sesuatu yang terbatas atau dialokasikan | IP, VLAN ID, bandwidth, GEM port |
-| Constraint | Aturan validitas dalam domain | Referensi interface harus valid |
-| Intent | Kondisi yang ingin dicapai | Subnet A dapat mengakses layanan B |
-| Operation | Langkah perubahan dengan kontrak | AddRoute, CreateVLAN, EnableInterface |
-| Event | Peristiwa pada suatu waktu | LinkDown, timer expired, frame received |
-| Observation | Bukti yang dibaca dari suatu sumber | Hasil CLI, telemetry, atau SNMP |
+| Entities | Something with a stable identity | Router, interface, ONU, process |
+| Capabilities | Capabilities with known scope | IPv4 routing, switching, optical observation |
+| Properties | Value on an object | Address, admin state, rx power |
+| Relations | Relationships of type | `attached_to`, `member_of`, `depends_on` |
+| Resources | Something limited or allocated | IP, VLAN ID, bandwidth, GEM port |
+| Constraints | Validity rules in domains | The interface reference must be valid |
+| Intent | Conditions to be achieved | Subnet A can access service B |
+| Operations | Step changes with contracts | AddRoute, CreateVLAN, EnableInterface |
+| Events | Events at a time | LinkDown, timer expired, frame received |
+| Observations | Evidence read from a source | CLI, telemetry, or SNMP results |
 
-Property perlu tipe dan satuan yang jelas. Relasi fisik, koneksi L2/L3, dan dependency layanan tidak boleh dilebur menjadi satu jenis garis tanpa arti. Capability sebaiknya menyatakan parameter dan batas dukungan, bukan hanya boolean `supported`.
+Properties need clear types and units. Physical relationships, L2/L3 connections, and service dependencies should not be merged into one meaningless line. Capabilities should state support parameters and limits, not just the boolean `supported`.
 
-## State dan provenance
+## State and provenance
 
-| Lapisan | Makna | Contoh |
+| Layers | Meaning | Example |
 |---|---|---|
-| Observation | Bukti asli dengan sumber dan waktu | CLI membaca interface down pada waktu T |
-| Observed state | Interpretasi atas bukti yang tersedia | Interface dinilai down berdasarkan observation tertentu |
-| Desired state | Kondisi yang dikehendaki | Interface administratively enabled |
-| Simulated state | Hasil model pada cabang dan waktu virtual tertentu | Frame diteruskan setelah perubahan route simulasi |
+| Observations | Original proof with source and time | CLI reads the interface is down at time T |
+| Observed state | Interpretation of available evidence | The interface is rated down based on certain observations |
+| Desired state | Desired conditions | Administratively enabled interface |
+| Simulated state | Model results on a specific branch and virtual time | Frames are forwarded after simulation route changes |
 
-Observation yang bertentangan harus tetap dapat diperiksa. Data yang belum dibaca atau sudah kedaluwarsa perlu ditandai unknown/stale; jangan otomatis diisi dari hasil simulasi.
+Conflicting observations must remain checkable. Unread or expired data needs to be marked unknown/stale; do not automatically fill in from the simulation results.
 
-Snapshot produksi dapat menjadi input cabang simulasi. Cabang perlu menunjuk snapshot asal, versi model, konfigurasi, dan asumsi untuk state yang tidak teramati. Merangkum konfigurasi perangkat tidak menjamin seluruh buffer dan state internalnya ikut tertangkap.
+Production snapshots can be input to simulation branches. The branch needs to designate the origin snapshot, model version, configuration, and assumptions for the unobserved state. Encapsulating a device's configuration does not guarantee that all of its buffers and internal state are captured.
 
-## Intent, IR, dan dua executor
+## Intent, IR, and two executors
 
 ```text
 Intent + snapshot + capabilities
@@ -55,28 +55,34 @@ Intent + snapshot + capabilities
     Trace + result            Observe + verify
 ```
 
-IR adalah representasi perantara yang mempertahankan makna operasi sebelum diterjemahkan ke backend. Pembagian modul dan format serialisasinya masih terbuka.
+IR is an intermediate representation that preserves the meaning of operations before being translated to the backend. The division of modules and serialization formats is still open.
 
-Contoh `EnsureReachability(A, B)` perlu dipersempit: arah trafik, alamat/prefix, protokol/port, VRF, keadaan link, dan asumsi return path. Planner menghasilkan operasi yang dapat dipahami backend, misalnya menambahkan route. Executor simulator mengubah state virtual; adapter nyata menerjemahkannya sesuai capability perangkat.
+The `EnsureReachability(A, B)` example needs to be narrowed down: traffic direction, address/prefix, protocol/port, VRF, link state, and assumed return path. Planner generates operations that the backend can understand, for example adding a route. The simulator executor changes the virtual state; The real adapter translates it according to the device's capability.
 
-Operation adalah unit logis perencanaan. Eksekusinya pada perangkat dapat memerlukan beberapa perintah dan dapat gagal sebagian; ia tidak otomatis merupakan transaksi atomik lintas perangkat.
+Operation is the logical unit of planning. Its execution on a device may require multiple commands and may fail partially; it is not automatically an atomic transaction across devices.
 
-Kontrak operasi yang diusulkan mencakup target, argumen, precondition, expected effect, postcondition, timeout, sifat idempotensi, dan kemungkinan kompensasi. Menjalankan ulang operasi harus memiliki hasil yang didefinisikan, terutama setelah kegagalan parsial.
+The proposed operating contract includes targets, arguments, preconditions, expected effects, postconditions, timeouts, idempotency properties, and possible compensation. Rerunning an operation should have a defined outcome, especially after a partial failure.
 
-## Adapter dan transport
+## Verify model sharing with simulator
 
-Kontrak driver konseptual dari visi: `discover`, `observe`, `capabilities`, `plan`, `execute`, dan `validate`. Pembagian tanggung jawab planner umum dan perencanaan khusus driver masih perlu dirancang.
+The proposed Verify mode uses the same declarative IR as the simulator. Rule contains `match`, `action`, and evaluation order per device/chain. The simulator runs the rule against a single packet; The verifier calculates the set of packets and issues reachability, isolation, loop/blackhole, and shadowed rule queries in the supported stateless subset.
 
-SSH/CLI, SNMP, NETCONF, RESTCONF, gNMI, HTTP, Modbus, dan serial adalah calon transport. Parsing output dan perilaku firmware berada pada adapter/domain terkait. Dukungan transport tidak berarti seluruh kemampuan vendor sudah tersedia.
+The counterexample verifier must be able to be taken as concrete input, rerun through the simulator, and then linked to decisions and byte changes. The differential test on the package remains a gate so that the two executors do not deviate. Stateful connection tracking and NAT remain unsupported until the state model has its own contract. Details of the proposal and gate are in [ADR-0012](../adr/0012-shared-verify-ir.md) and [Verify plan](verification.md).
 
-Inventaris user-reported tersedia pada [pilot-v1.json](../../fixtures/inventory/pilot-v1.json): Linux VM/server, RouterOS major 7, C320 dengan versi per board, serta contoh state GPON ONU. Model/firmware ONU, distro Linux, versi minor RouterOS, akses, dan capability yang belum diketahui tetap unknown. Driver belum tersedia; tahap pengujiannya ada pada [rencana pilot](pilot.md).
+## Adapter and transport
 
-## Perubahan nyata, reconciliation, dan AI
+Conceptual driver contracts of vision: `discover`, `observe`, `capabilities`, `plan`, `execute`, and `validate`. The division of responsibilities for general planners and driver-specific planning still needs to be designed.
 
-Alur yang dituju adalah plan → validasi → simulasi sesuai model → kebijakan/otorisasi yang berlaku → execute → observe → verify. Plan perlu menyatakan dependency, dampak, dan apa yang terjadi jika sebagian langkah gagal.
+SSH/CLI, SNMP, NETCONF, RESTCONF, gNMI, HTTP, Modbus, and serial are candidate transports. Output parsing and firmware behavior resides in the respective adapter/domain. Transport support does not mean all vendor capabilities are available.
 
-Rollback adalah kemampuan per operasi/backend. Mengembalikan konfigurasi lama belum tentu memulihkan sesi aktif, state protokol, atau efek fisik. Branch/merge/bisect state infrastruktur juga memerlukan aturan domain untuk konflik; kemiripan dengan Git adalah arah pengalaman.
+User-reported inventory is available in [pilot-v1.json](../../fixtures/inventory/pilot-v1.json): Linux VM/server, RouterOS major 7, C320 with per board version, as well as GPON ONU state examples. ONU model/firmware, Linux distro, RouterOS minor version, access, and unknown capabilities remain unknown. Drivers not yet available; the testing stage is in [pilot plan](pilot.md).
 
-Reconciliation membandingkan desired dan observed state, lalu menghasilkan repair plan. Eksekusi otomatis beserta kebijakannya belum diputuskan. AI dapat membantu query, diagnosis, dan perencanaan melalui objek serta operasi yang sama; akses model tidak otomatis memberi hak mengeksekusi perubahan.
+## Real change, reconciliation, and AI
 
-Lihat [roadmap](roadmap.md) untuk urutan pembuktian dan [keputusan](decisions.md) untuk batas yang belum dipilih.
+The intended flow is plan → validation → simulation according to the model → applicable policy/authorization → execute → observe → verify. The plan needs to state dependencies, impacts, and what happens if some steps fail.
+
+Rollback is a per operation/backend capability. Restoring an old configuration does not necessarily restore active sessions, protocol state, or physical effects. Branch/merge/bisect state infrastructure also requires domain rules for conflicts; the similarity to Git is the direction of the experience.
+
+Reconciliation compares the desired and observed states, then produces a repair plan. Automatic execution and its policies have not yet been decided. AI can help with querying, diagnosis, and planning over the same objects and operations; Model access does not automatically grant rights to execute changes.
+
+See [roadmap](roadmap.md) for proof order and [decisions](decisions.md) for unselected boundaries.

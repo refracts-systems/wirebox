@@ -1,0 +1,2 @@
+PASS: Git diff whitespace check (existing CRLF accepted without changing bytes).
+PASS: 18 Markdown files; 298 local links; balanced fences; no tracked/nonignored HTML.

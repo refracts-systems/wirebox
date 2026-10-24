@@ -1,0 +1,5 @@
+   Compiling wirebox-studio v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-studio)
+error: failed to remove file `C:\Users\ricky\src\wirebox\target\debug\wirebox-studio.exe`
+
+Caused by:
+  Access is denied. (os error 5)

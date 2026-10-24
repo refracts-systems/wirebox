@@ -1,33 +1,33 @@
-# Kelayakan ide dan proyek pembanding
+# Feasibility of benchmarking ideas and projects
 
-Wirebox masuk akal sebagai rangkaian kemampuan yang dibangun bertahap. Kesulitan terbesar adalah keluasan model dan kesetaraan antara simulasi dengan sistem nyata. Keberadaan graph, UI, atau compiler intent saja belum membuktikan akurasi maupun manfaat operasional.
+Wyrlex makes sense as a series of capabilities built in stages. The greatest difficulty is the breadth of the model and the equivalence between the simulation and the real system. The mere existence of a graph, UI, or intent compiler does not prove accuracy or operational benefit.
 
-## Proyek yang dibahas
+## Projects discussed
 
-Ringkasan fungsi berikut diperiksa dari sumber resmi pada 19 Oktober 2026. Kolom relevansi adalah interpretasi untuk Wirebox, bukan klaim bahwa produk tersebut identik atau kekurangan fitur tertentu.
+The following functional summary was checked from official sources on October 19, 2026. The relevance column is an interpretation for Wyrlex, not a claim that the products are identical or lack certain features.
 
-| Proyek | Fokus yang relevan | Pelajaran untuk Wirebox |
+| Project | Relevant focus | Lessons for Wyrlex |
 |---|---|---|
-| [Batfish](https://batfish.org/) | Analisis konfigurasi jaringan | Pisahkan validasi reachability/policy dari simulasi waktu setiap paket |
-| [Forward Networks](https://www.forwardnetworks.com/) | Model digital twin jaringan untuk inspeksi dan validasi perubahan | Ada kebutuhan nyata untuk query perilaku dan dampak perubahan berbasis model |
-| [NetBox Labs](https://netboxlabs.com/) | Data/model infrastruktur, intended dan operational state, serta drift | Identitas objek dan provenance state perlu fondasi yang kuat |
-| [Apstra](https://www.juniper.net/us/en/products/network-automation/apstra-data-center-director.html) | Otomasi berbasis intent dan validasi jaringan data center | Domain yang terdefinisi membantu menjaga kontrak intent dan backend |
-| [SmartOLT](https://www.smartolt.com/) | Manajemen OLT/ONU, provisioning, monitoring, dan operasi | Domain akses ISP punya workflow konkret yang bisa dipilih kemudian |
-| [OpenConfig](https://www.openconfig.net/) | Model data vendor-neutral, telemetry, dan protokol manajemen | Model yang ada dapat dipetakan; schema saja belum menjadi simulator perilaku |
-| [containerlab](https://containerlab.dev/) | Orkestrasi lab jaringan berbasis container dan koneksi virtual | Lab implementasi nyata dapat menjadi pembanding untuk model Wirebox |
+| [Batfish](https://batfish.org/) | Network configuration analysis | Separate reachability/policy validation from time simulation of each packet |
+| [Forward Networks](https://www.forwardnetworks.com/) | Network digital twin models for change inspection and validation | There is a real need for model-based querying of the behavior and impact of changes |
+| [NetBox Labs](https://netboxlabs.com/) | Infrastructure data/model, intended and operational state, and drift | Object identity and state provenance need a strong foundation |
+| [Apstra](https://www.juniper.net/us/en/products/network-automation/apstra-data-center-director.html) | Intent-based automation and data center network validation | A defined domain helps maintain intent and backend contracts |
+| [SmartOLT](https://www.smartolt.com/) | OLT/ONU management, provisioning, monitoring, and operations | ISP access domains have concrete workflows that can be selected later |
+| [OpenConfig](https://www.openconfig.net/) | Vendor-neutral data model, telemetry, and management protocols | Existing models can be mapped; schema alone is not yet a behavior simulator |
+| [containerlab](https://containerlab.dev/) | Container-based network lab orchestration and virtual connections | A real implementation lab can serve as a comparison for the Wyrlex | model
 
-Deskripsi vendor menjelaskan posisi produknya, bukan hasil benchmark independen. Belum ada evaluasi langsung Wirebox melawan produk-produk tersebut atau keputusan integrasi dengan salah satunya.
+Vendor descriptions describe product positions, not independent benchmark results. There has been no direct evaluation of Wyrlex against these products or decision on integration with any of them.
 
-## Ruang pembeda yang ingin dibuktikan
+## Differentiation space that you want to prove
 
-Hipotesis Wirebox adalah pengalaman yang menyambungkan objek infrastruktur, intent, eksperimen, trace kausal, dan inspeksi byte. Pengguna dapat berpindah dari pertanyaan “mengapa gagal?” ke state, keputusan protokol, serta byte yang relevan tanpa kehilangan hubungan asal-usulnya.
+Wyrlex hypotheses are experiences that connect infrastructure objects, intents, experiments, causal traces, and byte inspections. Users can move from asking “why did it fail?” to state, protocol decisions, and relevant bytes without losing their provenance relationship.
 
-Hipotesis ini perlu dibuktikan melalui satu workflow kecil yang lengkap. Contoh awal: ping gagal karena route hilang; pengguna melihat alasan drop, mengubah route pada cabang simulasi, lalu membandingkan hasil dan perubahan byte.
+This hypothesis needs to be proven through a small, complete workflow. Initial example: ping failed because route was lost; the user looks at the reason for the drop, changes the route on the simulation branch, then compares the results and byte changes.
 
-Untuk use case operasional berikutnya, visi awal mengusulkan reachability pelanggan melewati ONU → OLT → VLAN → router/NAT → uplink. Skenario itu memerlukan model lebih luas dan adapter yang belum ada.
+For the next operational use case, the initial vision proposes customer reachability across ONU → OLT → VLAN → router/NAT → uplink. That scenario requires a broader model and adapters that don't yet exist.
 
-## Batas ambisi
+## Limits of ambition
 
-Prioritas awal adalah model yang dapat dijelaskan dan diuji pada skenario terbatas. Dukungan banyak vendor, AI, time travel penuh, serta eksekusi produksi menjadi perluasan setelah fondasi terbukti. Tidak ada keputusan harga, model bisnis, target skala, atau janji dukungan seluruh vendor dalam percakapan ini.
+The initial priority is a model that can be explained and tested on limited scenarios. Multi-vendor support, AI, full time travel, and production execution become expanded once the foundation is proven. There are no pricing decisions, business models, scale targets, or promises of vendor-wide support in these conversations.
 
-[Roadmap](roadmap.md) menerjemahkan arah tersebut menjadi tahapan dengan hasil yang dapat diperiksa.
+[Roadmap](roadmap.md) translates the direction into stages with examineable results.

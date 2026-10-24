@@ -1,4 +1,4 @@
-# Belajar membangun Wirebox, phase 1–3
+# Belajar membangun Wyrlex, phase 1–4
 
 Dokumen ini membaca **kode yang sekarang ada**, tahap demi tahap. Setiap catatan menjawab: bagian mana yang bekerja, keputusan apa yang diambil, mengapa dipilih, dan apa akibatnya saat kode dikembangkan. [ADR](../adr/README.md) adalah keputusan arsitektur; [evidence](../evidence/phase-3/README.md) merekam hasil uji. Catatan belajar ini menghubungkan keduanya dengan fungsi dan data konkret.
 
@@ -17,5 +17,10 @@ Urutan yang disarankan:
 | 3 | [Codec dan field byte](phase_3/phase_3_codec_byte.md) | Bagaimana header diubah dan diinspeksi byte demi byte? |
 | 3 | [Alur paket jaringan](phase_3/phase_3_alur_paket.md) | Mengapa ping melewati ARP, switch, router, lalu kembali? |
 | 3 | [Versi, ABI, dan pembuktian](phase_3/phase_3_tracker_pembuktian.md) | Bagaimana hasil simulasi ditelusuri dan diuji? |
+| 4 | [Controller, snapshot dan inspector Studio](phase_4/phase_4_controller_snapshot.md) | Bagaimana UI membaca hasil konsisten, membatalkan Run, serta memverifikasi sesi yang dibuka? |
 
-Contoh phase 3 memakai fixture sintetis `PC1 — SW1 — R1 — PC2`. Nama kelas dan alamat Packet Tracer dari laporan reverse engineering memberi petunjuk desain, bukan source engine Wirebox atau bukti kesamaan perilaku vendor. Baca [batas model paket](../wirebox/packets.md) sebelum memakai hasil simulasi untuk keputusan operasional.
+Contoh phase 3 memakai fixture sintetis `PC1 — SW1 — R1 — PC2`. Nama kelas dan alamat Packet Tracer dari laporan reverse engineering memberi petunjuk desain, bukan source engine Wyrlex atau bukti kesamaan perilaku vendor. Baca [batas model paket](../wirebox/packets.md) sebelum memakai hasil simulasi untuk keputusan operasional.
+
+Lanjutan: [draft, sesi v2 dan retensi trace](phase_4/phase_4_draft_and_retention.md).
+
+[Acceptance agent, histori 10.000 row dan pengukuran](phase_4/phase_4_acceptance_measurement.md) menjelaskan metode dan batas benchmark Phase 4.

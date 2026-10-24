@@ -1,0 +1,178 @@
+{
+  "date": "2026-10-24",
+  "base_commit": "1b4139a2028b637e75d30c0f04425eaf50e0f42f",
+  "working_tree": "uncommitted",
+  "scope": "G4 technical agent acceptance per ADR-0010",
+  "binary": {
+    "path": "target/debug/wirebox-studio.exe",
+    "sha256": "e91e0c91207d9aa454e664f539c925312d61866d90d2c1c2d816287849bb60e7"
+  },
+  "sources": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "87a6637387af469b76e97c9b40f4518d1e3c4800b376c3e0352f789a04125505"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "d13306be0ecda81ce779baa290ffb417380d525928477f16200884b5169cca33"
+    },
+    {
+      "path": "crates/wirebox-studio/src/main.rs",
+      "sha256": "80dc50c034eea79f156e5eb372a7f5aa353fa4d90e4d2b232066331f80aae3d2"
+    },
+    {
+      "path": "crates/wirebox-studio/src/model.rs",
+      "sha256": "93676cfc7f5acdbc1ffb88c0f20c804557525c89c5ab5fc84bf9b5470fdbafdc"
+    },
+    {
+      "path": "kernel/src/network.zig",
+      "sha256": "f676722e711d4d8824e0a80b76ea30ec485018f75c0394f271993bd96831a817"
+    },
+    {
+      "path": "scripts/measure-studio-memory.ps1",
+      "sha256": "ab96e94d54333fb216727f9a9b6acbc3df5e1e64470a4cd260b11812b7ed211c"
+    },
+    {
+      "path": "scripts/summarize-studio-acceptance.mjs",
+      "sha256": "311cd028f28b92078afbadb06ac017510f14d579c3f8fc6827d66be3b70de0db"
+    },
+    {
+      "path": "README.md",
+      "sha256": "386cfe5990e5b1173314e134c48d5d98329d678930df12ee6999971b58d34f28"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "daa3010f0ddf87895272fab869e7be251263f7e60b2a6030b89f484594683be1"
+    },
+    {
+      "path": "docs/README.md",
+      "sha256": "d505faa54d03f114242320221304ff44c5361f176a2f0da3859f9a9886a8371b"
+    },
+    {
+      "path": "docs/wirebox/todos.md",
+      "sha256": "6725712bea036d101f8239ace06d556e2f8de6bd1f1ecf19b27cea5843bd537a"
+    },
+    {
+      "path": "docs/wirebox/README.md",
+      "sha256": "ffdf078a54ae3601c78c86fb69340a264d62a54d79564b9b4aa2f9c93f57de49"
+    },
+    {
+      "path": "docs/wirebox/roadmap.md",
+      "sha256": "30edbda3a1265d0d39b0c284e7fa8fe57687b8102629db76503a4470a8d31031"
+    },
+    {
+      "path": "docs/wirebox/pilot.md",
+      "sha256": "6b6b520f88bf81a7199bcf76a9498919018b3c49ddf8d58efe1eca61bc376f5f"
+    },
+    {
+      "path": "docs/evidence/phase-4-acceptance/README.md",
+      "sha256": "37fa40910a33525287d06aaa6a7706b0fc0966d8483b7ea88e3ccd32b377a3f7"
+    },
+    {
+      "path": "docs/adr/0010-agent-acceptance-and-studio-measurement.md",
+      "sha256": "bc78790df48036106beea729121ba2e48374ee66f9d489d407505e962f552667"
+    },
+    {
+      "path": "docs/learning/phase_4/phase_4_acceptance_measurement.md",
+      "sha256": "de8e43d6bce6525b6b1b1d1d8ee1fd9ddc0dacb3cdcb2df7915be349d08ea9f0"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\clippy-final.log",
+      "sha256": "02bc58a1c1732c28e350f4b11ed068f5ecc8f92e48b9435b02c509634c725ba7"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\core-final.log",
+      "sha256": "edf3a057c7ec7154ced676fc6b1d2e866993e9b6c3ee3e76d984ba8d92d0c889"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\environment.json",
+      "sha256": "e127b5e85e36f449e102be819cf83301a47d1e74668d927432c036dcc5c7e55a"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\final-environment.json",
+      "sha256": "8939d328f780a1803edb1bd3451fb97e0e55435fbf828d21c9ba7f298ae08c2c"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\final-memory.json",
+      "sha256": "519398ce4d58585b5e6d8713795fdae9b92a20bbd1f88a11248f0e0f2bc35e0a"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\final-ui.log",
+      "sha256": "fb851e72910a145f30a6f82ad14ac5d2b49d315428b8431726fa8cf0f88b0ccf"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\memory.json",
+      "sha256": "2465a0c188e786567be0c4dedf3d669ef8d4d87a834b28826525197e17c53e3a"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\metrics-progress.log",
+      "sha256": "09e87a41f073f8a8dba2edebe0a8ede95001d3200def98acab51c96c87949c4f"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\metrics.json",
+      "sha256": "da06fa597df43bca2ccb37e72d4a39e5b661915b0924d2e67e260aa339f99cf8"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\native-session-v2.wb.json",
+      "sha256": "42881507f82fa01caa16ffa0d986aafdd114fe6a89cd6f8654848b5a065898f3"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\native-ui.log",
+      "sha256": "f9ac3e22a0100be22fc26b67925577a1fa09fb5a1fa738e72c287b4f09250edf"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\pagination-build-final.log",
+      "sha256": "5dc02332c7e2cb601198d6f7737e5755416bdeaff30bed57e5a8bb7aa72374bb"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\pagination-build.log",
+      "sha256": "fef4eb20c47ee74cd9ddacce7c18a2c23968af2e96368ab28d870288f0bdff92"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\process-peak.json",
+      "sha256": "c4e8e38f4aa49015a35b51a38518659353cffc8f2396960fbb063ac997e1f381"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\README.md",
+      "sha256": "37fa40910a33525287d06aaa6a7706b0fc0966d8483b7ea88e3ccd32b377a3f7"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\soak-complete.jpg",
+      "sha256": "b36943b3e65d631140ec0ef72fbdd5d8a10ee8fd451f07221b48577553545ff0"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\soak-hidden-initial.log",
+      "sha256": "ba197fe5e7c544c8eb2f03cac110d1471d197504fc47248f1e4cd8e3479d5775"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\soak-progress.jpg",
+      "sha256": "dffb5158906d42fa7ac37044801576d0ad8ce3680d0db94d728664919cf6fecd"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\soak-ui.log",
+      "sha256": "ba197fe5e7c544c8eb2f03cac110d1471d197504fc47248f1e4cd8e3479d5775"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\soak-visible-ui.log",
+      "sha256": "4406be62044bb5830801dae3189e0a4f7a91d58ece1a67658d86ae8b320145d4"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\studio-final.log",
+      "sha256": "8f8b256edfc36f5c7b3d7cb87108b5fada9d42e87070a5d2b371ff2415138a33"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\verification.log",
+      "sha256": "b399ff10e0d42d1f3c312ed47423489224dc68c6d747d7c1a09f6e5b8e380b3f"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\visible-environment.json",
+      "sha256": "78dc2a9867805580f7b842b6c0fd1ac2d641b46e7f226900eab7d271294c33dd"
+    },
+    {
+      "path": "docs\\evidence\\phase-4-acceptance\\visible-memory.json",
+      "sha256": "68b73eb31f8df9fb1f4991889717db9dde273e665f62cd31bfc4278e87c72d39"
+    }
+  ]
+}

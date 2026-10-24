@@ -1,5 +1,5 @@
-#ifndef WIREBOX_KERNEL_H
-#define WIREBOX_KERNEL_H
+#ifndef WYRLEX_KERNEL_H
+#define WYRLEX_KERNEL_H
 #include <stddef.h>
 #include <stdint.h>
 

@@ -1,0 +1,12 @@
+opened:network-v1
+branch
+run
+batch:budget=4:executed=4:outcome=0:pending=1
+batch:budget=4:executed=8:outcome=0:pending=1
+batch:budget=4:executed=12:outcome=1:pending=0
+trace:53
+latency_us:native:selection:28738
+byte:8=3f
+Tersimpan: C:\Users\ricky\src\wirebox\docs\evidence\phase-4-acceptance\native-session-v2.wb.json
+window_closed
+network_destroyed

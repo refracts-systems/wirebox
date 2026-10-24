@@ -126,7 +126,7 @@ impl std::error::Error for RunError {}
 /// Thread-bound owner. Calls are synchronous, bounded, serialized, and copy all data.
 ///
 /// ```compile_fail
-/// let world = wirebox_kernel::simulation::World::new(0, 16).unwrap();
+/// let world = wyrlex_kernel::simulation::World::new(0, 16).unwrap();
 /// std::thread::spawn(move || drop(world));
 /// ```
 pub struct World {

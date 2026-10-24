@@ -12,7 +12,7 @@ function Invoke-Checked {
     if ($LASTEXITCODE -ne 0) { throw "$Exe failed with exit code $LASTEXITCODE" }
 }
 
-$zig = if ($env:WIREBOX_ZIG) { $env:WIREBOX_ZIG } else {
+$zig = if ($env:WYRLEX_ZIG) { $env:WYRLEX_ZIG } else {
     $installed = Join-Path $env:LOCALAPPDATA 'Programs\Zig\zig-x86_64-windows-0.17.0\zig.exe'
     if (Test-Path -LiteralPath $installed) { $installed } else { 'zig' }
 }
@@ -29,18 +29,18 @@ try {
         Invoke-Checked -Exe $zig -ToolArgs @('test', 'kernel/src/abi.zig', '-O', $mode, '--cache-dir', 'target/zig-tests')
     }
     Invoke-Checked -Exe $zig -ToolArgs @('cc', '-target', 'x86_64-windows-msvc', '-std=c11', '-c', 'kernel/tests/layout.c', '-Ikernel/include', '-o', 'target/abi-layout.obj')
-    $packages = if ($CoreOnly) { @('-p', 'wirebox-kernel', '-p', 'wirebox-headless') } else { @('--workspace') }
+    $packages = if ($CoreOnly) { @('-p', 'wyrlex-kernel', '-p', 'wyrlex-headless') } else { @('--workspace') }
     Invoke-Checked -Exe 'cargo' -ToolArgs (@('test', '--locked') + $packages)
     Invoke-Checked -Exe 'cargo' -ToolArgs (@('clippy', '--locked') + $packages + @('--all-targets', '--', '-D', 'warnings'))
-    Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wirebox-headless', '--', '--probe')
-    Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wirebox-headless', '--', '--check-fixtures')
-    Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wirebox-headless', '--', '--scheduler-demo')
-    Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wirebox-headless', '--', '--check-runtime')
-    Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wirebox-headless', '--', '--check-network')
+    Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wyrlex-headless', '--', '--probe')
+    Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wyrlex-headless', '--', '--check-fixtures')
+    Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wyrlex-headless', '--', '--scheduler-demo')
+    Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wyrlex-headless', '--', '--check-runtime')
+    Invoke-Checked -Exe 'cargo' -ToolArgs @('run', '--locked', '-p', 'wyrlex-headless', '--', '--check-network')
     if (-not $CoreOnly) {
-        Invoke-Checked -Exe 'cargo' -ToolArgs @('build', '--locked', '-p', 'wirebox-studio')
+        Invoke-Checked -Exe 'cargo' -ToolArgs @('build', '--locked', '-p', 'wyrlex-studio')
     }
-    Write-Output 'Wirebox verification passed. Native UI interaction is a separate manual/Computer Use check.'
+    Write-Output 'Wyrlex verification passed. Native UI interaction is a separate manual/Computer Use check.'
 } finally {
     Pop-Location
 }

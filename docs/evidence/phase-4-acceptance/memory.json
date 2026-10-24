@@ -1,0 +1,252 @@
+{
+  "scope": "Process memory and Windows responding flag only; not input latency or scripted workflow acceptance",
+  "process_id": 27460,
+  "process_started_utc": "2026-10-23T23:51:29.0745133Z",
+  "requested_seconds": 1830,
+  "elapsed_seconds": 40.5179097,
+  "peak_working_set_bytes": 61272064.0,
+  "within_1gib": true,
+  "failure": "Studio exited during observation",
+  "samples": [
+    {
+      "seconds": 0.0041491,
+      "working_set_bytes": 60628992,
+      "private_bytes": 65019904,
+      "responding": true
+    },
+    {
+      "seconds": 1.0249228,
+      "working_set_bytes": 60628992,
+      "private_bytes": 65019904,
+      "responding": true
+    },
+    {
+      "seconds": 2.0409148,
+      "working_set_bytes": 60628992,
+      "private_bytes": 65019904,
+      "responding": true
+    },
+    {
+      "seconds": 3.0515916,
+      "working_set_bytes": 60628992,
+      "private_bytes": 65019904,
+      "responding": true
+    },
+    {
+      "seconds": 4.0617821,
+      "working_set_bytes": 60674048,
+      "private_bytes": 65081344,
+      "responding": true
+    },
+    {
+      "seconds": 5.0740817,
+      "working_set_bytes": 60674048,
+      "private_bytes": 65081344,
+      "responding": true
+    },
+    {
+      "seconds": 6.0834784,
+      "working_set_bytes": 60674048,
+      "private_bytes": 65081344,
+      "responding": true
+    },
+    {
+      "seconds": 7.0975712,
+      "working_set_bytes": 60674048,
+      "private_bytes": 65081344,
+      "responding": true
+    },
+    {
+      "seconds": 8.1083535,
+      "working_set_bytes": 60674048,
+      "private_bytes": 65081344,
+      "responding": true
+    },
+    {
+      "seconds": 9.1240656,
+      "working_set_bytes": 60674048,
+      "private_bytes": 65081344,
+      "responding": true
+    },
+    {
+      "seconds": 10.1342774,
+      "working_set_bytes": 60370944,
+      "private_bytes": 65204224,
+      "responding": true
+    },
+    {
+      "seconds": 11.1554533,
+      "working_set_bytes": 60399616,
+      "private_bytes": 65253376,
+      "responding": true
+    },
+    {
+      "seconds": 12.1686235,
+      "working_set_bytes": 60416000,
+      "private_bytes": 65499136,
+      "responding": true
+    },
+    {
+      "seconds": 13.1814409,
+      "working_set_bytes": 60416000,
+      "private_bytes": 65499136,
+      "responding": true
+    },
+    {
+      "seconds": 14.1912997,
+      "working_set_bytes": 60416000,
+      "private_bytes": 65499136,
+      "responding": true
+    },
+    {
+      "seconds": 15.2023896,
+      "working_set_bytes": 60416000,
+      "private_bytes": 65499136,
+      "responding": true
+    },
+    {
+      "seconds": 16.216083,
+      "working_set_bytes": 60416000,
+      "private_bytes": 65499136,
+      "responding": true
+    },
+    {
+      "seconds": 17.2300058,
+      "working_set_bytes": 60416000,
+      "private_bytes": 65499136,
+      "responding": true
+    },
+    {
+      "seconds": 18.2457181,
+      "working_set_bytes": 60416000,
+      "private_bytes": 65499136,
+      "responding": true
+    },
+    {
+      "seconds": 19.2581639,
+      "working_set_bytes": 60416000,
+      "private_bytes": 65499136,
+      "responding": true
+    },
+    {
+      "seconds": 20.2735309,
+      "working_set_bytes": 61272064,
+      "private_bytes": 65761280,
+      "responding": true
+    },
+    {
+      "seconds": 21.2798824,
+      "working_set_bytes": 61272064,
+      "private_bytes": 65761280,
+      "responding": true
+    },
+    {
+      "seconds": 22.2938385,
+      "working_set_bytes": 61272064,
+      "private_bytes": 65761280,
+      "responding": true
+    },
+    {
+      "seconds": 23.3010539,
+      "working_set_bytes": 61272064,
+      "private_bytes": 65761280,
+      "responding": true
+    },
+    {
+      "seconds": 24.3107449,
+      "working_set_bytes": 61272064,
+      "private_bytes": 65757184,
+      "responding": true
+    },
+    {
+      "seconds": 25.3247305,
+      "working_set_bytes": 61272064,
+      "private_bytes": 65757184,
+      "responding": true
+    },
+    {
+      "seconds": 26.3366216,
+      "working_set_bytes": 61272064,
+      "private_bytes": 65757184,
+      "responding": true
+    },
+    {
+      "seconds": 27.346787,
+      "working_set_bytes": 61272064,
+      "private_bytes": 65757184,
+      "responding": true
+    },
+    {
+      "seconds": 28.3552119,
+      "working_set_bytes": 60530688,
+      "private_bytes": 65011712,
+      "responding": true
+    },
+    {
+      "seconds": 29.3633969,
+      "working_set_bytes": 60530688,
+      "private_bytes": 65052672,
+      "responding": true
+    },
+    {
+      "seconds": 30.3717938,
+      "working_set_bytes": 61091840,
+      "private_bytes": 65757184,
+      "responding": true
+    },
+    {
+      "seconds": 31.3804318,
+      "working_set_bytes": 61091840,
+      "private_bytes": 65757184,
+      "responding": true
+    },
+    {
+      "seconds": 32.3941785,
+      "working_set_bytes": 61091840,
+      "private_bytes": 65757184,
+      "responding": true
+    },
+    {
+      "seconds": 33.4062211,
+      "working_set_bytes": 61091840,
+      "private_bytes": 65757184,
+      "responding": true
+    },
+    {
+      "seconds": 34.421196,
+      "working_set_bytes": 61091840,
+      "private_bytes": 65757184,
+      "responding": true
+    },
+    {
+      "seconds": 35.432482,
+      "working_set_bytes": 61091840,
+      "private_bytes": 65757184,
+      "responding": true
+    },
+    {
+      "seconds": 36.4432026,
+      "working_set_bytes": 61091840,
+      "private_bytes": 65761280,
+      "responding": true
+    },
+    {
+      "seconds": 37.4529837,
+      "working_set_bytes": 61091840,
+      "private_bytes": 65761280,
+      "responding": true
+    },
+    {
+      "seconds": 38.4598847,
+      "working_set_bytes": 61091840,
+      "private_bytes": 65761280,
+      "responding": true
+    },
+    {
+      "seconds": 39.4654332,
+      "working_set_bytes": 61091840,
+      "private_bytes": 65761280,
+      "responding": true
+    }
+  ]
+}

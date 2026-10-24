@@ -1,49 +1,59 @@
-# Dokumentasi Wirebox
+# Wyrlex documentation
 
-Catatan konsep, arah desain, keputusan, dan bukti pengembangan Wirebox. Phase 0–3 tersedia, termasuk simulator paket dan tracker byte headless. Studio terintegrasi dan adapter nyata mengikuti roadmap.
+This directory contains Wyrlex concepts, design direction, decisions, and development evidence. Phases 0–3 are available, including the headless packet simulator and byte tracker. Packet Studio Phase 4 passed technical agent acceptance for its declared scope; real-device adapters remain on the roadmap.
 
-## Wirebox
+## Wyrlex
 
-- [Menjalankan build dan preview](../README.md)
+- [Build and preview commands](../README.md)
 - [Architecture Decision Records](adr/README.md)
-- [Kontrak phase 0 dan fixture baseline](wirebox/phase-0-contract.md)
-- [Kontrak FFI v1](wirebox/ffi.md)
-- [Uji boundary generation handle: Kandidat A dan B](evidence/handle-generation/README.md)
-- [Hasil verifikasi gate G0/G1](evidence/phase-0-1/README.md)
-- [Runtime graph/scheduler dan ABI phase 2](wirebox/runtime.md)
-- [Hasil verifikasi gate G2](evidence/phase-2/README.md)
-- [Simulator paket, byte tracker, dan ABI phase 3](wirebox/packets.md)
-- [Hasil verifikasi gate G3](evidence/phase-3/README.md)
-- [Walkthrough perubahan byte aktual](evidence/phase-3/byte-walkthrough.md)
-- [Learning docs phase 1–3: keputusan kode dan alasannya](learning/README.md)
-- [Hardening Phase 0–3: hasil dan batas pengujian](evidence/hardening-phase-0-3/README.md)
-- [Panduan hardening untuk backend engineer](learning/hardening_phase_0_3.md)
-- [Catatan Cognitive Coverage](learning/hardening_phase_0_3.md#apa-arti-generated): guide, kuis dan dashboard pribadi tersedia hanya dalam folder lokal yang diabaikan Git.
-- [Apa itu Wirebox, tujuan, dan batas cakupan](wirebox/README.md)
-- [Model semantik, state, planner, dan runtime](wirebox/architecture.md)
-- [Simulasi tanpa perangkat dan hubungan dengan bukti PT](wirebox/simulation.md)
-- [Byte tracker, penjelasan perubahan, dan replay](wirebox/byte-tracker.md)
-- [Zig, Rust, GPUI, dan GPUix + Solid](wirebox/technology.md)
-- [Kelayakan ide dan proyek pembanding](wirebox/positioning.md)
-- [Roadmap phase: PoC, MVP, pilot, beta, dan future](wirebox/roadmap.md)
-- [Todos per phase dan status pekerjaan](wirebox/todos.md)
-- [Rencana pilot, skenario uji, dan ukuran keberhasilan](wirebox/pilot.md)
-- [Keputusan, preferensi, serta pertanyaan terbuka](wirebox/decisions.md)
+- [Phase 0 contract and baseline fixtures](wirebox/phase-0-contract.md)
+- [FFI v1 contract](wirebox/ffi.md)
+- [Handle-generation boundary test: candidates A and B](evidence/handle-generation/README.md)
+- [G0/G1 verification results](evidence/phase-0-1/README.md)
+- [Phase 2 runtime graph, scheduler, and ABI](wirebox/runtime.md)
+- [G2 verification results](evidence/phase-2/README.md)
+- [Phase 3 packet simulator, byte tracker, and ABI](wirebox/packets.md)
+- [G3 verification results](evidence/phase-3/README.md)
+- [Packet Studio controls, inspector, and versioned sessions](wirebox/studio.md)
+- [Initial Phase 4 integration and G4 limits](evidence/phase-4/README.md)
+- [G4 completion plan and path to a real pilot](wirebox/phase-4-plan.md)
+- [Walkthrough of actual byte changes](evidence/phase-3/byte-walkthrough.md)
+- [Phase 1–4 learning notes: code decisions and reasons](learning/README.md)
+- [Phase 0–3 hardening results and test limits](evidence/hardening-phase-0-3/README.md)
+- [Hardening guide for a backend engineer](learning/hardening_phase_0_3.md)
+- [Cognitive Coverage notes](learning/hardening_phase_0_3.md#apa-arti-generated): the private guide, quiz, and dashboard remain in the Git-ignored local directory.
+- [What Wyrlex is, its goal, and its scope](wirebox/README.md)
+- [Semantic model, state, planner, and runtime](wirebox/architecture.md)
+- [Device-free simulation and its Packet Tracer evidence](wirebox/simulation.md)
+- [Byte tracker, change explanation, and replay](wirebox/byte-tracker.md)
+- [Zig, Rust, GPUI, and GPUix + Solid](wirebox/technology.md)
+- [Idea positioning and comparison projects](wirebox/positioning.md)
+- [Phase roadmap: PoC, MVP, pilot, beta, and future](wirebox/roadmap.md)
+- [Phase todos and work status](wirebox/todos.md)
+- [Verify design sharing an IR with the simulator](wirebox/verification.md)
+- [Pilot plan, test scenarios, and success measures](wirebox/pilot.md)
+- [Decisions, preferences, and open questions](wirebox/decisions.md)
 
-Panduan untuk agent dan kontributor: [AGENTS.md](../AGENTS.md).
+Agent and contributor guidance: [AGENTS.md](../AGENTS.md).
 
-## Reverse engineering Packet Tracer
+## Cisco Packet Tracer reverse engineering
 
-- [Ringkasan dan cara membaca](packet-tracer/README.md)
-- [Arsitektur simulasi](packet-tracer/architecture.md)
-- [Daftar bukti dan tingkat kepastian](packet-tracer/evidence-ledger.md)
-- [Audit REA/Ghidra dan smoke test PT lokal](evidence/pt-comparison/README.md)
-- [Runbook pengujian pembanding PT dan Wirebox](packet-tracer/comparison-tests.md)
-- [Mini-simulator dan verifikasi lokal](packet-tracer/mini-simulator.md)
-- [Format dokumen .pkt dan koreksi temuan](packet-tracer/pkt-format.md)
-- [Implikasi untuk Wirebox](packet-tracer/wirebox-implications.md)
-- [Arsip laporan asli dan provenance](packet-tracer/sources/README.md)
+- [Summary and reading order](packet-tracer/README.md)
+- [Simulation architecture](packet-tracer/architecture.md)
+- [Evidence ledger and confidence levels](packet-tracer/evidence-ledger.md)
+- [REA/Ghidra audit and local PT smoke test](evidence/pt-comparison/README.md)
+- [PT/Wyrlex comparison-test runbook](packet-tracer/comparison-tests.md)
+- [Mini-simulator and local verification](packet-tracer/mini-simulator.md)
+- [.pkt document format and corrected findings](packet-tracer/pkt-format.md)
+- [Implications for Wyrlex](packet-tracer/wirebox-implications.md)
+- [Original reports and provenance archive](packet-tracer/sources/README.md)
 
-Catatan disusun pada 19 Oktober 2026 dari visi awal pengguna, percakapan proyek, laporan RE, dan pemeriksaan mini-simulator lokal. Dokumen ini tidak menyatakan bahwa seluruh binary Packet Tracer telah diaudit ulang. Sumber teknologi eksternal yang diperiksa ulang ditautkan pada dokumen terkait.
+The notes were assembled on 19 October 2026 from the initial user vision, project discussion, RE reports, and local mini-simulator inspection. They do not claim that every Packet Tracer binary path was audited again. Rechecked external technology sources are linked from the relevant documents.
 
-Rencana phase dan target pilot Linux/MikroTik/ZTE/ONU diperbarui pada 20 Oktober 2026. Gate serta checklist membedakan kesiapan yang sudah tersedia dari implementasi yang belum diuji.
+The phase plan and Linux/MikroTik/ZTE/ONU pilot targets were updated on 20 October 2026. Gates and checklists distinguish available readiness from implementation that has not been tested.
+
+[Studio hardening on 24 October and G4 status](evidence/phase-4-hardening/README.md).
+
+[Agent technical G4 results, metrics, and test limits](evidence/phase-4-acceptance/README.md).
+
+[Wyrlex rename migration evidence](evidence/rename-wyrlex/README.md).

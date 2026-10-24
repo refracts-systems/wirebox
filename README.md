@@ -1,68 +1,68 @@
-# Wirebox
+# Wyrlex
 
-Studio infrastruktur untuk inspeksi, simulasi, penelusuran paket, dan perubahan berbasis model bersama. [Konsep lengkap](docs/wirebox/README.md), [learning docs phase 1–3](docs/learning/README.md), [ADR](docs/adr/README.md), [roadmap](docs/wirebox/roadmap.md), dan [todos](docs/wirebox/todos.md).
+Wyrlex is an infrastructure studio and runtime for inspection, simulation, packet tracing, and planned change over a shared semantic model. Read the [product concept](docs/wirebox/README.md), [Phase 1–4 learning notes](docs/learning/README.md), [ADRs](docs/adr/README.md), [roadmap](docs/wirebox/roadmap.md), and [phase todos](docs/wirebox/todos.md).
 
-## Status implementasi
+## Implementation status
 
-Phase 0–3 tersedia untuk scope lokal: kontrak/fixture, probe Zig–Rust dan GPUI, runtime waktu virtual, serta **simulator Ethernet/ARP/IPv4/ICMP dengan routing statis dan tracker byte headless**. [Model paket](docs/wirebox/packets.md) memproses ping sukses, route hilang, TTL habis, ARP timeout, dan input invalid. [Walkthrough byte](docs/evidence/phase-3/byte-walkthrough.md) menunjukkan byte aktual sebelum/sesudah forwarding. Wirebox membangun model perilaku jaringan; OS dan image vendor tidak diperlukan.
+Phases 0–3 are available for the local scope: contracts/fixtures, Zig–Rust/GPUI integration, virtual time, and a **headless Ethernet/ARP/IPv4/ICMP simulator with static routing and a byte tracker**. The initial [Packet Studio Phase 4](docs/wirebox/studio.md) integration shows live trace and bytes, Run/Pause/Step/Reset controls, configuration branches, and versioned session save/load. [Phase 4 technical acceptance](docs/evidence/phase-4-acceptance/README.md) passed for the declared fixture and handler-to-render scope; human usability is still unknown. The [packet model](docs/wirebox/packets.md) covers successful ping, missing route, expired TTL, ARP timeout, and invalid input. Wyrlex models network behavior; it does not require a vendor OS image.
 
-Target build: Windows x64, Zig **0.17.0** sebagai baseline yang diverifikasi (minimum produk 0.17), Rust **1.99.1**, Visual Studio C++ Build Tools dan Windows SDK. Dependency GPUI dipin pada **0.2.2** dengan Cargo.lock. Rust dipilih otomatis oleh rustup melalui rust-toolchain.toml.
+The target is Windows x64 with Zig **0.17.0** as the verified baseline (product minimum 0.17), Rust **1.99.1**, Visual Studio C++ Build Tools, and the Windows SDK. GPUI is pinned at **0.2.2** by `Cargo.lock`. rustup selects Rust through `rust-toolchain.toml`.
 
-## Menjalankan
+## Operate
 
-PowerShell dari root repository:
+Run these commands from the repository root in PowerShell:
 
 ```powershell
-# Jika zig.exe belum tersedia di PATH, tunjuk lokasi instalasinya:
-$env:WIREBOX_ZIG = 'C:\Users\ricky\AppData\Local\Programs\Zig\zig-x86_64-windows-0.17.0\zig.exe'
+# If zig.exe is not on PATH, set its installation path:
+$env:WYRLEX_ZIG = 'C:\Users\ricky\AppData\Local\Programs\Zig\zig-x86_64-windows-0.17.0\zig.exe'
 
-cargo run --locked -p wirebox-headless -- --probe
-cargo run --locked -p wirebox-headless -- --check-fixtures
-cargo run --locked -p wirebox-headless -- --scheduler-demo
-cargo run --locked -p wirebox-headless -- --check-runtime
-cargo run --locked -p wirebox-headless -- --packet-demo S01
-cargo run --locked -p wirebox-headless -- --check-network
-cargo run --locked -p wirebox-studio
+cargo run --locked -p wyrlex-headless -- --probe
+cargo run --locked -p wyrlex-headless -- --check-fixtures
+cargo run --locked -p wyrlex-headless -- --scheduler-demo
+cargo run --locked -p wyrlex-headless -- --check-runtime
+cargo run --locked -p wyrlex-headless -- --packet-demo S01
+cargo run --locked -p wyrlex-headless -- --check-network
+cargo run --locked -p wyrlex-studio
 ```
 
-Sesuaikan path Zig untuk komputer lain. Jika memakai lokasi instalasi lokal standar, build script juga dapat menemukannya melalui LOCALAPPDATA. Kernel dibangun oleh Cargo build script ke OUT_DIR; tidak perlu membangun static library manual.
+Adjust the Zig path on another machine. The build script also searches the normal `LOCALAPPDATA` installation when available. Cargo builds the kernel into `OUT_DIR`; no manual static-library build is required.
 
-Pada window: pilih node/link atau byte untuk inspector, tekan **Ctrl+R** untuk batch probe baru, **Esc** untuk reset selection, dan **Ctrl+Q** atau tombol close window untuk keluar. Topologi adalah fixture statis. Byte/event probe berasal dari Zig; tombol ini belum mengirim paket jaringan.
+In the Studio window, choose S01–S05, use **Ctrl+R** for Run, **Space** for Pause, **F10** for one scheduler step, and **Ctrl+N** for Reset. Select a node or link to filter the trace, a trace row to inspect its packet, or a field/byte to highlight related data. Before/After shows packet-byte versions. **Ctrl+S/Ctrl+O** saves/opens a session, **Esc** clears selection, and **Ctrl+Q** exits. The topology is still a four-node fixture; the [Studio guide](docs/wirebox/studio.md) documents configuration and the S02 route-repair workflow.
 
-## Verifikasi
+## Verify
 
-Hardening Phase 0–3 dan satu perbaikan validasi route dijelaskan di [learning notes](docs/learning/hardening_phase_0_3.md), dengan [hasil pengujian](docs/evidence/hardening-phase-0-3/README.md).
+Phase 0–3 hardening and the route-validation fix are explained in the [learning notes](docs/learning/hardening_phase_0_3.md), with [test results](docs/evidence/hardening-phase-0-3/README.md).
 
-Materi pribadi Cognitive Coverage (guide HTML, kuis, dashboard, dan progress belajar) disimpan **hanya secara lokal** dalam `cognitive-coverage/`, yang diabaikan Git. Folder ini tidak tersedia melalui GitHub atau clone baru. Jika materi sudah dihasilkan di komputermu, buka `cognitive-coverage/cognitive-coverage-open.html` melalui browser. Skill project dan catatan belajar Markdown tetap tersedia di repository; materi ini tidak menambah dependency runtime engine.
+Personal Cognitive Coverage material (HTML guide, quiz, dashboard, and learning progress) is stored **locally only** in the Git-ignored `cognitive-coverage/` directory. It is not available from GitHub or a fresh clone. If it has been generated locally, open `cognitive-coverage/cognitive-coverage-open.html` in a browser. The project skills and Markdown learning notes remain in the repository; the generated material adds no runtime dependency.
 
 ```powershell
-# Kernel, C layout, wrapper, fixture, formatter, dan Clippy
+# Kernel, C layout, wrapper, fixtures, formatter, and Clippy
 ./scripts/verify.ps1 -CoreOnly
 
-# Default Zig tests: Debug + ReleaseSafe. Tambahkan ReleaseFast bila diperlukan.
+# Default Zig tests: Debug + ReleaseSafe. Add ReleaseFast when required.
 ./scripts/verify.ps1 -CoreOnly -ZigModes Debug,ReleaseSafe,ReleaseFast
 
-# Termasuk build/test/lint desktop (tidak membuka window)
+# Include desktop build/test/lint without opening a window
 ./scripts/verify.ps1
 
-# Build dari salinan source baru, memakai dependency/compiler cache yang sudah tersedia
+# Build from a clean source copy using the existing dependency/compiler cache
 ./scripts/verify-clean-export.ps1
 
 ```
 
-Opsional, hanya jika folder pembelajaran lokal tersedia: jalankan `node scripts/check-cognitive-coverage.mjs` untuk memeriksa source hash, anchor, dan quiz mapping. Ini bukan prasyarat build atau CI. Perubahan source atau dokumentasi dapat membuat manifest lokal stale; refresh materi terkait sebelum menganggapnya sesuai versi terbaru.
+When the local learning folder exists, optionally run `node scripts/check-cognitive-coverage.mjs` to check source hashes, anchors, and quiz mappings. This is not a build or CI requirement. Source or documentation changes can make the local manifest stale; refresh affected material before treating it as current.
 
-Build pertama GPUI mengunduh dan mengompilasi banyak dependency. Workspace default hanya memuat kernel/headless; `--workspace` memasukkan desktop. Script memeriksa status setiap native command. Workflow Windows pada `.github/workflows/verify.yml` disiapkan; keberadaan workflow tidak berarti job remote telah dijalankan.
+The first GPUI build downloads and compiles many dependencies. The default workspace commands cover kernel/headless; `--workspace` includes desktop. The scripts report the status of each native command. The Windows workflow in `.github/workflows/verify.yml` is configured; the presence of a workflow does not mean that a remote job has run.
 
-Pemeriksaan visual, input, dan close window merupakan verifikasi runtime terpisah. Hasil aktual ada pada [evidence phase 0–1](docs/evidence/phase-0-1/README.md), [phase 2](docs/evidence/phase-2/README.md), dan [phase 3](docs/evidence/phase-3/README.md). Uji build saat ini debug. Integrasi simulator dengan Studio adalah phase 4; validasi Linux lab G5 dan distribusi release belum dijalankan.
+Visual inspection, input, and window-close checks are separate runtime verification. Actual results are recorded in [Phase 0–1 evidence](docs/evidence/phase-0-1/README.md), [Phase 2](docs/evidence/phase-2/README.md), [Phase 3](docs/evidence/phase-3/README.md), and [Phase 4 integration](docs/evidence/phase-4/README.md). The application uses a debug build; default kernel tests cover Debug and ReleaseSafe. Agent technical G4 passed on 24 October 2026 within the [ADR-0010 scope](docs/adr/0010-agent-acceptance-and-studio-measurement.md); Linux lab validation (G5) and release distribution have not run.
 
-## Struktur
+## Structure
 
-- `kernel/`: ABI C, probe, graph, scheduler, PRNG, codec paket, protokol, serta jurnal Zig.
-- `crates/wirebox-kernel/`: wrapper ownership/error/thread serta pemanggilan build Zig.
-- `crates/wirebox-headless/`: CLI probe, fixture, demo scheduler/paket, dan oracle acceptance terpisah.
-- `crates/wirebox-studio/`: spike GPUI dengan node/link/hex inspector.
-- `fixtures/`: skenario sintetis, expected bytes, dan inventaris user-reported yang disamarkan.
-- `docs/`: desain, keputusan, phase, evidence, serta sumber RE historis.
+- `kernel/`: C ABI, probe, graph, scheduler, PRNG, packet codecs, protocols, and the Zig journal.
+- `crates/wirebox-kernel/` (package `wyrlex-kernel`): ownership/error/thread wrapper and Zig build integration.
+- `crates/wirebox-headless/` (package `wyrlex-headless`): CLI probes, fixtures, scheduler/packet demos, and the independent acceptance oracle.
+- `crates/wirebox-studio/` (package `wyrlex-studio`): GPUI Packet Studio, copied-snapshot controller, configuration branches, and versioned sessions.
+- `fixtures/`: synthetic scenarios, expected bytes, and sanitized user-reported inventory.
+- `docs/`: design, decisions, phases, evidence, and historical reverse-engineering sources.
 
-Panduan perubahan: [AGENTS.md](AGENTS.md). Jangan memasukkan credential, capture pelanggan tanpa sanitasi, atau binary vendor ke repository.
+Contribution guidance is in [AGENTS.md](AGENTS.md). Do not commit credentials, unsanitized customer captures, or vendor binaries.

@@ -1,37 +1,37 @@
-# Runbook uji pembanding Wirebox–Packet Tracer
+# Wyrlex–Packet Tracer benchmark test runbook
 
-Baseline disusun 21 Oktober 2026, sebelum run differential. [Audit awal](../evidence/pt-comparison/README.md) menyediakan identitas binary, audit Ghidra, smoke PT, dan acceptance Wirebox. **Belum ada verdict differential.**
+The baseline is set for October 21, 2026, before the differential run. [Preliminary audit](../evidence/pt-comparison/README.md) provides binary identity, Ghidra audit, PT smoke, and Wyrlex acceptance. **There is no verdict differential yet.**
 
-## Kontrak perbandingan
+## Comparison contracts
 
-Bekukan versi/hash engine dan PT, file topologi/hash, device model, konfigurasi interface/route, initial cache, TTL, payload, serta mode delay/jitter. Mulai setiap kasus dari salinan kondisi awal; jangan membiarkan ARP/MAC hangat mengubah expected sequence kasus cold-start.
+Freeze engine and PT version/hash, topology/hash files, device model, interface/route configuration, initial cache, TTL, payload, and delay/jitter mode. Start each case from a copy of the initial condition; do not let warm ARP/MAC change the expected sequence of cold-start cases.
 
-Bandingkan keputusan dan invariant yang sama: tujuan lookup, egress, next-hop, delivery/drop, TTL request sebelum/sesudah router, checksum valid, ICMP type/code dan quote. Map identitas MAC/device secara eksplisit bila PT tidak membolehkan MAC yang sama. Checksum numerik hanya harus identik bila seluruh header yang dicakup juga identik; bila tidak, validasi checksum terhadap byte masing-masing serta perubahan yang disebabkan TTL. Jangan menghapus TTL, next-hop, payload, atau error code sebagai normalisasi.
+Compare the same decisions and invariants: destination lookup, egress, next-hop, delivery/drop, TTL request before/after router, valid checksum, ICMP type/code and quote. Map MAC/device identity explicitly if PT does not allow the same MAC. The numeric checksums must only be identical if all the headers included are also identical; otherwise, validate the checksum against the respective byte as well as any changes caused to the TTL. Do not remove TTL, next-hop, payload, or error code as normalization.
 
-Timestamp, initial reply TTL, ARP retry policy, padding dan overhead link harus dibandingkan terpisah dari hasil semantik. Model v1 Wirebox hanya menghitung frame MAC tanpa FCS/preamble/IFG. Jumlah row Event List tidak dibandingkan dengan jumlah scheduler pop Wirebox.
+Timestamp, initial reply TTL, ARP retry policy, padding and link overhead must be compared separately from semantic results. Wyrlex's v1 model only counts MAC frames without FCS/preamble/IFG. The number of Event List rows is not compared to the number of Wyrlex pop schedulers.
 
-## Kasus minimum dan akses input
+## Minimum cases and input access
 
-| ID | Setup dan observasi wajib | Catatan akses PT |
+| ID | Setup and mandatory observations | PT access notes |
 |---|---|---|
-| S01 | PC1–SW1–R1–PC2, dua subnet; echo reply; request TTL turun satu, L2 rewrite, checksum benar, payload/ICMP request tetap | Atur initial TTL 64 melalui fasilitas yang benar-benar tersedia; jika tidak dapat diatur, bandingkan delta TTL dan catat input berbeda, tanpa mengklaim byte-identical |
-| S02 | Destinasi alias 198.51.100.2; hapus route /32 di R1; ICMP type 3/code 0 dan tanpa forward sembarang; restore route sebagai kontrol sehat | PC-PT belum dibuktikan mendukung alias local. Gunakan endpoint yang mendukung loopback dengan pemetaan peran yang tertulis, atau tandai kontrol alias belum representable. Jangan mengganti penghapusan route statis dengan menghapus connected route |
-| S03 | Request TTL=1, tidak diteruskan R1, ICMP type 11/code 0 dengan quote benar | Harus ada bukti TTL input, bukan hanya pesan timeout pada aplikasi |
-| S04 | Interface egress R1 tetap up; next-hop yang diminta tidak menjawab; rekam ARP retry, interval, timeout dan pelepasan buffer | Mematikan NIC PC2 bisa menjatuhkan link dan connected route, sehingga bukan uji ARP timeout yang setara. Dapat gunakan next-hop kosong di subnet hidup untuk subkasus ARP, dengan revisi fixture terdokumentasi. Kebijakan tiga retry Wirebox bukan default PT yang sudah diketahui |
-| S05 | Injeksi IPv4 terpotong `4500`, checksum salah, fragment/options/VLAN unsupported; tidak crash atau sukses palsu | Simple/Complex PDU GUI belum terbukti mengizinkan raw malformed bytes. Jika metode input tidak tersedia, catat `not_testable_via_gui`; jangan menganggap paket valid yang dibentuk GUI sebagai uji negatif |
+| S01 | PC1–SW1–R1–PC2, two subnets; echo reply; request TTL drops by one, L2 rewrite, checksum correct, payload/ICMP request remains | Set the initial TTL 64 through the facilities that are actually available; if it cannot be set, compare the TTL deltas and note the different inputs, without claiming byte-identical |
+| S02 | Destination aka 198.51.100.2; delete route /32 on R1; ICMP type 3/code 0 and without any forwarding; restore route as healthy control | PC-PT has not been proven to support local aliases. Use loopback-enabled endpoints with written role mappings, or mark control aliases as not yet representable. Do not replace deleting a static route by deleting a connected route |
+| S03 | Request TTL=1, not forwarded to R1, ICMP type 11/code 0 with true quote | There must be proof of input TTL, not just a timeout message on the application |
+| S04 | R1's egress interface remains up; requested next-hop does not answer; record ARP retry, interval, timeout and buffer release | Turning off the PC2 NIC can drop links and connected routes, so it is not an equivalent ARP timeout test. Can use an empty next-hop in the live subnet for ARP subcases, with documented fixture revisions. Wyrlex's triple retry policy is not a known PT default |
+| S05 | IPv4 injection truncated `4500`, incorrect checksum, fragment/options/VLAN unsupported; no crashes or false success | Simple/Complex PDU GUI has not been shown to allow raw malformed bytes. If the input method is not available, note `not_testable_via_gui`; do not consider valid GUI-formed packets as a negative test |
 
-Untuk tiap kasus simpan konfigurasi sebelum run, screenshot/ekspor PDU ingress/egress, raw bytes jika tersedia, Event List yang relevan, route/ARP/MAC state, hasil aplikasi, dan tiga pengulangan kondisi awal yang sama. Catat juga field yang tidak dapat diamati. Label protokol di GUI tanpa byte tidak cukup untuk lulus uji byte.
+For each case save the pre-run configuration, screenshot/export the ingress/egress PDUs, raw bytes if available, relevant Event Lists, route/ARP/MAC state, application results, and three repetitions of the same initial conditions. Also note the fields that cannot be observed. Protocol labels in the GUI without bytes are not enough to pass the byte test.
 
-## Verdict dan cakupan klaim
+## Verdict and claim coverage
 
-Setiap assertion mendapat `match`, `mismatch`, `not_observed`, atau `not_testable`. Status kasus hanya `match` bila semua assertion wajib teramati dan cocok. Assertion yang belum teramati menahan verdict; ia tidak dianggap match. Jika PT dan Wirebox berbeda, periksa spesifikasi protokol dan pembanding Linux sebelum menetapkan pihak yang salah. Perilaku PT bukan satu-satunya oracle kebenaran.
+Each assertion gets `match`, `mismatch`, `not_observed`, or `not_testable`. The case status is only `match` if all mandatory assertions are observed and matched. Unobserved assertions hold the verdict; it is not considered a match. If PT and Wyrlex are different, check the protocol specifications and Linux comparators before settling on the wrong side. PT behavior is not the only oracle of truth.
 
-Pisahkan gate berikut:
+Separate the following gates:
 
-1. **Kebenaran subset:** fixture/oracle independen, differential PT, lalu Linux capture untuk field serta keputusan yang dimodelkan.
-2. **Ketahanan:** fuzz decoder/ABI, input malformed, batas allocator/buffer, timer cancellation, cache penuh, horizon run dan determinisme. Jangan mengirim input malformed ke perangkat produksi sebagai bagian uji ini.
-3. **Keunggulan tracker:** pengguna dapat menunjuk byte TTL/checksum/L2 yang berubah beserta penyebabnya; hasil dapat diekspor dan diulang. Bandingkan tugas berpasangan dan kebenaran jawabannya, bukan jumlah panel UI.
-4. **Keunggulan performa/workflow:** workload setara, cold/warm cache terpisah, median/p95 respons, waktu diagnosis, bantuan, memory dan crash/hang. Bekukan workload sebelum pengukuran; jangan memakai waktu animasi GUI sebagai kecepatan engine.
-5. **Kesetaraan vendor:** model/firmware tertentu, state read-back dan capture lab. PT maupun hasil statis Ghidra tidak menggantikan pengujian Linux/RouterOS/ZTE/ONU.
+1. **Subset truth:** independent fixture/oracle, differential PT, then Linux capture for modeled fields and decisions.
+2. **Resilience:** decoder/ABI fuzz, malformed input, allocator/buffer limits, timer cancellation, cache full, horizon run and determinism. Do not send malformed input to production devices as part of this test.
+3. **Advantages of the tracker:** users can indicate which TTL/checksum/L2 bytes changed and the cause; results can be exported and repeated. Compare paired tasks and the correctness of the answer, not the number of UI panels.
+4. **Performance/workflow advantages:** equivalent workload, separate cold/warm cache, median/p95 response, diagnosis time, help, memory and crash/hang. Freeze workloads before measurement; do not use GUI animation time as engine speed.
+5. **Vendor equivalency:** specific model/firmware, state read-back and capture lab. Neither PT nor Ghidra static results replace Linux/RouterOS/ZTE/ONU testing.
 
-Satu ping berhasil meluluskan smoke test. Klaim yang lebih luas mengikuti cakupan assertion yang benar-benar lulus.
+One ping successfully passed the smoke test. The broader claim follows that the scope of the assertion actually passes.

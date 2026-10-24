@@ -1,0 +1,22 @@
+   Compiling wirebox-studio v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-studio)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.99s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running unittests src\main.rs (target\debug\deps\wirebox_studio-b6213442d6ce02d4.exe)
+
+running 6 tests
+S02 branch: unreachable -> echo_reply; source report unchanged
+test model::tests::branch_repairs_missing_route_without_changing_source ... ok
+test model::tests::save_load_partial_complete_and_invalid_files ... ok
+Horizon reached with pending frames: outcome=arp_timeout, not success; save/load identical
+test model::tests::horizon_with_pending_work_is_never_success ... ok
+S01: outcome=1, batch=step, events=12, trace=63, packets=16
+S02: outcome=2, batch=step, events=8, trace=40, packets=8
+S03: outcome=3, batch=step, events=8, trace=40, packets=8
+S04: outcome=4, batch=step, events=12, trace=44, packets=9
+S05: outcome=5, batch=step, events=0, trace=2, packets=1
+test model::tests::presets_batch_step_and_owned_frames_match ... ok
+test model::tests::repaired_bundle_validates_baseline_and_keeps_active_report ... ok
+test model::tests::configuration_errors_and_packet_field_intersection ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s

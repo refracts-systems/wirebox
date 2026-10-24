@@ -1,24 +1,24 @@
-# ADR-0002 — Zig kernel, Rust host, dan C ABI v1
+#ADR-0002 — Zig kernel, Rust host, and C ABI v1
 
-- Tanggal: 20 Oktober 2026
-- Status: Accepted; probe, runtime graph/scheduler phase 2, dan [network ABI phase 3](../wirebox/packets.md) diimplementasikan. Perluasan kontrak network mengikuti ADR-0007.
+- Date: 20 October 2026
+- Status: Accepted; the probe, Phase 2 graph/scheduler runtime, and [Phase 3 network ABI](../wirebox/packets.md) are implemented. Network-contract expansion follows ADR-0007.
 
-## Konteks
+## Context
 
-Pengguna menetapkan Zig minimal 0.17 dan Rust 1.99.1. Dibutuhkan batas yang dapat diuji sebelum graph/protokol/UI membesar.
+The user set Zig 0.17 minimum and Rust 1.99.1. A testable boundary is needed before the graph, protocols, and UI grow.
 
-## Keputusan
+##Decision
 
-Gunakan Zig **0.17.0** sebagai pin build yang diverifikasi dan Rust **1.99.1**. Baseline produk tetap Zig minimal 0.17; rilis lebih baru dievaluasi sebelum pin diganti. Cargo build script membangun static library Zig untuk Windows x64 MSVC. `WIREBOX_ZIG` dapat menunjuk compiler secara eksplisit.
+Use Zig **0.17.0** as the verified build pin and Rust **1.99.1**. The product baseline remains Zig 0.17 minimum; newer releases require evaluation before changing the pin. The Cargo build script builds the Zig static library for Windows x64 MSVC. `WYRLEX_ZIG` can select a compiler explicitly.
 
-Kontrak v1 berada di [header C](../../kernel/include/wirebox.h). Session direpresentasikan handle `u64` dengan index/generation; angka nol dan generation lama invalid. Registry probe memiliki 16 session, setiap session antrean 16 record dengan payload maksimal 64 byte. Slot habis menghasilkan status capacity. Ini kapasitas **probe**, bukan janji kapasitas engine/packet MVP.
+The v1 contract is in the [C header](../../kernel/include/wirebox.h). A session is a `u64` handle with index/generation; zero and stale generations are invalid. The probe registry has 16 sessions, each with a 16-record queue and a 64-byte maximum payload. A full registry returns a capacity status. This is **probe** capacity, not an engine or packet-MVP promise.
 
-Data masuk disalin ke Zig, data keluar disalin ke buffer pemanggil. Tidak ada borrowed pointer yang disimpan host dan tidak ada allocator yang harus menyeberang bahasa. ABI memakai integer lebar tetap, `size_t`, extern struct dengan layout yang diperiksa, dan status `u32`; tidak memakai bool lintas ABI, Rust container, Zig slice, exception, atau callback host.
+Input is copied into Zig and output is copied into caller buffers. The host stores no borrowed pointer and no allocator crosses the language boundary. The ABI uses fixed-width integers, `size_t`, checked extern structs, and `u32` status values; it does not expose cross-ABI booleans, Rust containers, Zig slices, exceptions, or host callbacks.
 
-Semua operasi registry diserialisasi process-wide oleh pemanggil. Wrapper Rust menggunakan mutex dan session `!Send + !Sync`. Data hasil baca milik Rust dan dapat bertahan setelah session ditutup. Drop tidak melakukan unwind melintasi ABI. Pointer non-null dari pemanggil C tetap harus valid, aligned, dan berukuran sesuai kontrak; API tidak dapat membuktikan validitas sembarang alamat.
+The caller serialises all registry operations process-wide. The Rust wrapper uses a mutex and a `!Send + !Sync` session. Read results are owned by Rust and may outlive session close. Drop never unwinds across the ABI. A non-null C pointer must still be valid, aligned, and sized according to the contract; the API cannot prove arbitrary-address validity.
 
-## Alternatif dan konsekuensi
+## Alternatives and consequences
 
-Rust-only mengurangi toolchain, tetapi tidak mengikuti preferensi kernel pengguna. Shared native structs/pointer views mengurangi copy, namun memperluas risiko lifetime. Bounded copy probe dipilih untuk membuktikan kontrak dahulu. Registry statis bukan arsitektur scheduler; revisi API simulasi memerlukan review ABI dan tidak boleh menyamakan probe event dengan network event.
+Rust-only would reduce the toolchain but would ignore the user's kernel preference. Shared native structs/pointer views reduce copying but expand lifetime risk. A bounded-copy probe proves the contract first. The static registry is not the scheduler architecture; simulation API revisions require ABI review and must not equate probe events with network events.
 
-Detail: [kontrak FFI](../wirebox/ffi.md). Mekanisme linking mengikuti [Cargo build scripts](https://doc.rust-lang.org/cargo/reference/build-scripts.html); sintaks native mengikuti [Zig 0.17](https://ziglang.org/documentation/0.17.0/).
+Details: [FFI contract](../wirebox/ffi.md). Linking follows [Cargo build scripts](https://doc.rust-lang.org/cargo/reference/build-scripts.html); native syntax follows [Zig 0.17](https://ziglang.org/documentation/0.17.0/).

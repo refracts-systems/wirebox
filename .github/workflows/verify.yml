@@ -23,7 +23,7 @@ jobs:
           if ((Get-FileHash $archive -Algorithm SHA256).Hash -ne $expected) { throw 'Zig hash mismatch' }
           tar -xf $archive -C $env:RUNNER_TEMP
           if ($LASTEXITCODE -ne 0) { throw 'Zig extraction failed' }
-          "WIREBOX_ZIG=$(Join-Path $env:RUNNER_TEMP 'zig-x86_64-windows-0.17.0\zig.exe')" | Add-Content $env:GITHUB_ENV
+          "WYRLEX_ZIG=$(Join-Path $env:RUNNER_TEMP 'zig-x86_64-windows-0.17.0\zig.exe')" | Add-Content $env:GITHUB_ENV
       - name: Verify workspace
         shell: pwsh
         run: ./scripts/verify.ps1

@@ -1,87 +1,87 @@
-# Runtime phase 2 — graph, waktu virtual, dan jurnal
+# Runtime phase 2 — graph, virtual time, and journal
 
-Implementasi: [graph Zig](../../kernel/src/graph.zig), [runtime Zig](../../kernel/src/runtime.zig), [C ABI](../../kernel/include/wirebox_sim.h), dan [wrapper Rust](../../crates/wirebox-kernel/src/simulation.rs). Keputusan normatif: [ADR-0003](../adr/0003-virtual-time-and-trace.md) dan [ADR-0006](../adr/0006-phase-2-runtime.md). Hasil pengujian: [G2](../evidence/phase-2/README.md).
+Implementations: [graph Zig](../../kernel/src/graph.zig), [runtime Zig](../../kernel/src/runtime.zig), [C ABI](../../kernel/include/wirebox_sim.h), and [wrapper Rust](../../crates/wirebox-kernel/src/simulation.rs). Normative decisions: [ADR-0003](../adr/0003-virtual-time-and-trace.md) and [ADR-0006](../adr/0006-phase-2-runtime.md). Test results: [G2](../evidence/phase-2/README.md).
 
-API runtime pada dokumen ini menjalankan simulated state dan event counter. [Layer network phase 3](packets.md) memakai graph/heap/timer yang sama dan menambahkan perilaku host/router/switch melalui API terpisah. Koordinat, label tampilan, konfigurasi IP, observed/desired state, dan adapter tidak dimasukkan ke graph dasar. Nama fixture dipetakan ke ID oleh host.
+The runtime API in this document runs simulated state and event counters. [Layer network phase 3](packets.md) uses the same graph/heap/timer and adds host/router/switch behavior via separate APIs. Coordinates, display labels, IP configurations, observed/desired states, and adapters are not included in the base graph. The fixture name is mapped to an ID by the host.
 
-## Menjalankan
+## Operate
 
 ```powershell
-cargo run --locked -p wirebox-headless -- --scheduler-demo
-cargo run --locked -p wirebox-headless -- --check-runtime
+cargo run --locked -p wyrlex-headless -- --scheduler-demo
+cargo run --locked -p wyrlex-headless -- --check-runtime
 ./scripts/verify.ps1
 ```
 
-Demo membaca relasi graph dari fixture `icmp-static-v1`: 4 device, 6 port, 3 link. Runner menjadwalkan penambahan counter, timer random periodik, timer yang dibatalkan, dan event pada objek sementara yang kemudian dihapus. Output JSON memuat trace dan hasil; ini belum menjalankan S01–S05 atau mengirim ICMP.
+Demo of reading graph relations from fixture `icmp-static-v1`: 4 devices, 6 ports, 3 links. The runner schedules increments of counters, periodic random timers, canceled timers, and events on temporary objects that are then deleted. The JSON output contains traces and results; it does not yet run S01–S05 or send ICMP.
 
-Dengan seed 20260117, urutan event adalah `2, 1, 3, 4, 7`, waktunya `5, 10, 10, 10, 15` ns. Urutan tersebut menunjukkan bahwa ID schedule dan ordinal eksekusi berbeda. Counter akhir PC1=1, SW1=104, R1=12, PC2=0. Timer periodik menghasilkan sampel 33 lalu 71; event 7 menunjuk cause 4. Batas run menghentikan eksekusi pada 15 ns. Setelah timer dibatalkan, horizon kosong dapat maju ke 100 ns.
+With seed 20260117, the event sequence is `2, 1, 3, 4, 7`, time is `5, 10, 10, 10, 15` ns. This sequence shows that the schedule ID and execution ordinal are different. Final counters PC1=1, SW1=104, R1=12, PC2=0. The periodic timer generates samples 33 then 71; event 7 points to cause 4. The run limit stops execution at 15 ns. Once the timer is cancelled, the empty horizon can advance to 100 ns.
 
-## Graph dan lifecycle
+## Graph and lifecycle
 
-ID entity `u64` mulai 1, monotonik dalam satu World, tidak didaur ulang; nol invalid. ID pada World lain tidak dapat digunakan sebagai identitas global. `kind`: 1 device, 2 port, 3 link. Role device: 1 host, 2 switch, 3 router.
+Entity ID `u64` starts 1, monotonic in one World, not recycled; invalid zero. IDs in other worlds cannot be used as global identities. `kind`: 1 device, 2 ports, 3 links. Role devices: 1 host, 2 switches, 3 routers.
 
-- Device: `owner`, `a`, `b` nol.
-- Port: `owner` menunjuk device; `a`, `b`, `role` nol.
-- Link: `a` dan `b` menunjuk dua port berbeda; satu port maksimum satu link.
-- `counter` adalah state sintetis phase 2, bukan jumlah paket/interface statistics.
+- Device: `owner`, `a`, `b` zero.
+- Port: `owner` designate device; `a`, `b`, `role` zero.
+- Link: `a` and `b` designate two different ports; one port maximum one link.
+- `counter` is a phase 2 synthetic state, not the number of packets/interface statistics.
 
-Device yang dihapus menghapus port miliknya dan link yang menyentuh port tersebut. Port yang dihapus menghapus link terkait. Link yang dihapus mempertahankan endpoint. Timer untuk setiap entity yang terhapus langsung dibatalkan. Membuat entity baru pada slot kosong tidak menghidupkan ID lama.
+A deleted device deletes its ports and the links that touch those ports. Deleted ports remove associated links. Removed links retain the endpoint. The timer for each deleted entity is immediately cancelled. Creating a new entity in an empty slot does not animate the old ID.
 
-## Waktu, event, dan pembatalan
+## Times, events and cancellations
 
-Tick `u64` nanodetik, awal nol. Urutan heap `(time_ns, event_id)`; ID event mulai 1 dan menjadi tie-break sequence. Timestamp masa lalu ditolak. ID maksimum disisihkan untuk mendeteksi exhaustion sebelum increment; nilai waktu maksimum tetap sah untuk one-shot jika aksi tidak overflow.
+Tick ​​`u64` nanosecond, initial zero. Heap sequence `(time_ns, event_id)`; The event ID starts at 1 and becomes a tie-break sequence. Past timestamps are rejected. The maximum ID is set aside to detect exhaustion before increment; The maximum time value remains valid for a one-shot if the action does not overflow.
 
-`step()` menjalankan satu event paling awal. Antrean kosong mengembalikan reason `empty` tanpa memajukan jam. `run_until(horizon, budget)` menjalankan event `<= horizon`; setelah semua due selesai, jam menjadi horizon. Budget nol sah. Jika budget habis sementara event due masih ada, jam tetap pada event terakhir dan reason `budget_exhausted`. Event setelah horizon tetap pending.
+`step()` runs one very early event. An empty queue returns reason `empty` without advancing the clock. `run_until(horizon, budget)` fires event `<= horizon`; After all the dues are finished, the clock becomes the horizon. Zero budget is legit. If the budget runs out while the due event is still available, the clock remains at the last event and the reason is `budget_exhausted`. Events after the horizon remain pending.
 
-Timer memiliki ID tersendiri, registry, dan satu event pending. Interval nol = one-shot. Interval positif = periodik; firing berikutnya pada `previous_time + interval`, event ID baru, cause event sebelumnya. Cancel membuang event pending langsung dari heap. Timer yang selesai/dibatalkan menghasilkan `not_found` bila dibatalkan lagi. Host dapat menyisipkan cancel/remove di antara run bounded; belum ada interrupt worker.
+The timer has its own ID, registry, and one pending event. Zero interval = one-shot. Positive interval = periodic; next firing on `previous_time + interval`, new event ID, cause of previous event. Cancel removes pending events directly from the heap. A finished/canceled timer returns `not_found` when canceled again. The host can insert cancel/remove between bounded runs; there are no interrupt workers yet.
 
-Action 1 `add_counter` menambahkan amount. Action 2 `random_add_counter` menambahkan sampel `[0, amount)`, amount harus positif. SplitMix64-v1 dengan seed/state eksplisit dipin pada ADR-0006; PRNG hanya dikonsumsi saat firing berhasil. State PRNG tidak bergantung waktu nyata, kecepatan GUI, jadwal thread, atau read jurnal.
+Action 1 `add_counter` adds amount. Action 2 `random_add_counter` adds sample `[0, amount)`, amount must be positive. SplitMix64-v1 with explicit seed/state pinned to ADR-0006; PRNG is only consumed when firing is successful. PRNG state does not depend on real time, GUI speed, thread schedule, or read journal.
 
-Overflow pada waktu ulang, sequence/ID, jumlah eksekusi, atau counter menghasilkan `overflow`. Firing gagal tidak mengubah queue/state/jam/PRNG/jurnal. Run yang sebelumnya sudah menyelesaikan event lain tetap mempertahankan prefix tersebut; `RunError` Rust memuat `error` dan `progress`. Event gagal tetap dapat diperiksa melalui konteks jadwal pemanggil lalu dibatalkan, atau objeknya dihapus. Belum ada API inspeksi seluruh queue.
+Overflow on reset time, sequence/ID, execution count, or counter results in `overflow`. Firing failure does not change queue/state/clock/PRNG/journal. Runs that have previously completed another event retain that prefix; `RunError` Rust contains `error` and `progress`. Failed events can still be checked through the caller's schedule context and then canceled, or the object deleted. There is no queue-wide inspection API yet.
 
-Helper delay serialisasi menggunakan ceil(bytes × 8 × 1e9 / bitrate) dengan intermediate u128 dan output checked u64. Pengiriman frame phase 3 memakai helper ini; batas wire representation dijelaskan pada [model paket](packets.md).
+The serialization delay helper uses ceil(bytes × 8 × 1e9 / bitrate) with intermediate u128 and output checked u64. Phase 3 frame delivery uses this helper; wire representation limits are described in [package model](packets.md).
 
-## Queue, jurnal, dan visible list
+## Queue, journal, and visible list
 
-Heap menyimpan pekerjaan yang belum dieksekusi. Jurnal ring menyimpan eksekusi yang sudah berhasil, dengan `ordinal` mulai 1, event ID/waktu/target/timer/cause/action/amount, serta counter sebelum/sesudah. Cancel, schedule, dan penghapusan dari host tidak menjadi record jurnal pada tahap ini; karena itu jurnal ini belum event-sourced world atau audit semua command.
+The heap stores work that has not yet been executed. The ring journal stores successful executions, with `ordinal` starting at 1, event ID/time/target/timer/cause/action/amount, and before/after counters. Cancels, schedules, and deletions from hosts do not become journal records at this stage; Therefore this journal has not yet event-sourced the world or audited all commands.
 
-Retensi 0–256 dapat dipilih saat create. Full ring menimpa record tertua dan menaikkan `dropped`; retensi nol tetap menjalankan event. `trace(after_ordinal, capacity)` menyalin record tertahan ber-ordinal lebih besar dari cursor, tidak mengonsumsi. Cursor nol membaca dari awal yang masih tersedia. Gap diketahui lewat ordinal pertama dan snapshot `dropped`; cause dapat menunjuk record yang sudah hilang.
+Retention 0–256 can be selected at create. Full ring overwrites the oldest record and raises `dropped`; zero retention keeps running the event. `trace(after_ordinal, capacity)` copies retained records with an ordinal greater than the cursor, does not consume them. Cursor zero reads from the beginning which is still available. The gap is identified via the first ordinal and snapshot `dropped`; cause can point to records that have been lost.
 
-Visible list merupakan proyeksi host dari salinan jurnal. Demo membaca proyeksi satu row; test membandingkan read setiap step dengan read sekaligus. UI GPUI masih memakai probe phase 1; kontrol runtime masuk phase 4. Trace terbatas dan hasil ulang dari seed sama belum membuktikan checkpoint/restore phase 5.
+The visible list is a host projection of the journal copy. Demo reading one row projection; test compares reads each step with reads all at once. [Packet Studio Phase 4](studio.md) uses a Network controller, trace/packet/field copy and bounded execution control. Trace is limited and repeat results from the same seed do not prove checkpoint/restore phase 5.
 
-## Kontrak C ABI runtime v1
+## Contract C ABI runtime v1
 
-API `wb_sim_*` versi 1 independen dari probe `wb_*` v1. Revisi [ADR-0007](../adr/0007-packet-model.md) memakai namespace dua bit atas (probe 00/counter 10/network 11), generation 30 bit, dan index+1 untuk mencegah akses stale/lintas registry; generation exhausted dipensiunkan. Ini menggantikan pembagian satu bit/31 bit pada baseline G2. Registry maksimal 8 World. Setiap World maksimal 128 entity, 256 pending event/timer, 256 record jurnal. Keterbatasan ini terlihat lewat error, bukan drop event diam-diam.
+The `wb_sim_*` version 1 API is independent of the `wb_*` v1 probe. Revision [ADR-0007](../adr/0007-packet-model.md) uses the top two bit namespace (probe 00/counter 10/network 11), generation 30 bit, and index+1 to prevent stale/cross registry access; generation exhausted retired. This replaces the one bit/31 bit split on the baseline G2. Registry maximum 8 World. Each World has a maximum of 128 entities, 256 pending events/timers, 256 journal records. This limitation is visible through errors, not silent drop events.
 
-| Fungsi | Perilaku |
+| Function | Behavior |
 |---|---|
-| `wb_sim_version` | Query versi 1 |
-| `wb_sim_create` | Version, seed, retention; handle nol pada error jika output valid |
-| `wb_sim_destroy` | Tutup World dan invalidasi generation |
-| `wb_sim_add` | Device/port/link; ID nol pada kegagalan, input invalid tidak mengambil ID |
-| `wb_sim_remove` | Hapus entity dengan cascade/cancel |
-| `wb_sim_schedule` | Copy spec, kembalikan timer ID; interval nol one-shot |
-| `wb_sim_cancel` | Batalkan satu timer aktif |
-| `wb_sim_step`, `wb_sim_run_until` | Copy progress termasuk prefix pada error |
-| `wb_sim_snapshot` | Copy metadata runtime; bukan checkpoint lengkap |
-| `wb_sim_entities` | Copy graph lengkap atau capacity error; Rust mengurutkannya menurut ID |
-| `wb_sim_trace` | Copy batch setelah ordinal, non-consuming; capacity nol no-op |
+| `wb_sim_version` | Query version 1 |
+| `wb_sim_create` | Version, seed, retention; zero handle on error if output is valid |
+| `wb_sim_destroy` | Close World and invalidate generation |
+| `wb_sim_add` | Device/port/link; ID zero on failure, invalid input does not take ID |
+| `wb_sim_remove` | Delete entity with cascade/cancel |
+| `wb_sim_schedule` | Copy spec, return timer ID; one-shot zero interval |
+| `wb_sim_cancel` | Cancel one active timer |
+| `wb_sim_step`, `wb_sim_run_until` | Copy progress including prefix on error |
+| `wb_sim_snapshot` | Copy runtime metadata; not a complete checkpoint |
+| `wb_sim_entities` | Copy graph complete or capacity error; Rust sorts them by ID |
+| `wb_sim_trace` | Batch copy after ordinal, non-consuming; capacity zero no-op |
 
-Status `u32`: 0 ok, 1 invalid_argument, 2 abi_mismatch, 3 invalid_handle, 4 capacity, 5 not_found, 6 conflict, 7 past_time, 8 overflow. Progress reason: 0 empty, 1 horizon, 2 budget_exhausted, 3 stepped, 4 error. Error selain run tidak menjanjikan progress. Null pada output wajib invalid; output count/ID diinisialisasi nol jika pointer valid. Snapshot diinisialisasi nol sebelum validasi handle.
+`u32` status: 0 ok, 1 invalid_argument, 2 abi_mismatch, 3 invalid_handle, 4 capacity, 5 not_found, 6 conflict, 7 past_time, 8 overflow. Progress reasons: 0 empty, 1 horizon, 2 budget_exhausted, 3 stepped, 4 errors. Errors other than run do not promise progress. Null in the output must be invalid; count/ID output is initialized to zero if the pointer is valid. Snapshots are zero-initialized before handle validation.
 
-Semua pointer harus valid, aligned, cukup panjang, non-overlapping. Null array hanya sah ketika capacity nol. Capacity entity maksimal 128, trace maksimal 256. Output entity terlalu kecil mengembalikan capacity tanpa salinan parsial. Semua input disalin saat call; semua output milik caller. Tidak ada pointer World, allocator, callback, atau container native melewati ABI.
+All pointers must be valid, aligned, long enough, non-overlapping. Null arrays are only valid when capacity is zero. Maximum entity capacity 128, maximum trace 256. Entity output too small returns capacity without partial copy. All input is copied at call; all output belongs to the caller. No World pointers, allocators, callbacks, or native containers pass through the ABI.
 
-C caller wajib menserialisasi seluruh panggilan ketiga registry process-wide. Wrapper Rust menggunakan mutex yang sama dengan Session probe dan Network, dan World adalah `!Send + !Sync`. Hasil Vec/struct tetap hidup setelah World ditutup; close eksplisit atau Drop menghancurkan World satu kali. Lock meliputi satu call bounded; caller harus memilih budget yang sesuai respons aplikasi.
+The C caller must serialize all three registry process-wide calls. Rust's wrapper uses the same mutex as Session probe and Network, and World is `!Send + !Sync`. Vec/struct results remain alive after World closes; explicit close or Drop destroys the World once. Lock includes one bounded call; the caller must choose a budget that suits the application response.
 
-Layout Windows x64, alignment 8:
+Windows x64 layout, alignment 8:
 
-| Record | Ukuran byte | Field/offset utama |
+| Records | Byte size | Main field/offset |
 |---|---:|---|
-| Entity | 48 | id/owner/a/b/counter u64 @0/8/16/24/32; kind/role u32 @40/44 |
-| Event | 56 | id/time/target/timer/cause/amount u64 @0..40; action/reserved u32 @48/52 |
+| Entities | 48 | id/owner/a/b/counter u64 @0/8/16/24/32; kind/role u32 @40/44 |
+| Events | 56 | id/time/target/timer/cause/amount u64 @0..40; action/reserved u32 @48/52 |
 | Trace | 80 | Event @0; ordinal/before/after u64 @56/64/72 |
 | Schedule | 40 | target/time/interval/amount u64 @0..24; action/reserved u32 @32/36 |
 | Progress | 24 | now/processed u64 @0/8; reason/reserved u32 @16/20 |
-| Snapshot | 80 | 8 u64 @0..56; 4 count u32 @64..76 |
+| Snapshots | 80 | 8 u64 @0..56; 4 counts u32 @64..76 |
 
-Reserved harus nol. ABI in-process ini bukan format paket, file persistence, atau janji kompatibilitas lintas endianness/versi. Snapshot menyimpan now, seed, rng_state, next_event_id, next_timer_id, executed, dropped, last_event_id, entity/pending/timer/journal count; tidak memuat semua queue, konfigurasi, atau state untuk restore.
+Reserved must be zero. This in-process ABI is not a package format, file persistence, or promise of cross-endianness/version compatibility. Snapshot stores now, seed, rng_state, next_event_id, next_timer_id, executed, dropped, last_event_id, entity/pending/timer/journal count; does not load all queues, configurations, or states to restore.

@@ -1,24 +1,24 @@
-# ADR-0004 — GPUI langsung pada Windows x64
+# ADR-0004 — Direct GPUI on Windows x64
 
-- Tanggal: 20 Oktober 2026
-- Status: Accepted untuk spike phase 1. Hasil build dan interaksi dicatat terpisah di laporan gate.
+- Date: 20 October 2026
+- Status: Accepted for the Phase 1 spike. Build and interaction results are recorded separately in the gate report.
 
-## Konteks
+## Context
 
-Pengguna membandingkan GPUI dengan GPUix/Solid. Arah kernel Zig dan aplikasi Rust membutuhkan topology/byte inspector khusus.
+The user compared GPUI with GPUix/Solid. A Zig kernel and Rust application need a dedicated topology/byte inspector.
 
-## Keputusan
+## Decision
 
-Gunakan published crate **gpui = 0.2.2**, `default-features = false`, dengan `windows-manifest`, dan simpan Cargo.lock. Baseline platform adalah `x86_64-pc-windows-msvc`, debug build. Crate paket menyebut upstream commit `69e2130295c2649963eb639fc70b4f2ee8ea1624` dengan `dirty: true`; karena itu identitas build memakai **versi + checksum paket di Cargo.lock**, bukan menganggap source identik persis dengan commit tersebut.
+Use the published crate **gpui = 0.2.2**, `default-features = false`, with `windows-manifest`, and keep `Cargo.lock`. The platform baseline is `x86_64-pc-windows-msvc`, debug build. The package metadata names upstream commit `69e2130295c2649963eb639fc70b4f2ee8ea1624` with `dirty: true`; therefore build identity uses the **version and package checksum in Cargo.lock**, not an assumption of exact source identity.
 
-Spike menampilkan empat node/link statis yang dapat dipilih, byte inspector, command membaca batch Zig, keyboard shortcut, dan shutdown. Semua byte yang ditampilkan berasal dari transport probe aktual. Tampilan menyatakan bahwa simulasi paket belum tersedia.
+The spike shows four selectable static nodes/links, a byte inspector, a command that reads a Zig batch, keyboard shortcuts, and shutdown. Displayed bytes come from the actual transport probe. The UI states that packet simulation is not yet available in this historical spike.
 
-Gunakan API pada source paket yang dipin. Dokumentasi branch main dapat mempunyai pemisahan crate/API berbeda. Phase 1 tidak menjamin release packaging, platform lain, skala besar, atau seluruh kebutuhan MVP.
+Use the API in the pinned package source. Main-branch documentation may have different crate/API boundaries. Phase 1 does not guarantee release packaging, other platforms, large scale, or all MVP requirements.
 
-## Alternatif dan konsekuensi
+## Alternatives and consequences
 
-GPUix/Solid tetap alternatif jika pengalaman TSX diperlukan atau GPUI langsung gagal memenuhi uji. Ia menambah batas runtime pada stack saat ini. GPUI langsung dipilih sebagai percobaan terukur, bukan klaim benchmark superior.
+GPUix/Solid remains an alternative if TSX experience is required or direct GPUI fails its tests. It adds another runtime boundary to the stack. Direct GPUI is a measured experiment, not a claim of benchmark superiority.
 
-Build UI membutuhkan dependensi native lebih banyak daripada kernel; workspace default hanya membangun runner/kernel. `--workspace` atau `-p wirebox-studio` memasukkan UI. Build concurrency dibatasi empat pada mesin referensi 16 GB.
+The UI build needs more native dependencies than the kernel; default workspace commands build only runner/kernel. `--workspace` or `-p wyrlex-studio` includes the UI. Build concurrency is limited to four on the 16 GB reference machine.
 
-Sumber: [GPUI](https://gpui.rs/), [paket 0.2.2](https://crates.io/crates/gpui/0.2.2), [teknologi proyek](../wirebox/technology.md).
+Sources: [GPUI](https://gpui.rs/), [package 0.2.2](https://crates.io/crates/gpui/0.2.2), [project technology](../wirebox/technology.md).

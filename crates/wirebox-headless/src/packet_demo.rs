@@ -1,6 +1,6 @@
 use serde_json::{Value, json};
 use std::{collections::BTreeMap, error::Error, net::Ipv4Addr};
-use wirebox_kernel::{
+use wyrlex_kernel::{
     Error as KernelError,
     network::{
         Field, Network, Packet, Summary, Trace, Transmission, field_name, kind_name, reason_name,

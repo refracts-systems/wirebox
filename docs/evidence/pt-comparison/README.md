@@ -1,41 +1,41 @@
-# Audit awal Packet Tracer dan baseline pembanding
+# Packet Tracer initial audit and benchmark baseline
 
-Run lokal **21 Oktober 2026**, Windows x64. Permintaan pengguna: memakai REA dan Ghidra headless terhadap instalasi Packet Tracer 9.0.1 untuk memulai pengujian pembanding Wirebox.
+Local run **21 October 2026**, Windows x64. User request: use REA and Ghidra headless against Packet Tracer 9.0.1 installation to start Wirebox benchmark testing.
 
-**Hasil: audit statis terarah dan smoke test runtime PT tersedia; kesetaraan S01–S05 belum dievaluasi.** Wirebox lulus acceptance sendiri. Contoh PT yang dijalankan mempunyai topologi/config berbeda, sehingga dua hasil tersebut belum boleh digabung menjadi verdict kesetaraan atau keunggulan.
+**Result: targeted static audit and PT runtime smoke test available; S01–S05 equivalence has not been evaluated.** Wirebox passed its own acceptance. The PT example being run has a different topology/config, so these two results cannot be combined into a verdict of equality or superiority.
 
-## Target dan alat
+## Targets and tools
 
-| Item | Identitas / hasil |
+| Items | Identity / results |
 |---|---|
-| Target | `C:\Program Files\Cisco Packet Tracer 9.0.1\bin\PacketTracer.exe`, 60.005.312 byte |
+| Targets | `C:\Program Files\Cisco Packet Tracer 9.0.1\bin\PacketTracer.exe`, 60,005,312 bytes |
 | SHA-256 | `843579cc806a41d57a4ca524d6805b97ee1f91e0ddd02ac09be8461db04b94a1` |
 | REA | CLI `rea-agents@6.5.0`; [artifact evidence](rea-artifact.json), [managed check](rea-managed-check.json) |
-| Ghidra | 12.1.4, Java 25; proyek lokal `PTProj`, program `/PacketTracer.exe`; input proyek mempunyai hash identik dengan target terpasang |
-| REA native Ghidra | Impor/analisis penuh timeout 330.000 ms; [status](rea-status.json). Tidak menghasilkan dekompilasi yang dipakai sebagai bukti |
-| REA native UI | Tidak tersedia di Windows pada provider yang aktif; [error asli](pt-ui-observe.json) |
-| Fallback | Ghidra langsung, analisis proyek yang sudah ada, `-noanalysis`; smoke GUI memakai Windows UIAutomation dan pesan mouse ke window PT |
+| Ghidra | 12.1.4, Java 25; local project `PTProj`, program `/PacketTracer.exe`; the project input has an identical hash to the attached target |
+| REA native Ghidra | Full import/analysis timeout 330,000 ms; [status](rea-status.json). Does not produce decompilation used as evidence |
+| REA native UI | Not available on Windows on active providers; [original error](pt-ui-observe.json) |
+| Fallback | Ghidra hands-on, existing project analysis, `-noanalysis`; smoke GUI uses Windows UIAutomation and mouse messages to the PT | window
 
-REA tidak ditulis ke folder instalasi vendor dan konfigurasi MCP Codex tidak diubah. REA artifact evidence ber-ID `ev_7aa5c12de345210113e7021e81edfea0313c1ad129e92c2d1770167ab3dfef66`; managed check `ev_c2093ec66b05da007741c5e466daa6b780434f220a822e6cfb08fa051661b053` menyatakan tidak ada CLI data directory. Evidence artifact hanya membuktikan identitas/inventaris PE.
+The REA is not written to the vendor installation folder and the MCP Codex configuration is not changed. REA artifact evidence has ID `ev_7aa5c12de345210113e7021e81edfea0313c1ad129e92c2d1770167ab3dfef66`; managed check `ev_c2093ec66b05da007741c5e466daa6b780434f220a822e6cfb08fa051661b053` states there is no CLI data directory. Evidence artifact only proves the identity/inventory of the PE.
 
-## Pemeriksaan statis terarah
+## Directional static checking
 
-[Log run pertama](ghidra-run.log) mencatat empat fungsi selesai didekompilasi. Interpretasi berikut berasal dari pembacaan pseudocode lokal; alamat berlaku hanya untuk hash target di atas.
+[First run log](ghidra-run.log) records four functions being decompiled. The following interpretation comes from reading the local pseudocode; address is valid only for the above target hash.
 
-| Fungsi | Pengamatan lokal | Batas kesimpulan |
+| Function | Local observations | Conclusion limits |
 |---|---|---|
-| `0x141d1d3e0` | Penetapan vftable `Simulation::CScheduler`; storage melalui `+0x18`; elemen berstride 16 byte, pemilihan anak `2*i+2`/saudaranya dan pergeseran parent, pengurangan end 16 byte; pemanggilan destructor Qt pada `+0x48/+0x50/+0x58` | Konsisten dengan pelepasan binary heap. Ada indirection ke storage; jangan menyebut inline vector pada `+0x18` sebagai layout yang sudah pasti. Fungsi ini sendiri belum membuktikan urutan `(time,id)`, jenis registry RB-tree, atau lifecycle thread |
-| `0x141d22cf0` | Lookup helper, error `SimulationTimer`, RTTI `CIpcTimer`, dan jalur error `getIpcTimer implementation error` | Mendukung lookup/validasi timer terpisah. Detail helper lookup belum diaudit pada run ini |
-| `0x14094c530` | Jalur dengan diagnostik RIB, unreachable host, dan ICMP time exceeded; konstruksi message type `0xb`, code `0` pada jalur terkait | Mendukung routing/ICMP software. Belum memulihkan seluruh kondisi forwarding atau membuktikan byte/checksum runtime |
-| `0x142580fc0` | `QMessageBox`, maksimum event, Clear Event List dan View Previous Events | Batas Event List GUI nyata di kode. Kebijakan GUI berbeda dari struktur heap; run ini tidak mengukur perilaku saat buffer benar-benar penuh |
+| `0x141d1d3e0` | `Simulation::CScheduler` vftable Assignment; storage via `+0x18`; 16 byte striding element, `2*i+2`/sibling child selection and parent shift, 16 byte end subtraction; Qt destructor call on `+0x48/+0x50/+0x58` | Consistent with binary heap unwinding. There is indirection to storage; don't call the inline vector in `+0x18` a fixed layout. This function itself does not prove the `(time,id)` sequence, RB-tree registry type, or thread lifecycle |
+| `0x141d22cf0` | Lookup helper, error `SimulationTimer`, RTTI `CIpcTimer`, and error path `getIpcTimer implementation error` | Supports separate timer lookup/validation. Lookup helper details have not been audited on this run |
+| `0x14094c530` | Path with RIB, unreachable host, and ICMP time exceeded diagnostics; construction of message type `0xb`, code `0` on the related path | Supports routing/ICMP software. Haven't recovered all forwarding conditions or proven runtime bytes/checksums |
+| `0x142580fc0` | `QMessageBox`, maximum events, Clear Event List and View Previous Events | Event List GUI limits are real in the code. GUI policies are different from heap structures; This run does not measure behavior when the buffer is completely full |
 
-Jadi klaim lama heap dan panel log mendapat dukungan lokal tambahan. Klaim map-by-ID, komparator waktu/ID, worker thread, distribusi jitter, dan checkpoint lengkap tetap memerlukan fungsi/pengamatan lain. Kehadiran kode routing tidak meluluskan conformance protokol.
+So legacy heap claims and log panels get additional local support. Map-by-ID, time/ID comparator, worker thread, jitter distribution, and complete checkpoint claims still require other functions/observations. The presence of a routing code does not establish protocol conformance.
 
-Extractor yang dapat diulang: [WireboxPtAudit.java](../../../scripts/ghidra/WireboxPtAudit.java). Ia memeriksa hash program, dekompilasi empat fungsi, serta mencatat marker dan ukuran body. Marker hanya membantu peninjauan, bukan oracle perilaku. Output pseudocode penuh disimpan lokal di `artifacts/pt-audit/` yang diabaikan Git.
+Repeatable extractor: [WireboxPtAudit.java](../../../scripts/ghidra/WireboxPtAudit.java). It checks the program hash, decompiles four functions, and records marker and body size. Markers only aid review, not behavioral oracles. The full pseudocode output is stored locally in Git's ignored `artifacts/pt-audit/`.
 
-[Hasil extractor](ghidra-audit.json) dan [log run read-only](ghidra-audit-run.log) menunjukkan empat dekompilasi selesai dan semua marker yang dipilih ditemukan. Ukuran body berturut-turut 589, 966, 26.901, dan 944 alamat byte. Verifikasi hash dilakukan terhadap metadata program di database Ghidra, selain pencocokan hash file input proyek dan binary terpasang.
+[Extractor results](ghidra-audit.json) and [read-only run log](ghidra-audit-run.log) show four decompilations completed and all selected markers found. The body sizes are 589, 966, 26,901, and 944 address bytes, respectively. Hash verification is performed against program metadata in the Ghidra database, in addition to matching the hashes of project input files and installed binaries.
 
-Ulang dari root repo dengan proyek yang sudah dianalisis; command ini tidak membuat database baru:
+Restart from the root repo with the analyzed project; this command does not create a new database:
 
 ```powershell
 $ghidra = 'C:\Users\ricky\Downloads\Compressed\ghidra_12.1.4_PUBLIC_20260921\ghidra_12.1.4_PUBLIC'
@@ -49,23 +49,23 @@ npx -y rea-agents@6.5.0 inspect-managed-artifact 'C:\Program Files\Cisco Packet 
 ./target/debug/wirebox-headless.exe --check-network
 ```
 
-Prasyarat Java/Ghidra harus sudah tersedia; jangan memakai `-noanalysis` pada database baru sebagai pengganti analisis. Ghidra kadang mengembalikan exit 0 walau script gagal; periksa juga bahwa JSON lengkap, keempat `decompile_completed` true, dan hash benar. Perubahan format pseudocode dapat mengubah marker tanpa mengubah algoritme; marker hilang memerlukan pemeriksaan ulang.
+Java/Ghidra prerequisites must be available; do not use `-noanalysis` on a new database as a replacement for analysis. Ghidra sometimes returns exit 0 even though the script fails; also check that the JSON is complete, all four `decompile_completed` are true, and the hash is true. Changes in pseudocode format can change markers without changing the algorithm; Missing markers require re-examination.
 
-## Runtime yang benar-benar dijalankan
+## The runtime that actually ran
 
-[Observasi PT](pt-runtime-observations.json) diambil dari tabel **User Created PDU**, menggunakan contoh bawaan `HSRP/Hsrp_Simple_Ping_With_Same_Priority.pkt` (hash tercatat dalam artifact):
+[PT Observations](pt-runtime-observations.json) is taken from the **User Created PDU** table, using the default example `HSRP/Hsrp_Simple_Ping_With_Same_Priority.pkt` (hash recorded in artifact):
 
-| Probe PT | Status GUI |
+| PT Probe | GUI Status |
 |---|---|
 | Simple PDU ICMP PC0 → Router0 | Successful |
 | Simple PDU ICMP PC0 → PC1 | Failed |
 
-Penyebab probe kedua belum ditentukan. Nilai tabel `Time(sec)=0.000` tidak dipakai sebagai latency. Tidak dikumpulkan raw PDU, checksum, packet capture, atau trace keputusan untuk dua probe ini. HSRP, dua switch, dan tiga router pada contoh ini berbeda dari fixture empat node Wirebox. Ini smoke test runtime PT, bukan hasil S01/S02. Perubahan sesi tidak disimpan; hash file contoh setelah penutupan sama dengan sebelum pengujian.
+The cause of the second probe has not been determined. The table value `Time(sec)=0.000` is not used as latency. No raw PDUs, checksums, packet capture, or decision traces were collected for these two probes. The HSRP, two switches, and three routers in this example are different from the Wirebox's four node fixture. This is the PT runtime smoke test, not the S01/S02 results. Session changes are not saved; the sample file hash after closing is the same as before testing.
 
-[Baseline Wirebox baru](wirebox-network.json): **36 run skenario dan 37 input negatif lulus**; S01 echo reply, S02 no route, S03 TTL expired, S04 ARP timeout, S05 truncated IPv4. [Verifikasi core](wirebox-verify.log) juga lulus. Rincian oracle dan batas model tetap mengikuti [G3](../phase-3/README.md). Tidak ada hasil PT yang dimasukkan sebagai expected data palsu.
+[New Wirebox Baseline](wirebox-network.json): **36 scenario runs and 37 negative input passes**; S01 echo reply, S02 no route, S03 TTL expired, S04 ARP timeout, S05 truncated IPv4. [Core verification](wirebox-verify.log) also passed. Details of the oracle and model boundaries remain following [G3](../phase-3/README.md). No PT results were entered as false expected data.
 
-## Corpus setara yang masih harus dieksekusi
+## Corpus equivalents that have yet to be executed
 
-Gunakan [fixture normatif](../../../fixtures/scenarios/icmp-static-v1.json) dan [runbook pembanding](../../packet-tracer/comparison-tests.md). Tidak ada `.pkt` untuk fixture itu yang dibuat pada run ini. Nilai verdict saat ini **not_evaluated**, bukan pass dan bukan mismatch.
+Use [normative fixture](../../../fixtures/scenarios/icmp-static-v1.json) and [comparison runbook](../../packet-tracer/comparison-tests.md). No `.pkt` for that fixture was created in this run. The current verdict value is **not_evaluated**, not a pass and not a mismatch.
 
-Sebelum menyatakan lebih baik dari PT, diperlukan hasil berpasangan pada input yang setara: kebenaran paket/state, penjelasan byte yang dapat diverifikasi, keberhasilan diagnosis oleh pengguna, dan performa pada mesin serta workload yang sama. Coverage firmware/vendor tetap membutuhkan capture/read-back Linux atau perangkat yang ditetapkan, terpisah dari PT.
+Before saying it is better than PT, it requires pairwise results on equivalent inputs: packet/state correctness, verifiable byte description, successful diagnosis by the user, and performance on the same machine and workload. Firmware/vendor coverage still requires capture/read-back Linux or specified devices, separate from PT.

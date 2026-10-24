@@ -1,82 +1,85 @@
-# Panduan kerja repository Wirebox
+# Wyrlex repository guidance
 
-## Tujuan proyek
+## Project purpose
 
-Wirebox adalah rancangan studio dan runtime infrastruktur berbasis model semantik bersama. Tujuannya menghubungkan inspeksi sistem nyata, simulasi, penelusuran paket dan state, perencanaan perubahan, serta eksekusi melalui adapter perangkat.
+Wyrlex is an infrastructure studio and runtime built on a shared semantic model. It connects real-system inspection, simulation, packet and state tracing, change planning, and device-adapter execution.
 
-Baca [indeks dokumentasi](docs/README.md) dan [apa itu Wirebox](docs/wirebox/README.md) sebelum mengubah arah arsitektur. Untuk pekerjaan spesifik, baca dokumen terkait saja; tidak perlu memuat seluruh arsip RE.
+Read the [documentation index](docs/README.md) and [what Wyrlex is](docs/wirebox/README.md) before changing architecture. For a focused task, read only the relevant documents; do not load the full reverse-engineering archive.
 
-## Status dan sumber kebenaran
+## Status and sources of truth
 
-Pada 21 Oktober 2026, phase 0–3 tersedia: kontrak/fixture, probe Zig–Rust, spike GPUI, runtime waktu virtual, dan simulator paket Ethernet/ARP/IPv4/ICMP dengan routing statis serta tracker byte headless. Baca [kontrak runtime](docs/wirebox/runtime.md), [model paket/ABI](docs/wirebox/packets.md), dan [bukti G3](docs/evidence/phase-3/README.md). GPUI masih menampilkan probe; integrasi paket adalah phase 4. Driver/perbandingan perangkat nyata belum tersedia. Mini-simulator C++ adalah referensi eksternal; jangan menyamakannya dengan engine Wirebox.
+The active product name is **Wyrlex**. Rust packages are `wyrlex-kernel`, `wyrlex-headless`, and `wyrlex-studio`; build environments use `WYRLEX_*`. The `wb_*` C ABI prefix, legacy header names, checkout path, and historical evidence artifacts remain stable under [ADR-0011](docs/adr/0011-wyrlex-product-rename.md).
 
-- [Keputusan dan pertanyaan terbuka](docs/wirebox/decisions.md) membedakan preferensi pengguna, rekomendasi, dan hal yang belum dipilih.
-- [ADR](docs/adr/README.md) mencatat keputusan arsitektur yang diambil; [evidence G0/G1](docs/evidence/phase-0-1/README.md) membatasi klaim hasil aktual. Command build/verify tersedia pada [README](README.md).
-- [Roadmap](docs/wirebox/roadmap.md) berisi tahapan yang diusulkan, bukan daftar fitur selesai atau jadwal yang dijanjikan.
-- [Todos](docs/wirebox/todos.md) mencatat checklist per phase; [rencana pilot](docs/wirebox/pilot.md) menetapkan skenario dan kriteria bukti. Saat implementasi dimulai, kaitkan task dengan hasil verifikasi dan jangan meluluskan gate hanya dari checklist kode.
-- [Catatan Packet Tracer](docs/packet-tracer/README.md) merangkum laporan RE beserta koreksinya.
-- Isi `docs/packet-tracer/sources/` adalah arsip historis. Klaim di dalamnya dapat sudah digantikan oleh koreksi pada catatan tematik.
+As of 23 October 2026, Phases 0–3 are available: contracts/fixtures, Zig–Rust/GPUI, virtual time, and a headless Ethernet/ARP/IPv4/ICMP simulator with static routing and byte tracking. Read the [runtime contract](docs/wirebox/runtime.md), [packet model/ABI](docs/wirebox/packets.md), and [G3 evidence](docs/evidence/phase-3/README.md). Initial [Packet Studio Phase 4](docs/wirebox/studio.md) uses copied trace/packet/field data, batch controls, configuration branches, and versioned sessions; [G4 technical agent acceptance](docs/evidence/phase-4-acceptance/README.md) passed on 24 October 2026 for the four-node fixture, projected multi-run history, and handler-to-render scope (ADR-0010). Human usability is still unknown. Real-device drivers and comparison runs are unavailable. The C++ mini-simulator is an external reference and must not be treated as the Wyrlex engine.
 
-Instruksi pengguna dalam sesi aktif mengendalikan pekerjaan. Jangan menganggap rekomendasi dalam docs sebagai keputusan pengguna yang tidak boleh diubah. Perbarui status dokumentasi saat implementasi atau keputusan berubah.
+- [Decisions and open questions](docs/wirebox/decisions.md) distinguish user preferences, recommendations, and choices not yet made.
+- [ADRs](docs/adr/README.md) record architectural decisions; [G0/G1 evidence](docs/evidence/phase-0-1/README.md) limits claims about actual results. Build and verification commands are in the [README](README.md).
+- The [roadmap](docs/wirebox/roadmap.md) describes proposed stages, not completed features or promised dates.
+- [Todos](docs/wirebox/todos.md) record phase checklists; the [pilot plan](docs/wirebox/pilot.md) defines scenarios and evidence criteria. When implementing work, link it to verify results and never pass a gate from a code checklist alone.
+- [Packet Tracer notes](docs/packet-tracer/README.md) summarizes the RE reports and corrections.
+- [Verify design](docs/wirebox/verification.md) and [ADR-0012](docs/adr/0012-shared-verify-ir.md) propose a declarative IR shared by the simulator and verifier; no symbolic engine exists yet.
+- `docs/packet-tracer/sources/` is a historical archive. Its claims may be superseded by corrections in thematic notes.
 
-## Cara bekerja dan berkomunikasi
+Active-session user instructions control the work. Do not treat a recommendation in the documentation as an irreversible user decision. Update documentation status when implementation or decisions change.
 
-- Gunakan bahasa Indonesia yang jelas untuk diskusi dan penjelasan dokumentasi. Pertahankan nama API, identifier, istilah protokol, serta kutipan sumber sebagaimana diperlukan.
-- Periksa status Git, file yang relevan, dan instruksi lokal sebelum mengedit. Pertahankan pekerjaan pengguna yang sudah ada.
-- Kerjakan tugas yang sudah diotorisasi sampai selesai. Pilihan rutin dan perubahan lokal yang dapat dibalik tidak memerlukan konfirmasi tambahan.
-- Jangan membuat commit, push, atau publikasi tanpa permintaan atau otorisasi pengguna yang sesuai.
-- Jangan menambah dependensi, scaffold, atau engine hanya karena dokumen menyebut rencana implementasinya.
-- Laporkan hasil, cara verifikasi, dan keterbatasan yang benar-benar memengaruhi hasil. Jangan mengklaim command atau pengujian telah dijalankan jika belum.
+## Working and communication rules
 
-## Arah desain yang perlu dipertahankan
+- Use clear Indonesian for discussion and learning explanations. Repository documents committed outside `docs/learning/` must be written in English by project policy. The immutable raw captures under `docs/packet-tracer/sources/` are the provenance exception and must not be translated. Preserve API names, identifiers, protocol terms, and source quotations as needed.
+- Check Git status, relevant files, and local instructions before editing. Preserve existing user work.
+- Complete authorized work. Routine reversible local changes do not need another confirmation.
+- Do not commit, push, or publish without a matching user request or authorization.
+- Do not add dependencies, scaffolding, or an engine merely because a document mentions a future plan.
+- Report results, actual verification commands, and material limitations. Never claim that a command or test ran when it didn't.
 
-- Utamakan entity, relation, state, behavior, constraint, dan time sebagai model domain; sintaks vendor ditangani adapter.
-- Bedakan observation mentah, observed state, desired state, dan simulated state. Setiap hasil turunan perlu asal data dan batas cakupan model.
-- Hasil simulasi hanya berlaku pada perilaku yang dimodelkan. Jangan mengklaim kesetaraan firmware, ASIC, hardware, atau semua versi Packet Tracer tanpa bukti pembanding.
-- Kernel simulasi harus bisa dijalankan tanpa UI dan perangkat fisik. UI mengonsumsi state/trace dan mengirim command melalui batas yang jelas.
-- Pisahkan antrean scheduler, jurnal eksekusi, dan daftar event yang terlihat di GUI.
-- Untuk replay, catat urutan event, konfigurasi, input eksternal, versi model, serta state PRNG dan timer. Animasi mundur bukan bukti restore state lengkap.
-- Untuk tracker, pertahankan byte paket, pemetaan field ke byte/bit, versi paket, dan sebab perubahan. Jangan menggunakan layout struct native sebagai wire format.
+## Design direction to preserve
 
-Rincian: [model dan runtime](docs/wirebox/architecture.md), [simulasi](docs/wirebox/simulation.md), dan [byte tracker](docs/wirebox/byte-tracker.md).
+- Prefer entity, relation, state, behavior, constraint, and time as domain concepts; adapters handle vendor syntax.
+- Distinguish raw observations, observed state, desired state, and simulated state. Every result derived needs provenance and a model scope.
+- A simulation result applies only to modeled behavior. Do not claim firmware, ASIC, hardware, or all-version Packet Tracer equivalence without comparative evidence.
+- The simulation kernel must run without UI or physical devices. UI consumes state/trace and sends commands through an explicit boundary.
+- Separate the scheduler queue, execution journal, and GUI-visible event list.
+- For replay, record event order, configuration, external input, model version, PRNG state, and timer state. Reverse animation is not proof of complete state restoration.
+- Preserve packet bytes, field-to-byte/bit mappings, packet versions, and change causes in the tracker. Do not use a native struct layout as a wire format.
 
-## Bahasa dan batas antarkomponen
+Details: [model and runtime](docs/wirebox/architecture.md), [simulation](docs/wirebox/simulation.md), and [byte tracker](docs/wirebox/byte-tracker.md).
 
-Implementasi phase 1–3 memakai Zig untuk engine, Rust untuk host/wrapper/oracle, dan GPUI langsung untuk UI. Kontrak serta alasan ada di ADR-0002/0004/0007. GPUix + Solid tetap alternatif historis, bukan stack aktif. Hasil smoke check tidak dianggap benchmark atau bukti bahwa semua kebutuhan MVP sudah terpenuhi.
+## Languages ​​and boundaries between components
 
-- Baca [pilihan teknologi](docs/wirebox/technology.md) sebelum memilih atau mengganti stack.
-- Baseline versi yang ditetapkan pengguna: Zig minimal **0.17.0**, Rust **1.99.1**. Rust dipin pada `rust-toolchain.toml`; untuk prototipe Zig gunakan 0.17.0 sebagai baseline dan catat versi persis yang diuji. Jangan menurunkan target agar cocok dengan toolchain lokal yang lebih lama. Versi Zig lebih baru memerlukan pengujian kompatibilitas, bukan diasumsikan kompatibel.
-- Jika memakai Zig–Rust FFI, tulis kontrak ownership, ukuran buffer, lifetime, error, versi ABI, dan thread sebelum memperluas API.
-- Jangan melewatkan container internal Zig/Rust sebagai C ABI. Gunakan representasi yang ABI-nya jelas dan handle opaque bila sesuai.
-- Memori harus dilepas oleh allocator/pemilik yang sesuai. Borrow checker Rust tidak memverifikasi implementasi Zig.
-- Hindari panic/unwind melintasi FFI. UI tidak boleh menyimpan pointer engine yang dapat invalid setelah langkah simulasi berikutnya.
-- Pilih dan pin versi toolchain/dependensi setelah memeriksa dokumentasi serta build pada platform target. Jangan mengarang versi atau command build yang belum ada.
+Phase 1–3 use Zig for the engine, Rust for the host/wrapper/oracle, and direct GPUI for UI. Contracts and reasons are in ADR-0002/0004/0007. GPUix + Solid remains historical alternatives, not the active stack. A smoke check is not a benchmark or proof that the full MVP is complete.
 
-## Disiplin bukti dan dokumentasi
+- Read [technology choices](docs/wirebox/technology.md) before selecting or changing the stack.
+- The user-set baseline is Zig **0.17.0** minimum and Rust **1.99.1**. Rust is pinned in `rust-toolchain.toml`; record the exact Zig version tested. Do not lower the target for an older local toolchain. A newer Zig version requires compatibility testing.
+- For Zig–Rust FFI, document ownership, buffer size, lifetime, error, ABI version, and thread contracts before expanding the API.
+- Do not expose internal Zig/Rust containers as C ABI. Use ABI-defined representations and opaque handles where appropriate.
+- Release memory through the correct allocator/owner. Rust's borrow checker does not verify Zig implementation safety.
+- Do not allow panic/unwind across FFI. The UI must not retain an engine pointer that can become invalid after the next simulation step.
+- Select and pin toolchain/dependency versions after checking documentation and building on the target platform. Do not invent versions or commands.
 
-- Bedakan **dilaporkan**, **diverifikasi lokal**, **inferensi**, **usulan**, dan **unknown**. Gunakan definisi pada [catatan PT](docs/packet-tracer/README.md).
-- Untuk temuan baru, catat target/versi/hash bila tersedia, metode, input, hasil, tanggal, dan batas pengamatan.
-- Alamat fungsi dan offset PT berlaku pada binary laporan asal. Nama RTTI dan string flow-chart tidak memulihkan seluruh algoritme.
-- Jangan menghidupkan kembali hipotesis lama AES/Mash sebagai penjelasan akhir container `.pkt`; baca [koreksi format](docs/packet-tracer/pkt-format.md).
-- Pertahankan salinan sumber yang sudah diarsipkan beserta hash-nya. Tambahkan revisi sumber sebagai artifact baru dan perbarui manifest, alih-alih mengedit arsip historis diam-diam.
-- Evidence/manifest gate lama merekam baseline pada waktu run. Jangan menulis ulang hash G0/G1 agar seolah memvalidasi kode phase berikutnya; buat evidence baru.
-- Simpan penjelasan terbaru pada dokumen tematik dan tautkan ke sumber. Hindari duplikasi panjang yang bisa saling bertentangan.
-- Pakai tautan relatif antarfile di Markdown repository. Beri tanggal pada pemeriksaan teknologi eksternal yang dapat berubah.
+## Evidence and documentation discipline
 
-## Pembelajaran dan cognitive coverage
+- Distinguish **reported**, **locally verified**, **inference**, **proposal**, and **unknown** using the definitions in the [PT notes](docs/packet-tracer/README.md).
+- For a new finding, record target/version/hash when available, method, input, result, date, and observation limits.
+- PT function addresses and offsets apply to the reported binary. RTTI names and flow-chart strings do not recover a full algorithm.
+- Do not revive the old AES/Mash hypothesis as the final `.pkt` explanation; read the [format correction](docs/packet-tracer/pkt-format.md).
+- Preserve archived source copies with their hashes. Add a revised source as a new artifact and update the manifest instead of silently editing historical archives.
+- Old evidence/manifest files record the baseline at their run time. Do not rewrite G0/G1 hashes to make later code appear validated; create new evidence.
+- Keep current explanations in thematic documents and links to sources. Avoid long duplicate passages that can diverge.
+- Use relative Markdown links. Date checks of external technology that may change.
 
-- Skill project: [.agents/skills/cognitive-coverage/SKILL.md](.agents/skills/cognitive-coverage/SKILL.md); provenance/pin pada [UPSTREAM.md](.agents/skills/cognitive-coverage/UPSTREAM.md). Output pribadi berada di `cognitive-coverage/`, diabaikan Git dan tidak tersedia pada clone baru. Jika sudah dihasilkan lokal, buka `cognitive-coverage/cognitive-coverage-open.html` melalui browser.
-- Untuk perubahan kode yang berarti, jelaskan file yang dihasilkan/diubah, invariant dan alasan keputusan, command yang benar-benar dijalankan, serta satu pertanyaan teach-back. Hubungkan dengan konsep backend bila membantu, tanpa menyamakan semua error dengan rollback transaksi.
-- Komentar kode menjelaskan why, ownership, bounds dan titik commit; `SAFETY` Rust menyatakan precondition konkret FFI. Tutorial panjang berada di [learning docs](docs/learning/README.md).
-- Jangan menandai pemahaman manusia verified karena agent membuat materi atau test lulus. Gap UI/CLI/vendor tetap terlihat. Setelah source berubah, periksa sourceHash pada manifest; refresh artifact yang terdampak atau nyatakan materi stale.
-- Checker artifact lokal opsional: `node scripts/check-cognitive-coverage.mjs`, hanya jika folder output tersedia. Pemeriksaan ini terpisah dari build/CI dan test engine, serta tidak menjadi ukuran pemahaman manusia.
+## Learning and cognitive coverage
 
-## Verifikasi
+- The project skill is [.agents/skills/cognitive-coverage/SKILL.md](.agents/skills/cognitive-coverage/SKILL.md), with provenance pinned in [UPSTREAM.md](.agents/skills/cognitive-coverage/UPSTREAM.md). Personal output is in the Git-ignored `cognitive-coverage/` directory and is unavailable in a fresh clone. When generated locally, open `cognitive-coverage/cognitive-coverage-open.html` in a browser.
+- For meaningful code changes, explain files changed/generated, invariants and decision reasons, commands actually run, and one teach-back question. Relate to backend concepts where useful without treating every error as transaction rollback.
+- Code comments explain why, ownership, bounds, and commit points; Rust `SAFETY` comments state concrete FFI preconditions. Longer tutorials live in [learning docs](docs/learning/README.md).
+- Do not mark human understanding as verified because an agent generated material or tests passed. Keep UI/CLI/vendor gaps visible. After source changes, check manifest source hashes; refresh affected artifacts or state that they are stale.
+- Optional local artifact checker: `node scripts/check-cognitive-coverage.mjs` when output exists. It is separate from build/CI and engine tests and does not measure human understanding.
 
-Untuk perubahan docs saja, periksa tautan lokal, konsistensi status, dan integritas arsip jika tersentuh. Tidak perlu membuat test suite untuk perubahan prosa.
+## Verification
 
-Build baseline Windows: `./scripts/verify.ps1 -CoreOnly` untuk kernel/runner, atau `./scripts/verify.ps1` untuk seluruh workspace. UI interaction tetap pengujian terpisah. Jangan menandai workflow CI remote lulus hanya karena file YAML tersedia.
+For documentation-only changes, check local links, status consistency, and archive integrity when touched. Do not create a test suite for process changes.
 
-Ketika kode tersedia, gunakan command dari manifest/build system yang benar-benar ada. Pilih pengujian sesuai perubahan: fixture byte untuk codec, urutan dan cancellation untuk scheduler, skenario jaringan untuk perilaku protokol, serta ownership/error path untuk FFI. Verifikasi UI dan build platform dilakukan ketika komponen itu ditambahkan.
+Windows baseline build: `./scripts/verify.ps1 -CoreOnly` for kernel/runner, or `./scripts/verify.ps1` for the whole workspace. UI interaction remains a separate test. Do not mark remote CI as passed merely because its YAML exists.
 
-Jangan memakai jumlah baris trace sebagai jumlah event scheduler, keberhasilan demo sebagai bukti conformance, atau benchmark proyek lain sebagai benchmark Wirebox.
+When code exists, use commands from the actual manifest/build system. Select tests for the change: byte fixtures for codecs, ordering and cancellation for the scheduler, network scenarios for protocol behavior, and ownership/error paths for FFI. Verify UI and platform builds when those components are added.
+
+Do not use trace-line count as scheduler-event count, demo success as conformance evidence, or another project's benchmark as a Wyrlex benchmark.

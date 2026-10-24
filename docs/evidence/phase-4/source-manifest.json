@@ -1,0 +1,438 @@
+{
+  "date": "2026-10-23",
+  "base_commit": "1b4139a2028b637e75d30c0f04425eaf50e0f42f",
+  "working_tree": "uncommitted implementation",
+  "note": "Exact working-tree bytes. Prior gate manifests and archived Packet Tracer sources are unchanged.",
+  "source_files": [
+    {
+      "path": ".cargo/config.toml",
+      "sha256": "ebb630fa92f4af4588c9e68d9ab599da5482d7d000528a4903dc821441b92999"
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "3f2af30237bfbea7f875c3124728d46b23d08fa9fc3452dbde50acfd289263ab"
+    },
+    {
+      "path": ".github/workflows/verify.yml",
+      "sha256": "821495b15301e1dd6d991dac72dac050167b948ca31cb4a778f63d926b32dff6"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "dc84758221f5d68b38066ef4ee21db801244efa17e843bb8f3760ce249b2c0f4"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "9ced9ee9762d62405f01114cac879a2fe55ab5443d98e41479065b1cce6261cb"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "87a6637387af469b76e97c9b40f4518d1e3c4800b376c3e0352f789a04125505"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "974652280e328157dfba89e1567d7c7c92b88e78bae659d38c15597b54731f7c"
+    },
+    {
+      "path": "README.md",
+      "sha256": "3602db2f48c0702c91388fd18b95890616c6e1f471d4292499762d40c9cb4f19"
+    },
+    {
+      "path": "crates/wirebox-headless/Cargo.toml",
+      "sha256": "30084fee671e0f47f9ed23035c393598defd6cdb268572cdf3f5726a3d4f24e3"
+    },
+    {
+      "path": "crates/wirebox-headless/src/fixtures.rs",
+      "sha256": "02f7c637de731275683ca722229550e9ccd62ada139c86fa4b50343de32c85b5"
+    },
+    {
+      "path": "crates/wirebox-headless/src/main.rs",
+      "sha256": "fc4c5270d0b5620ef828670cf55c6eabb48abe5fbfc4d1eb9fc4df60efddb13c"
+    },
+    {
+      "path": "crates/wirebox-headless/src/packet_demo.rs",
+      "sha256": "f6fca52079af24164f94bd672ac89fd73ea97288bf23cb4c3982f4adcf3fd599"
+    },
+    {
+      "path": "crates/wirebox-headless/src/runtime_demo.rs",
+      "sha256": "7c84c381f1231fd9351d63d7b7b0c9f55c1e9ca2af6286698797a5199033e2e6"
+    },
+    {
+      "path": "crates/wirebox-kernel/Cargo.toml",
+      "sha256": "b1aa1f550a12e6c784661ffb9ded159757963a87ba34659bf7a20f6b099e3684"
+    },
+    {
+      "path": "crates/wirebox-kernel/build.rs",
+      "sha256": "53f6d93767688c929286a4d04c525bde8bf7197461defa2308a779e4696090c1"
+    },
+    {
+      "path": "crates/wirebox-kernel/src/lib.rs",
+      "sha256": "7cd85013b9e4d2ff77e2f3b38ee29b6deb478d605cd402bf96979de6e0c528a1"
+    },
+    {
+      "path": "crates/wirebox-kernel/src/network.rs",
+      "sha256": "71f895390d8d9fb37fd2396737c02b7bf72690ffba27e8aaef24f7bd1a03682e"
+    },
+    {
+      "path": "crates/wirebox-kernel/src/simulation.rs",
+      "sha256": "16062ba3f1a29ef8200ed5208c72335bea21d804e47dc49bc1d0e08de12bc189"
+    },
+    {
+      "path": "crates/wirebox-studio/Cargo.toml",
+      "sha256": "6038cd5739f285fd9defc36b8ba69fcf6bc092557b27f019a49b3bcc2c7ad287"
+    },
+    {
+      "path": "crates/wirebox-studio/src/main.rs",
+      "sha256": "f22f2918ec7faeb817249bf75eb7918df6fee44663879d59f136a4ddb87e20e7"
+    },
+    {
+      "path": "crates/wirebox-studio/src/model.rs",
+      "sha256": "24ab633c67dec95d6dc0c47642b6e22047163c7173b1ce97b277a67f1e819840"
+    },
+    {
+      "path": "docs/adr/0001-semantic-state.md",
+      "sha256": "718ab3aad2f2d2a262907163e24c990d97301b89b24876eb4fb95d4c43491d2e"
+    },
+    {
+      "path": "docs/adr/0002-zig-rust-abi.md",
+      "sha256": "b5dc0e0d417520ed68e3a3fdd03fffa9cfe707aacfac7c09118fadc60e7d7f73"
+    },
+    {
+      "path": "docs/adr/0003-virtual-time-and-trace.md",
+      "sha256": "0cc13fa0acd1e4c88c2ee80772223e51de14e6ef6f28ed0bbb01f38ee60212d4"
+    },
+    {
+      "path": "docs/adr/0004-gpui-windows.md",
+      "sha256": "4daf1f6528fc96acc674493363d81dca3cae5f55f0ad584e8d693ff6826da250"
+    },
+    {
+      "path": "docs/adr/0005-pilot-scope.md",
+      "sha256": "c24e9388ce27731e745f6124cfd0d3a2e92a89724dfd125f34fdf3f38d98fb9d"
+    },
+    {
+      "path": "docs/adr/0006-phase-2-runtime.md",
+      "sha256": "d7e165684e42c0e6e8268858fb6c00435eab0cb210f4cc6c6ebc12326a7e0d0f"
+    },
+    {
+      "path": "docs/adr/0007-packet-model.md",
+      "sha256": "0102a397ace75f1bd8d0696eaff92c39da79ea8825971136275822484b226771"
+    },
+    {
+      "path": "docs/adr/0008-studio-network-controller.md",
+      "sha256": "29bf016d311400fb81d79eda1fb6f8d8b6dd467864fb87dbf6c6691292d2d5ff"
+    },
+    {
+      "path": "docs/adr/README.md",
+      "sha256": "dd550b35ebd14222407669afb90ed714f8a4aae684b2c77c8290b91706fda8d4"
+    },
+    {
+      "path": "docs/evidence/phase-3/S01.json",
+      "sha256": "5b0f1678af58ec5a4640b9e8d04c004050685c015613b59a1c322d831d1725ee"
+    },
+    {
+      "path": "docs/evidence/phase-3/S02.json",
+      "sha256": "2cdbbcda0815535108e7b2fa3f6b0aa6ba46d34b6d082f8be3cb80f19657eab9"
+    },
+    {
+      "path": "docs/evidence/phase-3/S03.json",
+      "sha256": "fb9a073be228adece97fb7d5cb6a1ffed5248acaf7406f0179332f9585c17d55"
+    },
+    {
+      "path": "docs/evidence/phase-3/S04.json",
+      "sha256": "95bdd7beb64cd02cdc4080282b5006057bcafed8dbeb47142c71aeb460a82650"
+    },
+    {
+      "path": "docs/evidence/phase-3/S05.json",
+      "sha256": "0c555154e739503b860a3b47df3349e8dbb266d3ca0e2ffeefecc53f9213b134"
+    },
+    {
+      "path": "docs/learning/README.md",
+      "sha256": "f2e81975fa350ba07e174a44a8122e096b39efaa0db08cf7f7a8f93fc53f0092"
+    },
+    {
+      "path": "docs/learning/hardening_phase_0_3.md",
+      "sha256": "db5a2740e76861c0444458736b533585363193e8ecec29720d91af3f261146e0"
+    },
+    {
+      "path": "docs/learning/phase_1/phase_1_build_zig_rust.md",
+      "sha256": "a7a2a8cdf805d64cc2f45346b1abc8ae9cfb93baa9e1ec3317ba4c181fe2a506"
+    },
+    {
+      "path": "docs/learning/phase_1/phase_1_ffi_ownership.md",
+      "sha256": "c475be215a1888cf52cc1d5cfa6057c4aaa14a01e4d63d3faa8600ce4302d0f2"
+    },
+    {
+      "path": "docs/learning/phase_1/phase_1_gpui_probe.md",
+      "sha256": "d99a2d02ec340664897fe4a3b3c4e3aa57b795d22195e935bba7758a2466cb6f"
+    },
+    {
+      "path": "docs/learning/phase_2/phase_2_graph_lifecycle.md",
+      "sha256": "7186fd4b79bd6a94bae8ee1e140b35c183b1e48beb0ea9cad5727fe02a49010f"
+    },
+    {
+      "path": "docs/learning/phase_2/phase_2_scheduler_timer.md",
+      "sha256": "abcd60b0e399aade0494876fdf7cb385183ea7c393c219a2727566b08954531a"
+    },
+    {
+      "path": "docs/learning/phase_2/phase_2_state_trace.md",
+      "sha256": "b7a42fd8a8fdaeb1b5674466671e68805ff1b1f8b71218067a46c7e0aad8f4ee"
+    },
+    {
+      "path": "docs/learning/phase_3/phase_3_alur_paket.md",
+      "sha256": "d1a7beb4ad55271452c753d53b8d8fb9ac33649374d3e93ab103cb5ffbe1b518"
+    },
+    {
+      "path": "docs/learning/phase_3/phase_3_codec_byte.md",
+      "sha256": "f92b1fe72b5bbe86c2249ca4da3de474b641448b30e2881c06bcf6e46f751140"
+    },
+    {
+      "path": "docs/learning/phase_3/phase_3_tracker_pembuktian.md",
+      "sha256": "cd18a4ce68f0481b443e1a87649d0c4f111005f85e99a3cff7b8ea359f89e0e8"
+    },
+    {
+      "path": "docs/learning/phase_4/phase_4_controller_snapshot.md",
+      "sha256": "bc3b9dc774e2cc7aa6276eb5b191893939386075266e27b16a3a115c45635eb6"
+    },
+    {
+      "path": "docs/wirebox/README.md",
+      "sha256": "33aa18dc0182a6bc623761fe4dfc5863e238ce6a6f2ae9f9d1856e0422a86112"
+    },
+    {
+      "path": "docs/wirebox/architecture.md",
+      "sha256": "27363677612bf2d1b4951a20ea66c899222bf167e89879275d1246f0da9d24fc"
+    },
+    {
+      "path": "docs/wirebox/byte-tracker.md",
+      "sha256": "8951b1ca0b93e1c25115cb7d11970c738ea9105bed755c3a7cf0429a7d6ad649"
+    },
+    {
+      "path": "docs/wirebox/decisions.md",
+      "sha256": "fa95d6eaad2df2d6a8b586fbcca1596b5b288cb28193fbab3c21659eb7dc46cd"
+    },
+    {
+      "path": "docs/wirebox/ffi.md",
+      "sha256": "cba24f530b611c58f0b6e4ee2a75c9e0924f3dcf6c3af1952abf6d2631e09579"
+    },
+    {
+      "path": "docs/wirebox/packets.md",
+      "sha256": "17254b39a8a42c70adb12006ea3236acaa1604d7666af101a84df6cf2f04d0b0"
+    },
+    {
+      "path": "docs/wirebox/phase-0-contract.md",
+      "sha256": "118f7d42cefacdd6ba14d4ccb6749b3a3b69bc4791382fa645a69dc1ae2aa68c"
+    },
+    {
+      "path": "docs/wirebox/pilot.md",
+      "sha256": "08b667a4fdba20889e057a999047c0cbf2fa33784517945e6a65b80a9244c85a"
+    },
+    {
+      "path": "docs/wirebox/positioning.md",
+      "sha256": "60a964c6224dcff73d8239820b2ea1f118d23f2f66312ede1fbb9f86dda01d25"
+    },
+    {
+      "path": "docs/wirebox/roadmap.md",
+      "sha256": "34ee2da62379a71f52438f6cfc5638c7e60043a3f897e779d9fd5b05582f1eba"
+    },
+    {
+      "path": "docs/wirebox/runtime.md",
+      "sha256": "223ad7d78be3cff4804f74d3ffad3470df0361b16cbba2496141de1888402644"
+    },
+    {
+      "path": "docs/wirebox/simulation.md",
+      "sha256": "8cf3e8e4315c4730f16e856b5f40277d2748d8743ffb8407507464ee2b120151"
+    },
+    {
+      "path": "docs/wirebox/studio.md",
+      "sha256": "e9117d3114149fd0cbd11f220adcf320e7dd50fcc4c66b263ccfaa57fc148112"
+    },
+    {
+      "path": "docs/wirebox/technology.md",
+      "sha256": "ea37cd4bad35d89c9004c24370187c9edcfebc57a580c759148ff5b14330279d"
+    },
+    {
+      "path": "docs/wirebox/todos.md",
+      "sha256": "ef04ec2925978974c50749a54c3e68e8f14adbe62f2a312dff71778443c7e0ed"
+    },
+    {
+      "path": "fixtures/inventory/pilot-v1.json",
+      "sha256": "53e034801257888a1800c67182cb9d7e2d90e71d4a3d7bb7d8f4d87ffc4b558c"
+    },
+    {
+      "path": "fixtures/inventory/zte-c320-user-report.txt",
+      "sha256": "7008709761413a093c7f0aafb583e4222b80e8b86b3c30f54343d693122c2de0"
+    },
+    {
+      "path": "fixtures/packets/ipv4-forwarding-v1.json",
+      "sha256": "c8807dc9c85727ec625f5ed4fb3f4725afcb2f35df495d5860720dcc49b7d1b5"
+    },
+    {
+      "path": "fixtures/scenarios/icmp-static-v1.json",
+      "sha256": "a40d13908e49d9210285c61191818fb9f05f85ca752737b639693d090001d610"
+    },
+    {
+      "path": "kernel/include/wirebox.h",
+      "sha256": "5d23578a84c2705fce8f0ac0a24990a1537609f8c70358ddceae716cf6d47903"
+    },
+    {
+      "path": "kernel/include/wirebox_net.h",
+      "sha256": "ff57493edf796a7a9030d6de6eb386a9f034a0a9bde3e2648e1ae357f525ce25"
+    },
+    {
+      "path": "kernel/include/wirebox_sim.h",
+      "sha256": "d0e157622f79eedb3da535701240a87bc591c08d42656cec8a0277a1588b6032"
+    },
+    {
+      "path": "kernel/src/abi.zig",
+      "sha256": "b35d30fc46b46121bbba3af9778b866a1eaff2ddb457794fc452d1768c79b976"
+    },
+    {
+      "path": "kernel/src/codec.zig",
+      "sha256": "267f245aae36a843eb91e3251e96b5b6e437539f59e31f9e05a470b5e5de5733"
+    },
+    {
+      "path": "kernel/src/graph.zig",
+      "sha256": "f08d7eb158a1e330896b7c520e1f874629af30dba4c7bbfc106ddaeb8a1357e1"
+    },
+    {
+      "path": "kernel/src/net_abi.zig",
+      "sha256": "b27c04915334485db44dca195e380df3d763fe054b139829da5ff27d887be264"
+    },
+    {
+      "path": "kernel/src/network.zig",
+      "sha256": "26180287aeb736e2f6bf0f2c7eb264a5be9c68da59f63acf48a3b0c39c44c872"
+    },
+    {
+      "path": "kernel/src/network_tests.zig",
+      "sha256": "7b8115eb353f545079cf02252c4f1b0ce22f2440c158e65a606f54b2072de6b6"
+    },
+    {
+      "path": "kernel/src/runtime.zig",
+      "sha256": "822ace554131cab95628625cefefb23dbbd5b5ad8961a61c09eed6ebf47ae5f2"
+    },
+    {
+      "path": "kernel/src/runtime_tests.zig",
+      "sha256": "da716b48529014ea1162861da3b26d5c0f95fefa4e1487fe5a620d5beba41f80"
+    },
+    {
+      "path": "kernel/src/sim_abi.zig",
+      "sha256": "d82d7835392fc2e845dacb64b73c220dddec6f118cb62fd72c38c3724938bd81"
+    },
+    {
+      "path": "kernel/tests/layout.c",
+      "sha256": "e80272ae82fdf8a1c4ff11483452f78286c09b1df713567dd0968048e2e29ff1"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "d13306be0ecda81ce779baa290ffb417380d525928477f16200884b5169cca33"
+    },
+    {
+      "path": "scripts/check-cognitive-coverage.mjs",
+      "sha256": "3a58d7c22d7eeee9fc9cb93ce5341862bb25c27be3fcb06f9788e86332df76f1"
+    },
+    {
+      "path": "scripts/ghidra/WireboxPtAudit.java",
+      "sha256": "03448483bea73de22bff9a62ac080e0be64429a8151aa0981f1971780ec5a393"
+    },
+    {
+      "path": "scripts/test-handle-candidates.ps1",
+      "sha256": "db4c1c7c0561b856753ab744a58d7603217aa05a21a98046649cd041be12b987"
+    },
+    {
+      "path": "scripts/verify-clean-export.ps1",
+      "sha256": "bef8006048247544c680749a68b56259237a59a812c3f76b1c7bdc2bc756b105"
+    },
+    {
+      "path": "scripts/verify.ps1",
+      "sha256": "68979678566f8334a632896a5e8fc8429f0a24c05a259eb2e6e2aeda825cdf64"
+    }
+  ],
+  "evidence_files": [
+    {
+      "path": "docs/evidence/phase-4/README.md",
+      "sha256": "209bcb048d393363816b1feb61ac0653a87beba110fc8a3963be390fee78f87c"
+    },
+    {
+      "path": "docs/evidence/phase-4/address-branch.jpg",
+      "sha256": "1dab4d2414b495330899c84405a368338ca3511fdc7cc585abc10c2b70bbffd1"
+    },
+    {
+      "path": "docs/evidence/phase-4/artifact-integrity.log",
+      "sha256": "0ad1adb2fd998dc6788c964f8006d7d45474874d71a7b76625b80a267af44a11"
+    },
+    {
+      "path": "docs/evidence/phase-4/clean-export.log",
+      "sha256": "c3b4223af2ad8922447c264b5410c8d6fa2573d3299c181eb7fc687604e115b4"
+    },
+    {
+      "path": "docs/evidence/phase-4/clippy-final.log",
+      "sha256": "d91f90e235c36cf9478ccc87f7f3b2a673340c4535eeee49cd8244ee81585cf7"
+    },
+    {
+      "path": "docs/evidence/phase-4/invalid-packet.jpg",
+      "sha256": "58389f236560d4e76a67c61cc1770553e5b8bf687ab4bdd833e222b5d1708603"
+    },
+    {
+      "path": "docs/evidence/phase-4/invalid-session-rejected.jpg",
+      "sha256": "0ae5205a9fdb072f281f6c4cbc4f0d573f13ba4d63398125099645d970f939d3"
+    },
+    {
+      "path": "docs/evidence/phase-4/native-qa.json",
+      "sha256": "bf853b700dfa0e1f2e7d6681fcca07d72f92f74e47f0b75cbfcdc45a7fc324c1"
+    },
+    {
+      "path": "docs/evidence/phase-4/native-session.wb.json",
+      "sha256": "f473e21c26029804e4bb15b779dcebc31d15bafcf4464ffbbe99515bdc590430"
+    },
+    {
+      "path": "docs/evidence/phase-4/no-route.jpg",
+      "sha256": "89c383e8ef0c29deed3f99b8a6ba6fc2b4e245e6704a38bf4e9f0358fa07b2c7"
+    },
+    {
+      "path": "docs/evidence/phase-4/paused-pending.jpg",
+      "sha256": "760ff34033d87a9967d1abea4e59e92ded5d02d25eff66d97d31cd4e0428ee36"
+    },
+    {
+      "path": "docs/evidence/phase-4/reset-active-run.jpg",
+      "sha256": "44d0d84745a078c071d65c66947c09c782814bd789723c8a1798dd99935ab5e2"
+    },
+    {
+      "path": "docs/evidence/phase-4/route-repaired.jpg",
+      "sha256": "2efdb9b4830da483564bd9787edef2826b973401c97a78a7e14b39d18d6276d4"
+    },
+    {
+      "path": "docs/evidence/phase-4/session-reopened.jpg",
+      "sha256": "10fd1dcb4c7094b9826a6777a1b93c4788f4783c0c9a5ba9bd74d1f28a23582a"
+    },
+    {
+      "path": "docs/evidence/phase-4/studio-build-final.log",
+      "sha256": "e8b243e4cf6c085edba94971fffadeceb5ba6e8796697bd423d8a617ae0c365f"
+    },
+    {
+      "path": "docs/evidence/phase-4/studio-tests.log",
+      "sha256": "26ed1109b82710b95c15ac315d19d631c0c8703cd92bee2b3f05a738dca1556d"
+    },
+    {
+      "path": "docs/evidence/phase-4/ttl-after.jpg",
+      "sha256": "002b3759b856f50b705c57e22d423c0a762af40b77c77fb455221abb87134617"
+    },
+    {
+      "path": "docs/evidence/phase-4/ttl-before.jpg",
+      "sha256": "468ba3237be5681877318985272544fae721fba7de5229cd050c7175cd8f76df"
+    },
+    {
+      "path": "docs/evidence/phase-4/ui-interaction.log",
+      "sha256": "0987115c1aad51deccbc8ad6d766700b12ac5bfbfd79aa796fae101e057e96a4"
+    },
+    {
+      "path": "docs/evidence/phase-4/verification-exe-locked.log",
+      "sha256": "68d0939ad21d42c55ccb2e054950a95e7acd5584cc568a33df9de6a05021af11"
+    },
+    {
+      "path": "docs/evidence/phase-4/verification-initial.log",
+      "sha256": "08c332b7ae3ad845a0f04b9bc535a59836b5234ec10a90339a4465eb2c3fce91"
+    },
+    {
+      "path": "docs/evidence/phase-4/verification.log",
+      "sha256": "ced317888234c4458076ba8c802554994fde8b92b129272fdad1fc464946461e"
+    }
+  ]
+}

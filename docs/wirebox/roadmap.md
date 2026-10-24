@@ -1,88 +1,88 @@
-# Roadmap Wirebox: pembuktian, MVP, pilot, dan pengembangan
+# Wyrlex roadmap: proof, MVP, pilot and development
 
-Diperbarui 21 Oktober 2026. Ini rencana kerja bertahap atas permintaan pengguna. Checklist eksekusi ada pada [todos](todos.md); skenario dan ukuran keberhasilan ada pada [rencana pilot](pilot.md). Roadmap menjelaskan urutan, todos mencatat pekerjaan, dan pilot menentukan bukti keberhasilan.
+Updated October 24, 2026. This is a phased work plan at the request of users. The execution checklist is in [todos](todos.md); scenarios and measures of success are in the [pilot plan](pilot.md). Roadmaps explain sequences, todos record work, and pilots determine evidence of success.
 
-## Hasil yang ingin dibuktikan
+## The results you want to prove
 
-Wirebox harus menunjukkan hubungan yang dapat diperiksa dari **objek infrastruktur → intent → plan → perubahan state → keputusan protokol/byte → verifikasi hasil**.
+Wyrlex should show a checkable relationship from **infrastructure object → intent → plan → state change → protocol decision/byte → result verification**.
 
-| Milestone | Selesai setelah | Klaim yang boleh dibuat |
+| Milestones | Done after | Claims that may be made |
 |---|---|---|
-| PoC teknis | Phase 3 | Kernel mandiri memproses skenario dan menjelaskan paket hingga byte |
-| MVP Studio | Phase 4 | Pengguna membuka skenario, menjalankan, mendiagnosis, mengubah, dan membandingkan hasil melalui aplikasi |
-| Pilot inti Wirebox | Phase 7 | Satu model operasi diuji di simulator, dijalankan pada Linux/MikroTik lab, dan diverifikasi kembali |
-| Pilot domain ISP | Phase 8 | Satu workflow pelanggan terbukti pada ZTE dengan ONU Huawei/VSOL yang telah diuji |
+| Technical PoC | Phase 3 | The standalone kernel processes the scenario and describes packets down to bytes |
+| MVP Studio | Phase 4 | Users open scenarios, run, diagnose, modify and compare results via the application |
+| Wyrlex core pilot | Phase 7 | One operating model is tested in the simulator, run on Linux/MikroTik lab, and verified again |
+| ISP domain pilots | Phase 8 | One proven customer workflow on ZTE with tested Huawei/VSOL ONU |
 
-Satu ping sukses memenuhi sebagian PoC. Pembuktian gagasan awal yang menghubungkan simulasi dengan realitas memerlukan pilot inti; workflow ISP memerlukan pilot domain ISP. Setiap klaim memiliki cakupan yang dinyatakan.
+One successful ping fulfills a portion of the PoC. Proving the initial idea that links simulation to reality requires a core pilot; ISP workflow requires an ISP domain pilot. Each claim has stated coverage.
 
-## Posisi sekarang
+## Current position
 
-G0/G1 lulus untuk development lokal Windows x64 debug: [laporan gate](../evidence/phase-0-1/README.md). [G2](../evidence/phase-2/README.md) membuktikan graph/scheduler/timer/PRNG. [G3](../evidence/phase-3/README.md) membuktikan PoC Ethernet/ARP/IPv4/ICMP dan tracker byte headless dalam subset yang dinyatakan. Pekerjaan berikutnya phase 4: menghubungkan simulator dengan GPUI dan workflow MVP. Perbandingan Linux, driver, serta pilot nyata belum dijalankan.
+G0/G1 pass for local development Windows x64 debug: [gate report](../evidence/phase-0-1/README.md). [G2](../evidence/phase-2/README.md) proves graph/scheduler/timer/PRNG. [G3](../evidence/phase-3/README.md) proves Ethernet PoC/ARP/IPv4/ICMP and headless byte tracker in the stated subset. Initial integration [Packet Studio Phase 4](studio.md) is already available: copy controller, trace/byte, control, branch and session v2. [G4 technical agent](../evidence/phase-4-acceptance/README.md) passes on scope fixture, multi-run history projection as well as handler-to-render response; Human usability studies remain unknown. Comparison of Linux, drivers, as well as real pilots have not been carried out.
 
-Target pilot pengguna: **Linux VM/server, MikroTik RouterOS 7, OLT ZTE C320, ONU Huawei, dan ONU VSOL**. Versi board C320 serta contoh state GPON sudah tercatat sebagai user-reported pada [inventaris](../../fixtures/inventory/pilot-v1.json). Model/firmware ONU, versi minor RouterOS, distro/kernel Linux, akses, serta pasangan kompatibel yang belum diketahui tetap menjadi dependency G6/G8.
+Target pilot users: **Linux VM/server, MikroTik RouterOS 7, OLT ZTE C320, ONU Huawei, and ONU VSOL**. The C320 board version as well as the GPON state example are listed as user-reported in [inventory](../../fixtures/inventory/pilot-v1.json). ONU model/firmware, RouterOS minor version, Linux distro/kernel, access, as well as unknown compatible pairs remain G6/G8 dependencies.
 
-## Urutan phase
+## Phase sequence
 
-| Phase | Fokus dan hasil | Dependensi | Syarat keluar / gate |
+| Phases | Focus and results | Dependencies | Exit / gate conditions |
 |---|---|---|---|
-| 0 | Kontrak keberhasilan, fixture, inventaris lab, dan batas MVP | Fondasi docs/toolchain tersedia sebagian | G0: skenario utama, matriks uji, dan batas dukungan tertulis |
-| 1 | Build Zig/Rust, percobaan FFI, dan window GPUI Windows | G0 | G1: checkout baru dapat dibangun; Rust memakai hasil Zig; window dan shutdown bekerja |
-| 2 | Graph, state, waktu virtual, timer, dan jurnal | G1 | G2: urutan stabil, cancellation, dan batas eksekusi lolos uji |
-| 3 | Ethernet/ARP/IPv4/ICMP, routing statis, dan trace byte | G2 | G3: PoC headless lulus kasus sukses serta kegagalan yang didefinisikan |
-| 4 | Studio: topology, timeline, inspector, save/load | G3 dan percobaan UI G1 | G4: MVP menyelesaikan alur diagnosis–perubahan–perbandingan dari UI |
-| 5 | Checkpoint/replay, gangguan terkontrol, validasi terhadap lab | G4 | G5: restore/replay sesuai state dan hasil pembanding dalam scope |
-| 6 | Observasi Linux/MikroTik dan snapshot ke simulator | G5 | G6: provenance, unknown/stale, dan pemetaan snapshot terbukti |
-| 7 | Intent, dua executor, apply dan read-back Linux/MikroTik | G6 | G7: pilot inti lulus scorecard dan skenario kegagalan |
-| 8 | Domain ISP: ZTE → ONU Huawei/VSOL → layanan pelanggan | G7 dan inventaris perangkat | G8: pilot ISP lulus pada kombinasi model/firmware yang diuji |
-| 9 | Beta yang dapat diulang dan dioperasikan pengguna lain | G8 untuk beta ISP; G7 cukup untuk beta inti | G9: instalasi, recovery, dokumentasi, dan penggunaan berulang terbukti |
-| 10 | Pengembangan berdasarkan bukti penggunaan | G7/G8/G9 sesuai jalur | Gate per kemampuan; pilih fitur berdasarkan kebutuhan terukur |
+| 0 | Success contracts, fixtures, lab inventory, and MVP limits | Foundation docs/toolchain partially available | G0: main scenarios, test matrix and written support limits |
+| 1 | Zig/Rust build, FFI test, and Windows GPUI window | G0 | G1: new checkout can be built; Rust uses Zig results; window and shutdown work |
+| 2 | Graph, state, virtual time, timer, and journal | G1 | G2: stable sequence, cancellation, and execution limits pass test |
+| 3 | Ethernet/ARP/IPv4/ICMP, static routing, and trace bytes | G2 | G3: Headless PoC passes defined success as well as failure cases |
+| 4 | Studio: topology, timeline, inspector, save/load | G3 and G1 UI trials | G4: MVP completes the diagnose–change–compare flow of the UI |
+| 5 | Checkpoint/replay, controlled disruption, validation against lab | G4 | G5: restore/replay according to state and comparison results in scope |
+| 6 | Linux/MikroTik observations and snapshots to the simulator | G5 | G6: provenance, unknown/stale, and proven snapshot mapping |
+| 7 | Intent, shared declarative IR, Verify, two executors, apply and read-back Linux/MikroTik | G6 | G7: simulator/verifier agrees on subset of models and core pilots pass scorecard as well as failure scenarios |
+| 8 | ISP domain: ZTE → ONU Huawei/VSOL → customer service | G7 and device inventory | G8: ISP pilot passes on tested model/firmware combinations |
+| 9 | Beta that other users can repeat and operate | G8 for ISP beta; G7 is sufficient for core beta | G9: installation, recovery, documentation, and proven repeat use |
+| 10 | Development based on evidence of use | G7/G8/G9 on track | Gate per ability; select features based on measurable needs |
 
-Inventaris perangkat dan contoh observation phase 6/8 boleh dikumpulkan sejak phase 0. Percobaan GPUI/FFI dilakukan lebih awal agar risiko stack diketahui sebelum engine membesar. Implementasi fitur mengikuti dependensinya.
+Equipment inventory and examples of phase 6/8 observations can be collected from phase 0. GPUI/FFI experiments are carried out early so that the risk of the stack is known before the engine enlarges. Feature implementations follow their dependencies.
 
-## Phase 0–3: buktikan fondasi
+## Phase 0–3: prove the foundation
 
-Mulai dari `PC1 — SW1 — R1 — PC2` dengan format skenario Wirebox sendiri. Tetapkan semantics waktu, ID, ownership buffer, operation, dan batas trace. Pilih referensi pembanding yang independen dari implementasi baru.
+Starting from `PC1 — SW1 — R1 — PC2` with Wyrlex's own scenario format. Set time semantics, ID, buffer ownership, operation, and trace limits. Select a comparison reference that is independent of the new implementation.
 
-PoC menjelaskan ARP, MAC learning/flooding, route lookup, TTL/checksum, dan drop yang relevan. Byte asli, field mapping, versi paket, serta hubungan sebab menjadi bagian implementasi awal. Menempelkan nama langkah PT pada log belum memenuhi gate ini.
+The PoC describes ARP, MAC learning/flooding, route lookup, TTL/checksum, and relevant drops. The original bytes, field mapping, package version, and cause relationships became part of the initial implementation. Pasting the PT step name in the log does not satisfy this gate.
 
-Zig minimal 0.17.0 dan Rust 1.99.1 mengikuti keputusan pengguna. GPUI langsung adalah kandidat utama percobaan UI sesuai [arah teknologi](technology.md). Jika percobaan tidak memenuhi kebutuhan, catat kendalanya dan evaluasi alternatif berdasarkan bukti.
+Zig minimum 0.17.0 and Rust 1.99.1 following user decision. Direct GPUI is a prime candidate for UI experiments according to [technology direction](technology.md). If the trial does not meet needs, note the constraints and evaluate alternatives based on the evidence.
 
 ## Phase 4: MVP Studio
 
-MVP adalah aplikasi Windows untuk satu workflow lengkap: buka skenario → kirim ping → temukan penyebab gagal → periksa byte dan state → ubah route pada salinan skenario → jalankan ulang → bandingkan → simpan hasil.
+MVP is a Windows application for a complete workflow: open scenario → send ping → find cause of failure → check bytes and state → change route on scenario copy → rerun → compare → save results.
 
-Wajib: empat node awal, Ethernet/ARP/IPv4/ICMP, routing statis, kontrol eksekusi berbatas, trace kausal, inspector field/byte, save/load berversi, dan penanda unsupported. Form perubahan sederhana cukup; editor topologi lengkap bukan prasyarat.
+Mandatory: four initial nodes, Ethernet/ARP/IPv4/ICMP, static routing, bounded execution control, causal trace, field/byte inspector, versioned save/load, and unsupported flag. A simple change form is sufficient; a complete topology editor is not a prerequisite.
 
-MVP belum memerlukan driver nyata, impor `.pkt`, TCP lengkap, AI, emulasi firmware, atau time travel dari checkpoint arbitrer. Mengubah skenario lalu menjalankan ulang dari awal cukup pada MVP; restore state aktif diuji pada phase 5.
+MVP does not yet require real drivers, `.pkt` import, full TCP, AI, firmware emulation, or time travel from arbitrary checkpoints. Changing the scenario and then rerunning from scratch is enough on the MVP; restore active state tested in phase 5.
 
-## Phase 5–7: buktikan gagasan inti
+## Phase 5–7: prove the core idea
 
-Pastikan engine dapat direproduksi dan dibandingkan dengan lab pada perilaku yang didukung. Masukkan observation Linux/MikroTik ke model bersama, fork snapshot menjadi simulasi, dan nyatakan asumsi state yang tidak tersedia.
+Make sure the engine is reproducible and compared to the lab on supported behavior. Insert Linux/MikroTik observations into a shared model, fork snapshots into simulations, and state any state assumptions that are not available.
 
-Intent awal dibatasi pada reachability IPv4 statis: sumber, tujuan uji, arah, dan protokol dinyatakan. Plan menghasilkan operation seperti `EnsureStaticRoute` dengan pre/postcondition yang sama secara semantik. Simulator dan adapter nyata menerapkannya melalui backend masing-masing. Nama/schema operation masih rancangan.
+The initial intent is limited to static IPv4 reachability: the source, test destination, direction, and protocol are stated. Plan produces an operation like `EnsureStaticRoute` with semantically the same pre/postcondition. Route/filter/VLAN rules are then derived into a shared declarative IR so that the concrete simulator and Verify set do not have different copy semantics. Real simulators and adapters implement them through their respective backends. The name/operation scheme is still being drafted; [ADR-0012](../adr/0012-shared-verify-ir.md) has proposed status.
 
-Pilot memperagakan kegagalan awal, diagnosis, perubahan simulasi, plan yang dapat ditinjau, eksekusi di lab, lalu observation dan probe ulang. Uji stale plan, operasi berulang, koneksi manajemen terputus, serta kegagalan parsial. Hasil indeterminate memerlukan pemeriksaan state sebelum retry.
+The pilot demonstrates initial failure, diagnosis, simulation changes, plan review, execution in the lab, then observation and re-probe. Stale plan tests, repeated operations, management connection breaks, as well as partial failures. Indeterminate results require a state check before retrying.
 
-**G7 adalah pembuktian awal ide Wirebox dalam cakupan terbatas.** Ping pada perangkat saja belum membuktikan hubungan semantik antara plan simulasi dan operasi nyata. Rincian ada pada [rencana pilot](pilot.md).
+**G7 is an early proof of Wyrlex's idea in a limited scope.** Pings on the device alone do not prove the semantic relationship between the simulation plan and real operations. Details are in [pilot plan](pilot.md).
 
-## Phase 8: buktikan domain ISP pengguna
+## Phase 8: prove the user's ISP domain
 
-Mulai dengan observasi ZTE, PON/ONU, status layanan, VLAN, dan sinyal yang tersedia dari perangkat. Uji ONU Huawei dan VSOL secara terpisah; kesamaan fungsi tidak menjamin field dan operasi identik.
+Start with observations of ZTE, PON/ONU, service status, VLAN, and available signals from the device. Test Huawei ONU and VSOL separately; Functional similarity does not guarantee identical fields and operations.
 
-Workflow awal: satu layanan pelanggan uji pada VLAN dan jalur IP terkontrol menuju endpoint di sisi uplink. Pilih operasi setelah capability diketahui. Jangan menjadikan PPPoE, NAT, GEM/TCONT, atau pengubahan WAN ONU sebagai asumsi tersembunyi; modelkan dan uji yang benar-benar diperlukan oleh layanan terpilih.
+Initial workflow: one test customer service on a controlled VLAN and IP path to an endpoint on the uplink side. Select operations once capabilities are known. Don't make PPPoE, NAT, GEM/TCONT, or WAN ONU changes hidden assumptions; model and test what the selected service actually requires.
 
-Target “internet pelanggan dapat diakses” dari visi tetap dipertahankan. Pengujian dimulai pada endpoint terkontrol agar dependency dapat diamati, lalu diperluas ke tujuan eksternal dengan dependency tambahan yang dicatat. State optik awal adalah observation; simulasi fisika PON memerlukan model serta validasi tersendiri.
+The “customer accessible internet” target of the vision is maintained. Testing starts on a controlled endpoint so that dependencies can be observed, then extends to external destinations with additional dependencies noted. The initial optical state is observation; PON physics simulations require their own models and validation.
 
-## Phase 9–10: beta dan pengembangan berikutnya
+## Phase 9–10: beta and subsequent development
 
-Beta membuktikan workflow dapat diulang pada lingkungan terdokumentasi, termasuk install, credential handling, retensi, recovery, dan diagnosis kegagalan. Tetapkan kapasitas berdasarkan pengukuran dan terbitkan batas dukungan model/firmware yang diuji.
+Beta proves workflow repeatability in a documented environment, including install, credential handling, retention, recovery, and failure diagnosis. Set capacity based on measurements and publish tested model/firmware support limits.
 
-Jalur pengembangan: fidelitas protokol, skala/performa, domain/vendor, otomasi intent, kolaborasi, dan interoperabilitas. Tiap jalur memerlukan kebutuhan pengguna, kontrak, fixture pembanding, serta gate sendiri. Calon epic tersedia pada [todos](todos.md).
+Development path: protocol fidelity, scale/performance, domain/vendor, intent automation, collaboration, and interoperability. Each path requires its own user requirements, contracts, comparison fixtures, and gates. Epic candidates are available at [todos](todos.md).
 
-## Cara menjalankan rencana
+## How to execute the plan
 
-Gunakan satu phase utama sebagai pekerjaan aktif. Tandai task selesai setelah artifact/bukti tersedia; selesainya implementasi tidak otomatis meluluskan gate. Catat hasil gate sebagai belum diuji, lulus, gagal, atau tertahan beserta sebabnya.
+Use one main phase as active work. Mark the task as complete once the artifact/evidence is available; Completion of implementation does not automatically pass the gate. Record the gate results as untested, passed, failed, or held and why.
 
-Prioritas **Now**: phase 0–4. **Next**: phase 5–7. **Later**: phase 8–9. **Future**: phase 10. Ini urutan fokus, bukan janji tanggal. Estimasi kalender dibuat setelah kecepatan kerja dan scope pilot diketahui.
+Priority **Now**: phase 0–4. **Next**: phases 5–7. **Later**: phases 8–9. **Future**: phase 10. This is a sequence of focus, not a date promise. Calendar estimates are made after the pilot's working speed and scope are known.
 
-Jika gate gagal, perbaiki atau persempit klaim/cakupan secara eksplisit sebelum lanjut. Temuan PT tetap mengacu pada [evidence ledger](../packet-tracer/evidence-ledger.md), bukan pengganti uji Wirebox.
+If the gate fails, explicitly refine or narrow the claim/scope before proceeding. PT findings still refer to the [evidence ledger](../packet-tracer/evidence-ledger.md), not a replacement for the Wyrlex test.

@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-24",
+  "scope": "Final source; full verification followed by targeted Studio tests and workspace Clippy; native binary precedes last UI fixes",
+  "sources": [
+    {
+      "path": "crates/wirebox-studio/src/model.rs",
+      "sha256": "a69afc3f68dd3f1542acf12a8e0fef48991e4ffed1b8f666883a4b00fe9efd1a"
+    },
+    {
+      "path": "crates/wirebox-studio/src/main.rs",
+      "sha256": "5b72022b7023998aa6252873fc4db2d370d24331cbbf664fb27ac713ae31a47a"
+    },
+    {
+      "path": "kernel/src/network.zig",
+      "sha256": "f676722e711d4d8824e0a80b76ea30ec485018f75c0394f271993bd96831a817"
+    },
+    {
+      "path": "scripts/measure-studio-memory.ps1",
+      "sha256": "ab96e94d54333fb216727f9a9b6acbc3df5e1e64470a4cd260b11812b7ed211c"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "clippy-final.log",
+      "sha256": "8e1b35bd812e4e8badb6adede834d6c93ba9d3a352d3df7e2538da5a8ffdbf33"
+    },
+    {
+      "path": "memory-smoke.json",
+      "sha256": "d37c7a883afceb0389d046b240b3ef71e3905aebfcdd0cca98b12e64c31e6ccd"
+    },
+    {
+      "path": "studio-final.log",
+      "sha256": "6d315ae152b29f09d3cb7bff1fe724ac4c5cea124e8db53ccef1c729ba064bd3"
+    },
+    {
+      "path": "verification-final.log",
+      "sha256": "52a5970fb07164c07397832f425f2067be85583c0aabeb3e1274457505439983"
+    },
+    {
+      "path": "verification.log",
+      "sha256": "fe0cc000db1be04bdce0238c9f2c0f5dee96ff5fd2f92cf6e64fa5ec5c2762cd"
+    }
+  ]
+}

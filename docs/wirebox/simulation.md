@@ -1,58 +1,58 @@
-# Simulasi tanpa perangkat
+# Device-free simulation
 
-Simulasi jaringan tanpa perangkat fisik dan image OS vendor memungkinkan untuk perilaku yang kita implementasikan. Perangkat virtual tetap memiliki identitas, port, konfigurasi, state protokol, dan aturan pemrosesan.
+Network simulation without physical devices and vendor OS images allows for the behavior we implemented. Virtual devices retain their identity, ports, configuration, protocol state, and processing rules.
 
-Pada 21 Oktober 2026, [phase 3 Wirebox](packets.md) sudah menjalankan skenario Ethernet/ARP/IPv4/ICMP mandiri melalui Zig–Rust. [Bukti G3](../evidence/phase-3/README.md) memisahkan hasil engine Wirebox dari laporan PT dan mini-simulator eksternal. Berikutnya integrasi Studio; validasi perangkat nyata tetap diperlukan untuk klaim kesesuaian vendor.
+As of October 21, 2026, [phase 3 Wyrlex](packets.md) is already running standalone Ethernet/ARP/IPv4/ICMP scenarios over Zig–Rust. [Evidence G3](../evidence/phase-3/README.md) separates the Wyrlex engine results from the PT report and external mini-simulator. Next Studio integration; Real device validation remains required for vendor conformity claims.
 
-## Apa yang didukung bukti Packet Tracer?
+## What does Packet Tracer evidence support?
 
-| Temuan dalam catatan | Implikasi untuk Wirebox | Batas kesimpulan |
+| Findings in notes | Implications for Wyrlex | Conclusion limits |
 |---|---|---|
-| Objek device, port, link, PDU, dan process | Dunia jaringan dapat direpresentasikan dalam program | Seluruh perilaku vendor belum dipulihkan |
-| Heap timer serta registry by-ID | Eksekusi dapat diurutkan oleh waktu virtual dan timer dapat ditemukan/dibatalkan | Layout dan inheritance PT tidak perlu disalin |
-| Rantai proses protokol dan routing software | Perilaku forwarding dapat diimplementasikan sebagai algoritme | Nama class/kode langkah tidak sama dengan spesifikasi lengkap |
-| Event List GUI terpisah dari queue | Eksekusi dan tampilan trace perlu komponen berbeda | Tombol Back tidak membuktikan restore seluruh state |
-| Demo mini-sim berjalan lokal | Skenario ARP, switching, routing, ICMP, TCP, UDP dapat diperagakan mandiri | Model demo terbatas dan bukan pengujian kesetaraan PT |
+| Device, port, link, PDU, and process objects | The network world can be represented in the program | All vendor behavior has not been restored |
+| Heap timer and registry by-ID | Executions can be sequenced by virtual time and timers can be found/cancelled | PT layout and inheritance do not need to be copied |
+| Protocol process chain and software routing | The forwarding behavior can be implemented as an algorithm | The class name/step code is not the same as the full specification |
+| The Event List GUI is separate from the queue | Execution and display of traces require different components | The Back button does not restore the entire state |
+| Local running mini-sim demo | ARP, switching, routing, ICMP, TCP, UDP scenarios can be demonstrated independently | Limited demo model and not PT equality testing |
 
-Status rinci tersedia pada [evidence ledger](../packet-tracer/evidence-ledger.md). Dokumen RE terutama bersumber dari laporan pengguna; eksekusi ulang mini-simulator merupakan verifikasi lokal terpisah.
+Detailed status is available at [evidence ledger](../packet-tracer/evidence-ledger.md). RE documents are primarily sourced from user reports; mini-simulator re-execution is a separate local verification.
 
-## Tiga jenis pengujian yang dibahas
+## Three types of testing are discussed
 
-| Pendekatan | Pertanyaan yang cocok | Yang perlu tersedia |
+| Approach | Suitable questions | What needs to be available |
 |---|---|---|
-| Analisis konfigurasi/reachability | Apakah jalur atau policy memungkinkan trafik tertentu? | Konfigurasi dan model semantik yang mendukung fitur tersebut |
-| Simulasi discrete event | Kapan paket dikirim, timer habis, atau state berubah? | Algoritme protokol, scheduler, delay, dan asumsi model |
-| Lab OS/vendor | Bagaimana implementasi OS tersebut berperilaku pada skenario ini? | Image/software yang sesuai dan lingkungan eksekusinya |
+| Configuration/reachability analysis | Does the path or policy allow certain traffic? | Configuration and semantic models that support the feature |
+| Discrete event simulation | When is the packet sent, the timer expired, or the state changed? | Protocol algorithms, schedulers, delays, and model assumptions |
+| OS/vendor Labs | How does the OS implementation behave in this scenario? | Appropriate image/software and its execution environment |
 
-Ketiganya bisa saling melengkapi. Hasil reachability tidak otomatis menjelaskan retransmisi TCP. Lab OS pun tidak otomatis meniru ASIC, kondisi optik, atau seluruh kondisi perangkat fisik. Lihat [proyek pembanding](positioning.md).
+The three can complement each other. Reachability results do not automatically explain TCP retransmissions. Lab OS does not automatically replicate ASICs, optical conditions, or all physical device conditions. See [comparator project](positioning.md).
 
-## Kernel yang diusulkan
+## Proposed kernel
 
-Alur dasar: aplikasi membuat paket → proses protokol membentuk byte → port menghitung waktu pengiriman → scheduler menjalankan penerimaan pada port tujuan → state protokol berubah → trace mencatat hasil dan sebabnya.
+Basic flow: the application creates a packet → the protocol process forms the bytes → the port calculates the sending time → the scheduler performs reception on the destination port → the protocol state changes → the trace records the results and why.
 
-Pilihan awal yang disarankan:
+Recommended starting options:
 
-- Urutan stabil `(virtual_time, sequence)` untuk event dengan waktu sama.
-- ID timer dan mekanisme cancel yang tidak meninggalkan callback aktif pada objek yang sudah dihapus.
-- API langkah terbatas seperti `step` dan `runUntil`; menguras antrean sampai kosong tidak cocok untuk semua timer periodik.
-- PRNG eksplisit dengan seed/state yang dapat disimpan untuk jitter dan loss.
-- Kernel yang tidak bergantung pada jam GUI; mode realtime hanya mengatur laju pemutaran waktu virtual.
-- Satu pemilik state simulasi sebagai titik awal. Parallel execution ditambahkan jika kebutuhan terukur membenarkannya.
+- Stable sequence `(virtual_time, sequence)` for events with the same time.
+- ID timer and cancel mechanism that does not leave active callbacks on deleted objects.
+- Limited step APIs such as `step` and `runUntil`; draining the queue until empty is not suitable for all periodic timers.
+- Explicit PRNG with saveable seed/state for jitter and loss.
+- GUI clock-independent kernel; realtime mode only sets the virtual time playback rate.
+- One simulation state owner as starting point. Parallel execution is added when measurable needs justify it.
 
-Konvensi [ADR-0003](../adr/0003-virtual-time-and-trace.md) sudah diimplementasikan pada [runtime phase 2](runtime.md): tick u64 nanodetik dan `runUntil(t, budget)` memajukan jam ke t setelah semua event due diproses. Jika budget habis, waktu berhenti pada eksekusi terakhir. [Bukti G2](../evidence/phase-2/README.md) memeriksa invariant scheduler dan counter sintetis; [model paket phase 3](packets.md) memakai scheduler tersebut untuk frame arrival dan ARP timer. Mini-sim lama memakai konvensi berbeda, dicatat pada [verifikasi prototipe](../packet-tracer/mini-simulator.md).
+Convention [ADR-0003](../adr/0003-virtual-time-and-trace.md) is already implemented in [runtime phase 2](runtime.md): tick u64 nanoseconds and `runUntil(t, budget)` advances the clock to t after all due events have been processed. If the budget runs out, time stops at the last execution. [Evidence G2](../evidence/phase-2/README.md) checks scheduler invariants and synthetic counters; [packet model phase 3](packets.md) uses this scheduler for frame arrival and ARP timer. Older mini-sims use different conventions, noted in [prototype verification](../packet-tracer/mini-simulator.md).
 
-Queue eksekusi tidak boleh kehilangan event hanya karena UI membatasi jumlah baris. Jurnal dapat memiliki kebijakan retensi tersendiri; jika dibatasi, kemampuan replay yang tersisa harus jelas.
+The execution queue should not miss events just because the UI limits the number of rows. Journals may have their own retention policies; if restricted, remaining replayability should be clear.
 
-## Cakupan dan fidelitas
+## Coverage and fidelity
 
-Setiap model perlu menyatakan fitur yang didukung, yang disederhanakan, dan yang belum diketahui. Contoh: routing IPv4 statis tidak menjanjikan BGP, ECMP, NAT, fragmentasi, atau semua perilaku ICMP.
+Each model needs to state which features are supported, which are simplified, and which are unknown. Example: static IPv4 routing does not promise BGP, ECMP, NAT, fragmentation, or any ICMP behavior.
 
-Trace dapat menjelaskan mengapa model memilih route tertentu. Pernyataan bahwa router nyata akan memilih hasil identik memerlukan perbandingan pada konfigurasi, versi, dan skenario yang sesuai. Model error optik, antrean hardware, congestion, atau firmware membutuhkan pekerjaan tersendiri.
+Traces can explain why the model chose a particular route. The assertion that real routers will select identical results requires comparison across appropriate configurations, versions, and scenarios. Modeling optical errors, hardware queues, congestion, or firmware requires separate work.
 
-Untuk hasil yang bergantung pada fitur di luar model, tampilkan unsupported/unknown beserta penyebabnya. Jangan menyimpulkan pass hanya karena fitur tersebut dilewati.
+For results that depend on features outside the model, display unsupported/unknown along with the cause. Don't conclude a pass just because the feature was skipped.
 
-## Hubungan dengan format Packet Tracer
+## Relationship to Packet Tracer format
 
-Engine Wirebox dapat memakai format skenario sendiri yang berversi. Importer `.pkt` adalah pekerjaan terpisah untuk memetakan topologi dan konfigurasi yang dikenali.
+The Wyrlex engine can use its own versioned scenario format. The `.pkt` importer is a separate job for mapping recognized topologies and configurations.
 
-Laporan terakhir mengoreksi hipotesis awal enkripsi `.pkt`, tetapi reader yang didokumentasikan masih bergantung pada captured keystream. Importer lengkap, writer, dan round-trip belum dibuktikan. Rujuk [status format `.pkt`](../packet-tracer/pkt-format.md), bukan potongan laporan lama.
+The latest report corrects the initial `.pkt` encryption hypothesis, but the documented reader still relies on captured keystream. Complete importer, writer, and round-trip have not been proven. Reference [`.pkt` format status](../packet-tracer/pkt-format.md), not the old report snippet.

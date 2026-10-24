@@ -1,57 +1,57 @@
-# Mini-simulator: implementasi dan verifikasi
+# Mini-simulator: implementation and verification
 
-## Asal artifact
+## Origin of artifact
 
-Prototipe tersedia pada C:\Users\ricky\AppData\Local\Temp\opencode\pt_minisim. Berkas utama: ptmini.h, main.cpp, build.bat, dan ptmini.exe. Source/executable tidak dipindahkan ke repository ini; dokumentasi dan catatan verifikasinya yang disimpan.
+The prototype is available in C:\Users\ricky\AppData\Local\Temp\opencode\pt_minisim. Main files: ptmini.h, main.cpp, build.bat, and ptmini.exe. Source/executables are not moved to this repository; documentation and verification records are kept.
 
-Source dan executable diperiksa pada 19 Oktober 2026. Executable yang tersedia dijalankan langsung; belum dilakukan rebuild yang membuktikan kesesuaian binary dengan source. Hash artifact verifikasi tersedia di [verification/artifact-manifest.json](verification/artifact-manifest.json).
+Source and executables checked on October 19, 2026. Available executables run directly; A rebuild has not been carried out which proves the suitability of the binary to the source. The verification artifact hash is available at [verification/artifact-manifest.json](verification/artifact-manifest.json).
 
-## Skenario
+## Scenario
 
-Topologi: PC1 — SW1 — R1 — PC2. PC1 berada di 10.0.0.0/24 dan PC2 di 10.0.1.0/24. Link pada demo disetel 100 Mb/s dengan propagation delay 1 mikrodetik.
+Topology: PC1 — SW1 — R1 — PC2. PC1 is at 10.0.0.0/24 and PC2 is at 10.0.1.0/24. The link in the demo is set at 100 Mb/s with a propagation delay of 1 microsecond.
 
-1. ICMP echo: ARP, pembelajaran/flooding MAC, forwarding router, dan echo reply.
-2. TCP: handshake, buffering Nagle sederhana, satu kehilangan frame, retransmisi, lalu FIN.
-3. UDP: pengiriman ke port terdaftar, lalu port tertutup yang menghasilkan ICMP port unreachable.
+1. ICMP echo: ARP, MAC learning/flooding, router forwarding, and echo reply.
+2. TCP: handshake, simple Nagle buffering, one frame loss, retransmission, then FIN.
+3. UDP: sending to registered port, then closed port resulting in ICMP port unreachable.
 
-Data aplikasi seperti GET /index.html hanyalah payload demo, bukan bukti adanya implementasi server HTTP penuh.
+Application data such as GET /index.html is just a demo payload, not evidence of a full HTTP server implementation.
 
-## Hasil eksekusi lokal
+## Results of local execution
 
-| Metrik | Jitter ON | Jitter OFF |
+| Metrics | Jitter ON | Jitter OFF |
 |---|---:|---:|
-| Kedatangan pertama di SW1, detik | 0.0000244705 | 0.00002436 |
-| Waktu event terakhir, detik | 1.00167 | 1.00163 |
-| Baris Event List | 461 | 461 |
+| First arrival on SW1, second | 0.0000244705 | 0.00002436 |
+| Last event time, seconds | 1.00167 | 1.00163 |
+| Event List line | 461 | 461 |
 | Record frame arrival | 66 | 66 |
-| Record transisi state TCP | 7 | 7 |
-| Record retransmisi TCP | 1 | 1 |
-| Record kehilangan frame yang disuntikkan | 1 | 1 |
+| TCP state transition record | 7 | 7 |
+| TCP retransmission record | 1 | 1 |
+| Record loses injected frames | 1 | 1 |
 
-Output disimpan di [summary.txt](verification/summary.txt) dan [selected-trace.txt](verification/selected-trace.txt). Ini demonstrasi skenario, bukan suite pengujian conformance atau benchmark throughput.
+The output is stored in [summary.txt](verification/summary.txt) and [selected-trace.txt](verification/selected-trace.txt). This is a scenario demonstration, not a conformance test suite or throughput benchmark.
 
-eventCount() mengembalikan ukuran eventList_. Satu callback scheduler bisa menghasilkan beberapa trace, sehingga jumlah baris tidak boleh dilabeli sebagai jumlah event scheduler yang dieksekusi.
+eventCount() returns the size of eventList_. One scheduler callback can produce multiple traces, so the number of rows should not be labeled as the number of scheduler events executed.
 
-## Mekanisme yang diperiksa pada source
+## Checked mechanism in source
 
-Scheduler memakai priority_queue berurutan (time, seq). Port::send menghitung processing delay + transmission time + propagation delay + jitter, lalu menjadwalkan pemanggilan receive() milik port tujuan.
+The scheduler uses sequential priority_queue (time, seq). Port::send calculates processing delay + transmission time + propagation delay + jitter, then schedules the destination port's receive() call.
 
-runUntil(limit) memproses event yang jatuh tempo sampai batas, tetapi implementasi ini tidak memajukan now() ke limit jika tidak ada event di sana. Angka waktu di atas adalah waktu callback terakhir, bukan otomatis durasi horizon yang diminta.
+runUntil(limit) processes events due to the limit, but this implementation does not advance now() to the limit if there are no events there. The time number above is the last callback time, not automatically the requested horizon duration.
 
-Generator random menggunakan seed tetap 20260117. Komentar/output demo yang menyebut jitter ON selalu tidak reproducible terlalu luas: dengan seed, urutan input, build, dan lingkungan yang sama, run dapat diulang. Reproduksibilitas lintas standard library/platform belum diuji.
+The random generator uses a fixed seed of 20260117. The comments/demo output that mentions jitter ON always being non-reproducible is too broad: with the same seed, input sequence, build, and environment, the run is repeatable. Reproducibility across standard libraries/platforms has not been tested.
 
-## Batas model
+## Model limits
 
-- TCP adalah model pengajaran: tanpa SACK, congestion control, atau timer TIME_WAIT lengkap; MSS/window dan initial sequence disederhanakan.
-- Link belum memodelkan antrean, contention, atau collision.
-- IPv6, fragmentasi, NAT, dan aplikasi penuh belum tersedia menurut README prototipe.
-- Mode realtime tersedia sebagai enum, tetapi demo menjalankan mode stepped.
-- Kesamaan nama kode *_FC_* tidak membuktikan kesamaan semua perilaku dengan PT.
+- TCP is a teaching model: no SACK, congestion control, or full TIME_WAIT timers; MSS/window and initial sequence simplified.
+- Link does not yet model queues, contention, or collisions.
+- IPv6, fragmentation, NAT, and full application are not yet available according to the prototype README.
+- Realtime mode is available as an enum, but the demo runs stepped mode.
+- The similarity of the code name *_FC_* does not prove the similarity of all behavior with PT.
 
-Bug timer retransmisi pada versi awal prototipe diperbaiki dengan meng-arm timer untuk SYN/FIN/data dan memakai runUntil. Hal itu menjelaskan kebutuhan desain prototipe; tidak membuktikan bug identik pada PT.
+The retransmission timer bug in early versions of the prototype was fixed by arming the timer for SYN/FIN/data and using runUntil. It explains the need for prototype design; does not prove an identical bug in PT.
 
-## Makna untuk simulasi tanpa hardware
+## Meaning for simulation without hardware
 
-Prototipe menunjukkan bahwa perangkat virtual, PDU, state protokol, dan waktu dapat berjalan di dalam program lokal. Model perangkat tetap dibutuhkan. Klaim kesetaraan dengan vendor, kondisi optik, atau hardware produksi memerlukan model tambahan dan pengujian pembanding.
+The prototype shows that virtual devices, PDUs, protocol state, and time can run within a local program. The device model is still required. Claims of equivalency with vendor, optical condition, or production hardware require additional model and benchmark testing.
 
-Sumber historis: [README prototipe](sources/ptmini-README.original.md) dan [addendum](sources/REPORT_addendum.original.md).
+Historical sources: [prototype README](sources/ptmini-README.original.md) and [addendum](sources/REPORT_addendum.original.md).
