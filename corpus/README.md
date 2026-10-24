@@ -27,6 +27,14 @@ The identity hash covers the model/platform, software components, architecture, 
 
 Interoperability records will reference exact target identities and a service contract when vendor testing becomes available. Empty vendor directories and untested support rows are not evidence.
 
+## Device and firmware investigation policy
+
+[ADR-0014](../docs/adr/0014-version-scoped-device-behavior-evidence.md) is the accepted policy for targeted Linux/RouterOS/OLT/ONU investigation. It distinguishes hardware models from Wyrlex semantic rules, binds findings to exact builds and artifact hashes, and separates mechanism analysis, runtime observations, and Wyrlex comparisons. Major-version baselines prioritize investigation; they do not transfer tested support to other builds. OLT/ONU combinations require exact peer identities and service-specific evidence.
+
+REA is the preferred shipped-artifact analysis interface where applicable providers are available. Matching source analysis or correctly identified alternative tools can supply mechanism evidence. Missing or partial analysis remains explicit; a tool report alone cannot establish runtime behavior. No vendor firmware analysis has been run for this corpus.
+
+The ADR describes future analysis dossiers, claims, and combination records. Their schemas and validators are not implemented. The existing v1 runtime record contract remains Linux-specific; do not place vendor or analysis records under it or modify frozen historical runs to implement the extension. Existing target IDs, artifacts, hashes, and recorded results remain unchanged.
+
 ## Initial records
 
 Target: [Linux identity and tool versions](devices/linux/ubuntu-26.04-wsl2-x86_64/6.18.33.2-microsoft-standard-wsl2-7c656fcc/target.json).

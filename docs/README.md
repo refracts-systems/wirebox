@@ -37,6 +37,7 @@ This directory contains Wyrlex concepts, design direction, decisions, and develo
 - [Verify design sharing an IR with the simulator](wirebox/verification.md)
 - [Time as a first-class dimension: verifiable network history](wirebox/temporal-verification.md)
 - [Device behavior corpus and long-term value hypothesis](wirebox/behavior-corpus.md)
+- [ADR-0014: version-scoped device/firmware analysis and evidence policy](adr/0014-version-scoped-device-behavior-evidence.md)
 - [Pilot plan, test scenarios, and success measures](wirebox/pilot.md)
 - [Decisions, preferences, and open questions](wirebox/decisions.md)
 

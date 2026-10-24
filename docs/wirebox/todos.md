@@ -71,6 +71,7 @@ Gate G4 / MVP: diagnosis–change–comparison workflow can be completed via the
 - [x] P5-05 — Linux WSL2 namespace fixture, AF_PACKET capture, versioned corpus record, and comparator available. S01–S03 each repeated three times; [scope and evidence](../evidence/corpus-linux/README.md). No containerlab dependency.
 - [ ] P5-06 — Initial independent Linux comparison passes for S01–S03 with explicit byte/semantic checks and normalization. Broader negative/ARP-failure policy comparisons remain open. [Linux evidence](../evidence/corpus-linux/README.md); [local replay hardening](../evidence/phase-5-hardening/README.md).
 - [ ] P5-07 — Bounded checkpoint retention and incomplete-history behavior are documented and tested locally; final G5 report and gate assessment remain pending broader comparison coverage. [Local Phase 5 evidence](../evidence/phase-5/README.md).
+- [ ] P5-08 — Implement versioned analysis-dossier, behavior-claim, and interoperability evidence contracts/validation under [ADR-0014](../adr/0014-version-scoped-device-behavior-evidence.md). Preserve existing Linux target/run identities and verify historical-record compatibility. This evidence extension does not retroactively change the G5 experiment contract.
 
 Gate G5: identical replay in the stated environment and behavior according to the comparator in scope. This does not guarantee replay across all engine versions.
 
@@ -82,6 +83,7 @@ Gate G5: identical replay in the stated environment and behavior according to th
 - [ ] P6-04 — Handle timeouts, insufficient permissions, stale data, conflicting observations, and unavailable capabilities.
 - [ ] P6-05 — Form a snapshot of the observed state, separate the desired/simulated state, then fork it to the simulator along with the assumed uncaptured state.
 - [ ] P6-06 — Compare predictions with probe/capture lab; Show the source and time of observation to the inspector.
+- [ ] P6-07 — Select an exact RouterOS 7 target/build and bounded capability; bind relevant artifacts to the observed target, retain targeted REA or alternative mechanism findings, and link runtime cases with explicit unavailable/partial analysis gaps. Follow [ADR-0014](../adr/0014-version-scoped-device-behavior-evidence.md); do not inherit support across major/minor versions.
 
 Gate G6: the second snapshot of the target family can be provenance-checked and used for the stated scenario; Observation adapter does not write configuration.
 
@@ -99,6 +101,7 @@ Gate G6: the second snapshot of the target family can be provenance-checked and 
 - [ ] P7-10 — Test healthy baseline, routes lost and then recovered, repeating intents without duplication, stale plans, and communication failures on each backend.
 - [ ] P7-11 — Compare manual and Wyrlex workflows on the same task; fill in the scorecard without considering the simulation as proof of successful execution.
 - [ ] P7-12 — Write G7 results with a truly proven plan, artifact, mismatch, and scope.
+- [ ] P7-13 — Link adopted vendor behavior claims to semantic rule/operation versions, target applicability, and regression cases. Keep device comparison separate from simulator/verifier agreement and preserve unresolved mismatches under [ADR-0014](../adr/0014-version-scoped-device-behavior-evidence.md).
 
 Gate G7 / core pilot: semantic contracts and complete workflow proven on Linux as well as MikroTik lab. If only one backend passes, log the partial pilot; cross-backend proof is incomplete.
 
@@ -112,6 +115,7 @@ Gate G7 / core pilot: semantic contracts and complete workflow proven on Linux a
 - [ ] P8-06 — Healthy workflow tests, controlled service disruptions, simulated branch changes, applies to test services, and connectivity and other service conditions.
 - [ ] P8-07 — Repeat on Huawei and VSOL separately; write model/firmware limits and incompatible pairing results.
 - [ ] P8-08 — Separate LOS/optical power observations from model predictions; save pilot report and G8 decision.
+- [ ] P8-09 — Create exact ZTE board/component and Huawei/VSOL ONU baseline dossiers with targeted mechanism findings/gaps. Record peer/service-specific combinations, hardware versus simulated context, and version-change impact/retests under [ADR-0014](../adr/0014-version-scoped-device-behavior-evidence.md).
 
 Gate G8 / ISP pilot: one proven service workflow on tested matrices. If an ONU family has not qualified, that family's support remains unproven.
 

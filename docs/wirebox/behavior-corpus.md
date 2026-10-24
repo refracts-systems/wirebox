@@ -4,6 +4,8 @@ Recorded 24 October 2026 from a user-provided strategic proposal. Status: **prod
 
 Implementation update, 24 October 2026: a [local corpus](../../corpus/README.md) now contains JSON schemas, versioned scenarios, a WSL namespace runner, a validator, and the first Linux target records. The [initial comparison report](../evidence/corpus-linux/README.md) covers S01–S03 with three repetitions each. One initial instrumentation failure is retained alongside the corrected experiment. This is a concrete first step; vendor firmware and interoperability records remain unavailable.
 
+Policy update, 24 October 2026: [ADR-0014](../adr/0014-version-scoped-device-behavior-evidence.md) is accepted for exact-build device/firmware investigation and evidence reuse. It defines targeted RouterOS, ZTE OLT, Huawei ONU, and VSOL ONU analysis; separates mechanism/runtime/comparison evidence; and requires exact peer/service scope for interoperability. Analysis dossiers and vendor/combination schema extensions remain pending. The commercial and contribution hypotheses below remain undecided.
+
 ## Thesis
 
 Wyrlex's most valuable long-term asset could be accumulated knowledge of how real devices behave under reproducible conditions. Semantic fidelity is currently one of the project's largest risks. Systematically investigating that risk could create a durable advantage: a versioned, testable body of evidence per device model, firmware build, feature, and interoperability combination.
@@ -28,7 +30,7 @@ An observed difference becomes a scoped behavioral record after reproduction and
 
 ## What a behavior record should contain
 
-This is a proposed record contract, not an implemented schema:
+The table below describes the broader dossier contract. Initial Linux schemas implement part of it; mechanism-analysis, behavior-claim, and vendor-combination schemas are not yet implemented. Their accepted evidence requirements are in [ADR-0014](../adr/0014-version-scoped-device-behavior-evidence.md):
 
 | Category | Required context |
 |---|---|
@@ -70,4 +72,4 @@ Owning a device does not establish permission to redistribute its firmware or ev
 
 The Phase 5 Linux comparator is the first opportunity to establish a behavior-record workflow. Phase 6 can supply reproducible observation provenance. Phase 7 can link operation and Verify semantics to evidence. Phase 8 pilots can become the first narrowly scoped ISP interoperability records and, if participants consent, the first reviewed contributions.
 
-The initial schema and Linux lab case are now available in the local corpus. Next steps are broader Linux comparison coverage, then version-scoped RouterOS observations and behavior cases in Phase 6. Corpus hosting, automated contribution ingestion, and commercial certification should follow evidence of demand rather than precede it. The Linux record does not pass the full G5 gate or a vendor/commercial gate.
+The initial schema and Linux lab case are now available in the local corpus. Next steps are broader Linux comparison coverage and versioned evidence-contract extensions, then version-scoped RouterOS observations and targeted mechanism dossiers in Phase 6. Phase 7 links adopted claims to semantic rules; Phase 8 investigates exact OLT/ONU targets and combinations. Each missing analysis or runtime layer remains visible under ADR-0014. Corpus hosting, automated contribution ingestion, and commercial certification should follow evidence of demand rather than precede it. The Linux record does not pass the full G5 gate or a vendor/commercial gate.

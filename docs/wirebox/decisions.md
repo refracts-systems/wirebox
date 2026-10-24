@@ -29,6 +29,7 @@ Notes through October 24, 2026. Exploratory conversations do not automatically b
 | WB-21 | Verify model sharing | User suggestions, October 24, 2026 | The simulator and verifier are driven using the same declarative IR, with differential gate and counterexample byte trace; [ADR-0012](../adr/0012-shared-verify-ir.md) |
 | WB-22 | Time as the fourth dimension | User-provided thesis; documentation requested October 24, 2026 | [Verifiable network history](temporal-verification.md): incident reconstruction, supported plan-transition verification, and conditional future impact. Local replay exists; historical/temporal verification remains proposed |
 | WB-23 | Device behavior corpus | User-provided strategic proposal; documentation requested October 24, 2026 | [Reproducible behavioral evidence](behavior-corpus.md) per model/firmware/interoperability pair. Corpus operations, commercial access, licensing, certification, and contribution policies remain undecided |
+| WB-24 | Version-scoped device/firmware evidence | User-approved policy formalized October 24, 2026 | [ADR-0014](../adr/0014-version-scoped-device-behavior-evidence.md): targeted Linux/RouterOS/ZTE/ONU investigation; exact build/component hashes, separate mechanism/runtime/comparison assessments, explicit reuse, and exact peer/service combinations. Vendor dossiers and schema extensions remain pending; no vendor gate passes by adopting the policy |
 
 ## Corrections that affect the design
 

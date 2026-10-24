@@ -18,6 +18,7 @@ As of 24 October 2026, Phases 0–3 are available: contracts/fixtures, Zig–Rus
 - [Todos](docs/wirebox/todos.md) record phase checklists; the [pilot plan](docs/wirebox/pilot.md) defines scenarios and evidence criteria. When implementing work, link it to verify results and never pass a gate from a code checklist alone.
 - [Packet Tracer notes](docs/packet-tracer/README.md) summarizes the RE reports and corrections.
 - [Verify design](docs/wirebox/verification.md) and [ADR-0012](docs/adr/0012-shared-verify-ir.md) propose a declarative IR shared by the simulator and verifier; no symbolic engine exists yet.
+- [ADR-0014](docs/adr/0014-version-scoped-device-behavior-evidence.md) governs version-scoped device/firmware analysis, runtime evidence, and exact OLT/ONU combinations. Major versions are navigation groups, not evidence inheritance. Vendor dossiers and their schema extensions remain pending.
 - `docs/packet-tracer/sources/` is a historical archive. Its claims may be superseded by corrections in thematic notes.
 
 Active-session user instructions control the work. Do not treat a recommendation in the documentation as an irreversible user decision. Update documentation status when implementation or decisions change.

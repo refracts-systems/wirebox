@@ -93,6 +93,7 @@ User-provided directions recorded on 24 October 2026 are detailed in [verifiable
 
 The immediate priority remains real-system fidelity. Temporal claims depend on that fidelity, and corpus value depends on reproducible evidence. The initial local corpus exists; portable history, symbolic temporal verification, shared corpus hosting/contribution infrastructure, licensing, pricing, and certification remain unimplemented or undecided. The existing gate definitions still apply.
 
+The evidence policy is now accepted in [ADR-0014](../adr/0014-version-scoped-device-behavior-evidence.md). Phase 5 follow-up defines analysis/claim/combination contracts without rewriting existing Linux records. Phase 6 selects an exact RouterOS build and capability for targeted mechanism analysis and runtime tests; Phase 7 links adopted claims to semantic rules and independent comparisons. Phase 8 records ZTE board/component versions and separate Huawei/VSOL ONU combinations. Major-version baselines allocate investigation effort; support remains limited to tested builds, modes, and scenarios. Analysis dossiers and vendor schemas are not implemented, and this policy does not change gate results.
 
 ## How to execute the plan
 
