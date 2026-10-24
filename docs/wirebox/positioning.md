@@ -28,6 +28,12 @@ For the next operational use case, the initial vision proposes customer reachabi
 
 ## Limits of ambition
 
-The initial priority is a model that can be explained and tested on limited scenarios. Multi-vendor support, AI, full time travel, and production execution become expanded once the foundation is proven. There are no pricing decisions, business models, scale targets, or promises of vendor-wide support in these conversations.
+The initial priority is a model that can be explained and tested on limited scenarios. Multi-vendor support, AI, full time travel, and production execution expand once the foundation is proven. No pricing, commercial model, or scale target has been selected; vendor-wide support is not promised.
+
+## Proposed long-term differentiation
+
+On 24 October 2026, the user proposed two complementary directions: [verifiable network history](temporal-verification.md), covering incident history, intermediate change states, and conditional impact; and a [reproducible device behavior corpus](behavior-corpus.md), organized by model, firmware, and interoperability scope.
+
+The strategic hypothesis is that maintaining high-quality behavioral evidence can turn the cost of semantic fidelity into a durable advantage. An open engine with maintained datasets and scoped compatibility assessments is one business option to investigate. Neither uniqueness relative to competitors or research nor willingness to contribute or pay has been demonstrated. These proposals do not change the date or scope of the product-source checks in the comparison table above.
 
 [Roadmap](roadmap.md) translates the direction into stages with examineable results.

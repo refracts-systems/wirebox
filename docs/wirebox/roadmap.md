@@ -79,6 +79,20 @@ Beta proves workflow repeatability in a documented environment, including instal
 
 Development path: protocol fidelity, scale/performance, domain/vendor, intent automation, collaboration, and interoperability. Each path requires its own user requirements, contracts, comparison fixtures, and gates. Epic candidates are available at [todos](todos.md).
 
+## Proposed extensions: temporal verification and behavior evidence
+
+User-provided directions recorded on 24 October 2026 are detailed in [verifiable network history](temporal-verification.md) and the [device behavior corpus](behavior-corpus.md). They connect existing phases without marking additional capabilities complete:
+
+| Foundation | Proposed extension | Evidence required before claiming it |
+|---|---|---|
+| Phase 5 replay and lab comparison | Reproducible history and minimal behavioral records | Complete inputs, model/build provenance, reproducible mismatches, and declared replay limits |
+| Phase 6 observations | Queryable observed history | Observation intervals, identity, ordering/clock uncertainty, retention, and visible gaps |
+| Phase 7 shared model and Verify | Safe ordering of supported plan transitions | Transition semantics, relevant intermediate states/interleavings, counterexamples, and lab probes |
+| Phase 8 ISP service pilots | Multi-vendor service-transition evidence and initial corpus records | Exact OLT/board/ONU/router versions, operation scope, separate pairing tests, and consent for any shared data |
+| Later development | Incident queries, conditional impact, firmware comparisons, and possible compatibility assessments | Demonstrated operator demand, validated models, and explicit publication/review contracts |
+
+The immediate priority remains real-system fidelity. Temporal claims depend on that fidelity, and corpus value depends on reproducible evidence. These are proposed extensions; portable history, symbolic temporal verification, corpus infrastructure, licensing, pricing, and certification remain unimplemented or undecided. The existing gate definitions still apply.
+
 ## How to execute the plan
 
 Use one main phase as active work. Mark the task as complete once the artifact/evidence is available; Completion of implementation does not automatically pass the gate. Record the gate results as untested, passed, failed, or held and why.

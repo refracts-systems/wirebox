@@ -15,7 +15,7 @@ A network appears in many forms: diagrams, vendor CLI output, monitoring, config
 Wyrlex keeps that relationship in one model:
 
 ```text
-Infrastruktur = graph + state + behavior + constraints + time
+Infrastructure = graph + state + behavior + constraints + time
 ```
 
 For example, when a route changes, a user can inspect the changed object, the next-hop decision, affected packets, and simulation result before preparing the real change.
@@ -48,6 +48,8 @@ The main challenge is preserving consistent meaning between the model, simulator
 
 The differentiator to test is a traceable relationship from **intent → state → protocol decision → byte → result** in one workspace. That value remains a product hypothesis until usage demonstrates it.
 
+The user-proposed [temporal verification thesis](temporal-verification.md) extends this to network history, intermediate change states, and conditional future impact. A complementary [device behavior corpus proposal](behavior-corpus.md) treats reproducible knowledge of real model/firmware behavior as a long-term asset. Both are development directions, with their implementation, evidence, and business assumptions stated separately.
+
 ## Initial scope
 
 The PC1–SW1–R1–PC2 simulation runs headless and is connected to Studio: Ethernet, ARP, IPv4, ICMP, virtual time, and byte-change inspection. The next work is MVP acceptance and measurement, followed by checkpoint/replay, lab validation, and adapters in stages.
@@ -60,6 +62,7 @@ Emulation of every chipset, equivalence with every firmware version, support for
 - [Simulation](simulation.md) and the [byte tracker](byte-tracker.md): how behaviour is built and explained.
 - [Technology](technology.md): Zig/Rust and GPUI/GPUix considerations.
 - [Roadmap](roadmap.md) and [decisions](decisions.md): proposed work and choices still open.
+- [Temporal verification](temporal-verification.md) and the [behavior corpus](behavior-corpus.md): user-proposed directions for time-aware verification and evidence-backed vendor fidelity.
 - [Phase todos](todos.md) and the [pilot plan](pilot.md): checklists, scenarios, and success evidence for the PoC, MVP, Linux/MikroTik core pilot, and ZTE with Huawei/VSOL ONU pilot.
 
 The full vision source is the [initial Wyrlex document](../packet-tracer/sources/01-wirebox-vision.txt). Design additions in thematic documents are marked as proposals so they are not mistaken for user requirements or approved features.

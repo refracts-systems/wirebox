@@ -34,3 +34,9 @@ The first query is reachability, customer isolation, loops/blackholes, and rules
 4. Plan changes are compared as a set of reachability before/after; The mismatch stops at the CI gate.
 
 This proves the equality of the two interpreters of the Wyrlex model on the stated subset. This does not prove the behavior of the firmware, ASIC, or all vendor versions.
+
+## Proposed temporal extension
+
+The user-provided [temporal verification thesis](temporal-verification.md), recorded 24 October 2026, adds properties over histories and plan transitions: when reachability was lost, whether supported intermediate states preserve a service, and which services would be affected by an assumed failure. These capabilities are proposed extensions, not results of the current replay tests or an implemented symbolic engine.
+
+Transition verification needs explicit operation effects, ordering, asynchronous completion and failure semantics, packet-in-flight assumptions, and observation uncertainty. Checking the initial and final configurations, or one selected sequence of snapshots, does not prove safety across all relevant interleavings. The shared IR remains a foundation; the transition model needs its own contract and lab validation. The [behavior corpus proposal](behavior-corpus.md) would link those semantics to reproducible evidence per model and firmware.

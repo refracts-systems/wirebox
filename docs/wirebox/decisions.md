@@ -1,6 +1,6 @@
 # Decisions, preferences and open questions
 
-Notes until October 23, 2026. Exploratory conversations do not automatically become final decisions. This document differentiates user guidance, recommendations from discussions, as well as draft additions to clarify next steps.
+Notes through October 24, 2026. Exploratory conversations do not automatically become final decisions. This document differentiates user guidance, recommendations from discussions, as well as draft additions to clarify next steps.
 
 ## Recap of discussion
 
@@ -27,6 +27,8 @@ Notes until October 23, 2026. Exploratory conversations do not automatically bec
 | WB-19 | Initial implementation of Phase 4 | User requests, October 23, 2026 | Packet Studio with controller/snapshot, trace/field/byte, control, configuration branch and v1 session; [ADR-0008](../adr/0008-studio-network-controller.md). Native agent U1–U5 walkthrough completes after user authorizes desktop takeover; G4 has not yet passed the full |
 | WB-20 | Product identity | User decisions, October 24, 2026 | Active name becomes Wyrlex; package and environment use `wyrlex-*`/`WYRLEX_*`, while the ABI prefix `wb_*` and old artifact evidence are retained; [ADR-0011](../adr/0011-wyrlex-product-rename.md) |
 | WB-21 | Verify model sharing | User suggestions, October 24, 2026 | The simulator and verifier are driven using the same declarative IR, with differential gate and counterexample byte trace; [ADR-0012](../adr/0012-shared-verify-ir.md) |
+| WB-22 | Time as the fourth dimension | User-provided thesis; documentation requested October 24, 2026 | [Verifiable network history](temporal-verification.md): incident reconstruction, supported plan-transition verification, and conditional future impact. Local replay exists; historical/temporal verification remains proposed |
+| WB-23 | Device behavior corpus | User-provided strategic proposal; documentation requested October 24, 2026 | [Reproducible behavioral evidence](behavior-corpus.md) per model/firmware/interoperability pair. Corpus operations, commercial access, licensing, certification, and contribution policies remain undecided |
 
 ## Corrections that affect the design
 

@@ -33,6 +33,8 @@ This directory contains Wyrlex concepts, design direction, decisions, and develo
 - [Phase roadmap: PoC, MVP, pilot, beta, and future](wirebox/roadmap.md)
 - [Phase todos and work status](wirebox/todos.md)
 - [Verify design sharing an IR with the simulator](wirebox/verification.md)
+- [Time as a first-class dimension: verifiable network history](wirebox/temporal-verification.md)
+- [Device behavior corpus and long-term value hypothesis](wirebox/behavior-corpus.md)
 - [Pilot plan, test scenarios, and success measures](wirebox/pilot.md)
 - [Decisions, preferences, and open questions](wirebox/decisions.md)
 
