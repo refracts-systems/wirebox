@@ -1,6 +1,6 @@
 # Wyrlex documentation
 
-This directory contains Wyrlex concepts, design direction, decisions, and development evidence. Phases 0–3 are available, Packet Studio Phase 4 passed technical agent acceptance for its declared scope, and Phase 5 has local checkpoint/replay evidence. Initial Linux WSL2 comparisons are available in the behavior corpus; real-device adapters remain on the roadmap.
+This directory contains Wyrlex concepts, design direction, decisions, and development evidence. Phases 0–3 are available, Packet Studio Phase 4 passed technical agent acceptance for its declared scope, and G5 passes for scoped local checkpoint/replay and independent Linux WSL2 comparisons. Evidence-contract extensions and real-device adapters remain on the roadmap.
 
 ## Wyrlex
 
@@ -18,6 +18,7 @@ This directory contains Wyrlex concepts, design direction, decisions, and develo
 - [Initial Phase 4 integration and G4 limits](evidence/phase-4/README.md)
 - [Phase 5 checkpoint/replay and impairment evidence](evidence/phase-5/README.md)
 - [Phase 5 hardening, regressions, and replay matrix](evidence/phase-5-hardening/README.md)
+- [G5 assessment: replay, extended Linux comparison, and declared differences](evidence/phase-5-gate/README.md)
 - [Initial Linux WSL comparison and corpus evidence](evidence/corpus-linux/README.md)
 - [Behavior corpus structure, schemas, and reproduction](../corpus/README.md)
 - [G4 completion plan and path to a real pilot](wirebox/phase-4-plan.md)

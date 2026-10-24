@@ -556,6 +556,61 @@ pub fn demo(case: &str) -> Result<Value> {
     validate(&report, case)?;
     Ok(report_json(case, &report, true))
 }
+/// Export identical packet inputs for an independent Linux comparison. Invalid
+/// inputs enter at R1, matching the Ethernet-injection boundary in the lab.
+pub fn corpus_demo(case: &str) -> Result<Value> {
+    if matches!(case, "S01" | "S02" | "S03" | "S04") {
+        return demo(case);
+    }
+    if case == "R01" {
+        let mut value = demo("alias")?;
+        value["scenario"] = json!(case);
+        return Ok(value);
+    }
+    ensure(matches!(case, "N01" | "N02"), "unknown corpus case")?;
+    let mut valid = unhex("4500001c00010000400100000a0000020a0001020800000012340001")?;
+    if case == "N02" {
+        // ICMP checksums are evaluated at local delivery, not by every IP
+        // forwarder. Test R1's local address to make the boundary explicit.
+        valid[16..20].copy_from_slice(&ip("10.0.0.1")?.to_be_bytes());
+    }
+    let sum = checksum(&valid[..20]);
+    valid[10..12].copy_from_slice(&sum.to_be_bytes());
+    let sum = checksum(&valid[20..]);
+    valid[22..24].copy_from_slice(&sum.to_be_bytes());
+    let mut bad = valid.clone();
+    bad[if case == "N01" { 10 } else { 22 }] ^= 1;
+    let execute = |bytes: &[u8]| -> Result<Report> {
+        let (mut net, ids) = setup("S01", 1024)?;
+        net.inject(ids["R1:eth0"], 1, bytes)?;
+        let progress = net.run_until(5_000_000_000, 512)?;
+        ensure(progress.reason == 1, "corpus run did not finish")?;
+        collect(net, ids)
+    };
+    let invalid = execute(&bad)?;
+    ensure(
+        invalid.summary.outcome == 5
+            && invalid.summary.reason == if case == "N01" { 7 } else { 12 }
+            && invalid.summary.pending_events == 0
+            && invalid.txs.is_empty(),
+        "invalid checksum input was not rejected without transmission",
+    )?;
+    let control = execute(&valid)?;
+    // inject() has no outstanding ping correlation. Its reply reaches PC1 as
+    // unsolicited; inspect that reception rather than a ping summary outcome.
+    ensure(
+        control.summary.pending_events == 0
+            && control
+                .trace
+                .iter()
+                .any(|row| row.kind == 17 && row.reason == 107 && row.entity == control.ids["PC1"]),
+        "valid checksum control did not reach PC1",
+    )?;
+    let mut value = report_json(case, &invalid, true);
+    value["input_port"] = json!("R1:eth0");
+    value["control"] = report_json("valid_control", &control, true);
+    Ok(value)
+}
 pub fn check() -> Result<Value> {
     let mut cases = Vec::new();
     for case in ["S01", "S02", "S03", "S04", "S05", "alias"] {
@@ -591,6 +646,28 @@ pub fn check() -> Result<Value> {
 }
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn corpus_checksum_probes_reject_bad_bytes_and_deliver_valid_controls() {
+        for case in ["N01", "N02"] {
+            let output = super::corpus_demo(case).unwrap();
+            let bad = super::unhex(output["packets"][0]["hex"].as_str().unwrap()).unwrap();
+            let good =
+                super::unhex(output["control"]["packets"][0]["hex"].as_str().unwrap()).unwrap();
+            assert_eq!(super::checksum(&good[..20]), 0);
+            assert_eq!(super::checksum(&good[20..]), 0);
+            assert_eq!(super::checksum(&bad[..20]) == 0, case == "N02");
+            assert_eq!(super::checksum(&bad[20..]) == 0, case == "N01");
+            assert_eq!(output["control"]["pending_events"], 0);
+            assert!(
+                output["control"]["trace"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .any(|row| row["reason"] == "unsolicited_reply")
+            );
+        }
+        assert!(super::corpus_demo("unknown").is_err());
+    }
     #[test]
     fn frozen_network_scenarios_and_negative_inputs() {
         assert_eq!(super::check().unwrap()["result"], "pass");

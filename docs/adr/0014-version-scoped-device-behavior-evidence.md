@@ -223,7 +223,7 @@ As of 24 October 2026:
 - The same inventory reports a ZTE C320 and component version labels for GTXK, GTGHG, and SMXA boards. The physical-versus-simulated nature of the supplied CLI environment is unverified. No image hashes, analyzed firmware artifacts, or independently verified data-plane behavior are established.
 - Huawei and VSOL ONU model/hardware/firmware identities remain incomplete. The reported registration state does not establish those identities or a tested interoperability contract.
 - [Packet Tracer evidence](../packet-tracer/README.md) applies to its reported/inspected artifacts and scenarios. It remains a design/comparison reference and cannot serve as evidence for RouterOS, OLT, or ONU firmware internals.
-- Vendor analysis/claim/combination schemas, REA automation for this corpus, vendor observation adapters, and shared symbolic verification are not implemented by this ADR. Full G5 and G6–G8 remain open.
+- Vendor analysis/claim/combination schemas, REA automation for this corpus, vendor observation adapters, and shared symbolic verification are not implemented by this ADR. At adoption, G5 and G6–G8 were open. The subsequent [G5 assessment](../evidence/phase-5-gate/README.md) passes scoped replay/Linux comparisons; vendor dossiers, G6–G8, and the analysis/claim/combination schema extensions remain pending.
 
 ## Alternatives considered
 

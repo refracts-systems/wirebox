@@ -165,7 +165,7 @@ fn replay_matrix() -> Result<Value, Box<dyn Error>> {
     let mut incomplete_histories = 0;
     let mut unresolved_runs = 0;
     for case in ["S01", "S02", "S03", "S04", "S05", "alias"] {
-        for seed in [0, 1, 42, u64::MAX] {
+        for seed in [0, 1, 42, 20260117, u64::MAX] {
             for retention in [0, 1, 16, 1024] {
                 for (loss, jitter) in [(0, 0), (0, 10_000), (250_000, 10_000), (1_000_000, 0)] {
                     let mut baseline = start(case, seed, retention, loss, jitter)?;
@@ -189,37 +189,48 @@ fn replay_matrix() -> Result<Value, Box<dyn Error>> {
                         incomplete_histories += 1;
                     }
                     drop(baseline);
-                    for cut in [0, 1, 2, 6, 12] {
-                        let mut home = start(case, seed, retention, loss, jitter)?;
-                        home.run_until(5_000_000_000, cut)?;
-                        let checkpoint = home.checkpoint()?;
-                        let info = checkpoint.info()?;
-                        let at_cut = observable(&home)?;
-                        let mut branch = checkpoint.fork()?;
-                        drain(&mut branch)?;
-                        if observable(&home)? != at_cut || checkpoint.info()? != info {
-                            return Err("fork mutated home or immutable checkpoint".into());
-                        }
-                        drain(&mut home)?;
-                        for (label, actual) in
-                            [("home", observable(&home)?), ("fork", observable(&branch)?)]
-                        {
-                            if let Some(diff) = expected.difference(&actual) {
-                                return Err(format!("{case} seed={seed} retention={retention} loss={loss} jitter={jitter} cut={cut}: {label} differs at {diff}").into());
+                    // The pilot contract requires three repetitions at five
+                    // seeds. Repeat both uninterrupted and checkpoint paths.
+                    for repetition in 0..3 {
+                        if repetition > 0 {
+                            let mut repeated = start(case, seed, retention, loss, jitter)?;
+                            drain(&mut repeated)?;
+                            if let Some(diff) = expected.difference(&observable(&repeated)?) {
+                                return Err(format!("{case} seed={seed} repeat={repetition}: uninterrupted run differs at {diff}").into());
                             }
                         }
-                        home.restore(&checkpoint)?;
-                        if observable(&home)? != at_cut {
-                            return Err("restore did not recover checkpoint observables".into());
+                        for cut in [0, 1, 2, 6, 12] {
+                            let mut home = start(case, seed, retention, loss, jitter)?;
+                            home.run_until(5_000_000_000, cut)?;
+                            let checkpoint = home.checkpoint()?;
+                            let info = checkpoint.info()?;
+                            let at_cut = observable(&home)?;
+                            let mut branch = checkpoint.fork()?;
+                            drain(&mut branch)?;
+                            if observable(&home)? != at_cut || checkpoint.info()? != info {
+                                return Err("fork mutated home or immutable checkpoint".into());
+                            }
+                            drain(&mut home)?;
+                            for (label, actual) in
+                                [("home", observable(&home)?), ("fork", observable(&branch)?)]
+                            {
+                                if let Some(diff) = expected.difference(&actual) {
+                                    return Err(format!("{case} seed={seed} retention={retention} loss={loss} jitter={jitter} cut={cut}: {label} differs at {diff}").into());
+                                }
+                            }
+                            home.restore(&checkpoint)?;
+                            if observable(&home)? != at_cut {
+                                return Err("restore did not recover checkpoint observables".into());
+                            }
+                            drain(&mut home)?;
+                            if let Some(diff) = expected.difference(&observable(&home)?) {
+                                return Err(format!(
+                                    "{case} seed={seed} cut={cut}: restore differs at {diff}"
+                                )
+                                .into());
+                            }
+                            comparisons += 1;
                         }
-                        drain(&mut home)?;
-                        if let Some(diff) = expected.difference(&observable(&home)?) {
-                            return Err(format!(
-                                "{case} seed={seed} cut={cut}: restore differs at {diff}"
-                            )
-                            .into());
-                        }
-                        comparisons += 1;
                     }
                 }
             }
@@ -236,7 +247,9 @@ fn replay_matrix() -> Result<Value, Box<dyn Error>> {
     }
     Ok(
         json!({"checkpoint_cases": comparisons, "continuations_compared": comparisons * 3,
-        "scenarios": 6, "seeds": 4, "retention_capacities": [0,1,16,1024],
+        "scenarios": 6, "seeds": 5, "seed_values": [0,1,42,20260117,u64::MAX],
+        "repetitions_per_case": 3, "uninterrupted_runs_compared": 1440,
+        "retention_capacities": [0,1,16,1024],
         "impairments": 4, "cut_budgets": [0,1,2,6,12],
         "incomplete_baseline_histories": incomplete_histories,
         "unresolved_baseline_outcomes": unresolved_runs,
@@ -300,7 +313,7 @@ pub fn check() -> Result<Value, Box<dyn Error>> {
     Ok(json!({
         "phase": 5,
         "replay_matrix": matrix,
-        "g5_status": "incomplete; Linux capture and comparison not run",
+        "g5_status": "local replay only; independent lab evidence is assessed separately",
         "result": "pass",
         "checkpoint": {
             "model_version": checkpoint_info.model_version,
@@ -320,7 +333,7 @@ pub fn check() -> Result<Value, Box<dyn Error>> {
             "outcome": loss_summary.outcome,
             "reason": loss_summary.reason
         },
-        "lab_comparison": "not_run",
+        "lab_comparison": "not_executed_by_this_command",
         "scope": "value-owned checkpoint, active ARP queue, deterministic PRNG impairment"
     }))
 }

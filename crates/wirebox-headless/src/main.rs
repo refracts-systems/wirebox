@@ -15,6 +15,13 @@ fn run() -> Result<(), Box<dyn Error>> {
         println!("{}", serde_json::to_string_pretty(&phase5::check()?)?);
         return Ok(());
     }
+    if args.first().is_some_and(|arg| arg == "--corpus-demo") && args.len() == 2 {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&packet_demo::corpus_demo(&args[1])?)?
+        );
+        return Ok(());
+    }
     if args.first().is_some_and(|arg| arg == "--packet-demo") && args.len() <= 2 {
         println!(
             "{}",
@@ -39,7 +46,7 @@ fn run() -> Result<(), Box<dyn Error>> {
     }
     if !args.is_empty() && args != ["--probe"] {
         return Err(
-            "usage: wyrlex-headless [--probe | --check-fixtures | --scheduler-demo | --check-runtime | --packet-demo [S01..S05|alias] | --check-network | --check-phase5]"
+            "usage: wyrlex-headless [--probe | --check-fixtures | --scheduler-demo | --check-runtime | --packet-demo [S01..S05|alias] | --corpus-demo S01|S02|S03|S04|R01|N01|N02 | --check-network | --check-phase5]"
                 .into(),
         );
     }

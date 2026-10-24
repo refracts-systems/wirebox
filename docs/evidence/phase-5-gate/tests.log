@@ -1,0 +1,29 @@
+test_capture_drops_are_not_accepted (test_corpus.CorpusTests.test_capture_drops_are_not_accepted) ... ok
+test_classifier_revision_preserves_initial_instrumentation_failure (test_corpus.CorpusTests.test_classifier_revision_preserves_initial_instrumentation_failure) ... ok
+test_comparator_revision_cannot_be_switched_under_existing_scenario (test_corpus.CorpusTests.test_comparator_revision_cannot_be_switched_under_existing_scenario) ... ok
+test_corrupt_capture_rejected_by_hash (test_corpus.CorpusTests.test_corrupt_capture_rejected_by_hash) ... ok
+test_environment_path_components_are_sanitized (test_corpus.CorpusTests.test_environment_path_components_are_sanitized) ... ok
+test_fabricated_check_actual_is_rejected_after_rehash (test_corpus.CorpusTests.test_fabricated_check_actual_is_rejected_after_rehash) ... ok
+test_missing_case_cannot_pass_after_report_is_rehashed (test_corpus.CorpusTests.test_missing_case_cannot_pass_after_report_is_rehashed) ... ok
+test_missing_required_invariant_is_rejected (test_corpus.CorpusTests.test_missing_required_invariant_is_rejected) ... ok
+test_no_capture_cannot_be_a_success (test_corpus.CorpusTests.test_no_capture_cannot_be_a_success) ... ok
+test_path_traversal_absolute_and_windows_paths_are_rejected (test_corpus.CorpusTests.test_path_traversal_absolute_and_windows_paths_are_rejected) ... ok
+test_rehashed_pcap_still_must_match_jsonl (test_corpus.CorpusTests.test_rehashed_pcap_still_must_match_jsonl) ... ok
+test_successful_record_and_known_failed_record_remain_distinct (test_corpus.CorpusTests.test_successful_record_and_known_failed_record_remain_distinct) ... ok
+test_unknown_schema_version_is_rejected (test_corpus.CorpusTests.test_unknown_schema_version_is_rejected) ... ok
+test_wrong_ttl_with_correct_checksum_is_rejected (test_corpus.CorpusTests.test_wrong_ttl_with_correct_checksum_is_rejected) ... ok
+test_all_extended_cases_reproduce_with_required_invariants (test_corpus.ExtendedCorpusTests.test_all_extended_cases_reproduce_with_required_invariants) ... ok
+test_arp_answer_contradicts_no_answer_case (test_corpus.ExtendedCorpusTests.test_arp_answer_contradicts_no_answer_case) ... ok
+test_arp_ignore_precondition_is_checked (test_corpus.ExtendedCorpusTests.test_arp_ignore_precondition_is_checked) ... ok
+test_missing_healthy_control_reply_is_rejected (test_corpus.ExtendedCorpusTests.test_missing_healthy_control_reply_is_rejected) ... ok
+test_missing_invalid_ingress_cannot_be_mistaken_for_silent_rejection (test_corpus.ExtendedCorpusTests.test_missing_invalid_ingress_cannot_be_mistaken_for_silent_rejection) ... ok
+test_new_schema_does_not_expand_old_case_contract (test_corpus.ExtendedCorpusTests.test_new_schema_does_not_expand_old_case_contract) ... ok
+test_repaired_checksum_at_ingress_is_detected (test_corpus.ExtendedCorpusTests.test_repaired_checksum_at_ingress_is_detected) ... ok
+test_route_change_must_happen_between_probes (test_corpus.ExtendedCorpusTests.test_route_change_must_happen_between_probes) ... ok
+test_route_recovery_without_prior_failure_is_rejected (test_corpus.ExtendedCorpusTests.test_route_recovery_without_prior_failure_is_rejected) ... ok
+test_short_silence_window_is_rejected (test_corpus.ExtendedCorpusTests.test_short_silence_window_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 87.337s
+
+OK

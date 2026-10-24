@@ -31,3 +31,5 @@ Catatan Phase 5 menjelaskan implementasi checkpoint dan controlled impairment ya
 [Hardening Phase 5](phase_5/phase_5_hardening.md) membahas dua regression test yang gagal sebelum perbaikan, titik commit PRNG, lifecycle checkpoint, dan matriks replay.
 
 [Corpus dan pembanding Linux di WSL](phase_5/phase_5_corpus_linux.md) menjelaskan manifest append-only, identitas versi, capture kernel Linux, revisi classifier, dan test yang menolak false success.
+
+[Penutupan G5 dengan pembanding Linux](phase_5/phase_5_g5_linux_validation.md) membahas paket checksum salah, positive control, urutan pemulihan route, perbedaan ARP, dan lima seed/tiga pengulangan replay.

@@ -1,0 +1,22 @@
+{
+  "probes": [
+    {
+      "name": "before",
+      "input_hex": "4500001c00010000400146a90a000002c63364020800e5ca12340001",
+      "start_ns": 45550444245779,
+      "end_ns": 45551547485554,
+      "sent_via": "AF_INET IP_HDRINCL pc1:eth0"
+    },
+    {
+      "name": "after",
+      "input_hex": "4500001c00010000400146a90a000002c63364020800e5ca12340001",
+      "start_ns": 45551550221402,
+      "end_ns": 45551630491725,
+      "sent_via": "AF_INET IP_HDRINCL pc1:eth0"
+    }
+  ],
+  "route_add": {
+    "start_ns": 45551547498208,
+    "end_ns": 45551550218356
+  }
+}

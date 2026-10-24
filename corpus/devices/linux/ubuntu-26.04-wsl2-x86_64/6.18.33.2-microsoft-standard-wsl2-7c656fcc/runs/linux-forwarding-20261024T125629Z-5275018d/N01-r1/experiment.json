@@ -1,0 +1,18 @@
+{
+  "probes": [
+    {
+      "name": "primary",
+      "input_hex": "4500001c00010000400164dd0a0000020a0001020800e5ca12340001",
+      "start_ns": 45556924276937,
+      "end_ns": 45558026930243,
+      "sent_via": "AF_PACKET sw1:p1"
+    },
+    {
+      "name": "control",
+      "input_hex": "4500001c00010000400165dd0a0000020a0001020800e5ca12340001",
+      "start_ns": 45558026972904,
+      "end_ns": 45558129526407,
+      "sent_via": "AF_PACKET sw1:p1"
+    }
+  ]
+}

@@ -4,7 +4,7 @@ Wyrlex is an **infrastructure studio and runtime built around a shared semantic 
 
 *Semantic* means that the model expresses meaning: interfaces, routes, VLANs, services, dependencies, and device capabilities. A vendor CLI or management protocol is one way to read or change those objects.
 
-Updated 24 October 2026. The build foundation, Zig/Rust/GPUI boundary, graph and virtual-time runtime, and [headless packet simulation](packets.md) are available. Ethernet/ARP/IPv4/ICMP, static routing, and byte versions were tested at [G3](../evidence/phase-3/README.md). The initial [Packet Studio](studio.md) integration connects trace/byte data to UI controls; [Phase 4 technical agent acceptance](../evidence/phase-4-acceptance/README.md) passed for the declared fixture and handler-to-render scope, while human usability remains unknown. [Phase 5 local checkpoint/replay](../evidence/phase-5/README.md) now covers active ARP state, fork/restore, and seeded impairment; initial [Linux WSL2 comparisons](../evidence/corpus-linux/README.md) cover S01–S03, while real-device adapters remain on the roadmap. Earlier evidence is in [Phase 0/1](../evidence/phase-0-1/README.md) and [Phase 2](../evidence/phase-2/README.md).
+Updated 24 October 2026. The build foundation, Zig/Rust/GPUI boundary, graph and virtual-time runtime, and [headless packet simulation](packets.md) are available. Ethernet/ARP/IPv4/ICMP, static routing, and byte versions were tested at [G3](../evidence/phase-3/README.md). The initial [Packet Studio](studio.md) integration connects trace/byte data to UI controls; [Phase 4 technical agent acceptance](../evidence/phase-4-acceptance/README.md) passed for the declared fixture and handler-to-render scope, while human usability remains unknown. [Phase 5 local checkpoint/replay](../evidence/phase-5/README.md) now covers active ARP state, fork/restore, and seeded impairment; [G5 passed for scoped replay and Linux WSL2 comparisons](../evidence/phase-5-gate/README.md), including ARP failure policy, route recovery, and checksum rejection. Evidence-contract extensions and real-device adapters remain on the roadmap. Earlier evidence is in [Phase 0/1](../evidence/phase-0-1/README.md) and [Phase 2](../evidence/phase-2/README.md).
 
 Wyrlex does not recreate an operating system. *Kernel* means the simulation engine core; Linux, RouterOS, and device firmware remain their own systems in a real lab.
 
@@ -52,7 +52,7 @@ The user-proposed [temporal verification thesis](temporal-verification.md) exten
 
 ## Initial scope
 
-The PC1–SW1–R1–PC2 simulation runs headless and is connected to Studio: Ethernet, ARP, IPv4, ICMP, virtual time, and byte-change inspection. The next work is MVP acceptance and measurement, followed by checkpoint/replay, lab validation, and adapters in stages.
+The PC1–SW1–R1–PC2 simulation runs headless and is connected to Studio: Ethernet, ARP, IPv4, ICMP, virtual time, and byte-change inspection. Technical G4 and scoped G5 assessments are available. The next work is evidence-contract extensions and Phase 6 observations, followed by adapters and vendor pilots in stages.
 
 Emulation of every chipset, equivalence with every firmware version, support for every vendor, firmware-upgrade simulation, and universal rollback are not product promises. Successful `.pkt` import is not a prerequisite for the standalone engine.
 

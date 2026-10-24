@@ -69,15 +69,15 @@ Gate G4 / MVP: diagnosis–change–comparison workflow can be completed via the
 - [x] P5-03 — Add controlled loss/jitter and record input noise; the same seed produces the same observable run.
 - [x] P5-04 — Test checkpoint while ARP/timer/buffer is still active; compare state and continuation with run without restore.
 - [x] P5-05 — Linux WSL2 namespace fixture, AF_PACKET capture, versioned corpus record, and comparator available. S01–S03 each repeated three times; [scope and evidence](../evidence/corpus-linux/README.md). No containerlab dependency.
-- [ ] P5-06 — Initial independent Linux comparison passes for S01–S03 with explicit byte/semantic checks and normalization. Broader negative/ARP-failure policy comparisons remain open. [Linux evidence](../evidence/corpus-linux/README.md); [local replay hardening](../evidence/phase-5-hardening/README.md).
-- [ ] P5-07 — Bounded checkpoint retention and incomplete-history behavior are documented and tested locally; final G5 report and gate assessment remain pending broader comparison coverage. [Local Phase 5 evidence](../evidence/phase-5/README.md).
+- [x] P5-06 — Extended Linux comparison passes 21/21 repetitions and 186 invariant checks across S01–S04, route recovery R01, and checksum faults N01/N02 with healthy controls. ARP failure-policy differences and timing/byte exclusions remain explicit; [G5 assessment](../evidence/phase-5-gate/README.md).
+- [x] P5-07 — [Scoped G5 assessment](../evidence/phase-5-gate/README.md) passes: five seeds, three repetitions, 7,200 checkpoint cases and 21,600 exact continuations, plus independent Linux comparisons. Retained-history gaps, unresolved loss outcomes, and declared Linux/model differences remain visible.
 - [ ] P5-08 — Implement versioned analysis-dossier, behavior-claim, and interoperability evidence contracts/validation under [ADR-0014](../adr/0014-version-scoped-device-behavior-evidence.md). Preserve existing Linux target/run identities and verify historical-record compatibility. This evidence extension does not retroactively change the G5 experiment contract.
 
 Gate G5: identical replay in the stated environment and behavior according to the comparator in scope. This does not guarantee replay across all engine versions.
 
 ## Phase 6 — Observe Linux and MikroTik
 
-- [ ] P6-01 — Complete the Linux fixture/version matrix as well as RouterOS from the available lab tools.
+- [ ] P6-01 — Complete the Linux fixture/version matrix as well as RouterOS from the available lab tools. Inventory reminder: the user deferred MikroTik details on 24 October 2026; ask again at the start of the MikroTik baseline for model/CHR, exact build, architecture, VM/physical context, and local image path if available. No credentials are needed for this inventory.
 - [ ] P6-02 — Create a discover/observe/capabilities adapter contract with stable identity and provenance.
 - [ ] P6-03 — Implement the required topology/interface/address/route reading on Linux and MikroTik; Store selected observations as sanitized fixtures.
 - [ ] P6-04 — Handle timeouts, insufficient permissions, stale data, conflicting observations, and unavailable capabilities.
@@ -152,7 +152,7 @@ Gate G10: set per epic; One demo does not reveal all future capabilities. If the
 
 The execution sequence, output and completion criteria are outlined in [G4 closing plan, 24 October 2026](phase-4-plan.md). This plan has not changed the checklist status or gate results below.
 
-P4-04 and P4-06 have been tested by the agent according to user instructions. P4-07 complete measurement and soak; [evidence acceptance](../evidence/phase-4-acceptance/README.md). G4 technical agent passes the scope of ADR-0010. Phase 5 local checkpoint/replay and impairment are implemented, and initial Linux WSL2 capture/comparison is available for S01–S03. The next open job is broader negative/ARP-failure comparison coverage and the final G5 assessment. P0–P3 and local P5 remain local baselines, not vendor G5 benchmarks. Complete access/firmware separately before P6/P8.
+P4-04 and P4-06 have been tested by the agent according to user instructions. P4-07 complete measurement and soak; [evidence acceptance](../evidence/phase-4-acceptance/README.md). G4 technical agent passes the scope of ADR-0010. [Scoped G5 passes](../evidence/phase-5-gate/README.md) for local checkpoint/replay and expanded Linux comparison. The next open jobs are P5-08 evidence-contract extensions and Phase 6 preparation. These results are not vendor conformance or core/ISP pilot passes. Complete access/firmware separately before P6/P8.
 
 To complete the task, add the change/artifact link and verification results. For gates, use the result record in [pilot](pilot.md). This plan does not constitute authorization to change the device outside the lab/service that will be determined later.
 

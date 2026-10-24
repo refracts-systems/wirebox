@@ -1,0 +1,11 @@
+{
+  "probes": [
+    {
+      "name": "primary",
+      "input_hex": "4500001c000100000101a4dd0a0000020a0001020800e5ca12340001",
+      "start_ns": 45532892326274,
+      "end_ns": 45534003226423,
+      "sent_via": "AF_INET IP_HDRINCL pc1:eth0"
+    }
+  ]
+}

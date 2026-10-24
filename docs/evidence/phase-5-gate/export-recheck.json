@@ -1,0 +1,34 @@
+{
+  "record": "corpus/devices/linux/ubuntu-26.04-wsl2-x86_64/6.18.33.2-microsoft-standard-wsl2-7c656fcc/runs/linux-forwarding-20261024T125629Z-5275018d/record.json",
+  "reason": "Replay-oracle repetitions and status text changed after capture; all current packet exports remain identical.",
+  "checks": [
+    {
+      "case": "S01",
+      "exact_json_match": true
+    },
+    {
+      "case": "S02",
+      "exact_json_match": true
+    },
+    {
+      "case": "S03",
+      "exact_json_match": true
+    },
+    {
+      "case": "S04",
+      "exact_json_match": true
+    },
+    {
+      "case": "R01",
+      "exact_json_match": true
+    },
+    {
+      "case": "N01",
+      "exact_json_match": true
+    },
+    {
+      "case": "N02",
+      "exact_json_match": true
+    }
+  ]
+}

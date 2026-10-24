@@ -12,8 +12,8 @@ try {
     & cargo build --locked -p wyrlex-headless
     if ($LASTEXITCODE -ne 0) { throw 'Headless build failed' }
     $exe = Join-Path $repo 'target/debug/wyrlex-headless.exe'
-    foreach ($case in @('S01', 'S02', 'S03')) {
-        $output = & $exe --packet-demo $case
+    foreach ($case in @('S01', 'S02', 'S03', 'S04', 'R01', 'N01', 'N02')) {
+        $output = & $exe --corpus-demo $case
         if ($LASTEXITCODE -ne 0) { throw "Simulator export failed: $case" }
         $output | Out-File -Encoding utf8 (Join-Path $inputDir "$case.json")
     }
@@ -25,7 +25,7 @@ try {
     $provenance = @{
         committed_baseline = (& git rev-parse HEAD).Trim()
         working_tree_dirty = [bool](& git status --porcelain)
-        simulator_command = 'wyrlex-headless.exe --packet-demo S01|S02|S03'
+        simulator_command = 'wyrlex-headless.exe --corpus-demo S01|S02|S03|S04|R01|N01|N02'
         simulator_platform = 'Windows x64 MSVC'
         rust_version = (& rustc --version).Trim()
         zig_version = '0.17.0 (enforced by Cargo build script)'

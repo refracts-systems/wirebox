@@ -16,7 +16,7 @@ ADRs record context, decisions, alternatives, consequences, and implementation s
 | [0010](0010-agent-acceptance-and-studio-measurement.md) | Agent acceptance and Studio measurement | Accepted 24 October 2026 for the declared fixture scope |
 | [0011](0011-wyrlex-product-rename.md) | Wyrlex product identity with `wb_*` ABI compatibility | Accepted 24 October 2026; migration active |
 | [0012](0012-shared-verify-ir.md) | Declarative IR shared by the simulator and Verify | Proposed for Phases 5–7 |
-| [0013](0013-phase-5-checkpoint-and-impairment.md) | Value-owned checkpoints and deterministic impairment | Accepted; local replay and initial Linux comparisons available, broader G5 assessment remains open |
+| [0013](0013-phase-5-checkpoint-and-impairment.md) | Value-owned checkpoints and deterministic impairment | Accepted; [G5 passes for scoped replay and Linux comparisons](../evidence/phase-5-gate/README.md) |
 | [0014](0014-version-scoped-device-behavior-evidence.md) | Exact-build device/firmware reverse engineering, runtime evidence, and interoperability claims | Accepted 24 October 2026 as policy; vendor dossiers and schema extensions remain pending |
 
 Decision dates are 20–24 October 2026, as recorded in each ADR. Actual results are in [Phase 0–1 evidence](../evidence/phase-0-1/README.md) and [initial Phase 4 integration](../evidence/phase-4/README.md). Scope is in the [Phase 0 contract](../wirebox/phase-0-contract.md), and the work checklist is in [todos](../wirebox/todos.md).

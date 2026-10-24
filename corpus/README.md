@@ -43,6 +43,7 @@ Target: [Linux identity and tool versions](devices/linux/ubuntu-26.04-wsl2-x86_6
 |---|---|---|
 | [Initial capture](devices/linux/ubuntu-26.04-wsl2-x86_64/6.18.33.2-microsoft-standard-wsl2-7c656fcc/runs/linux-forwarding-20261024T073901Z-981dc0dc/record.json) | `linux-static-ipv4-v1`, comparator revision 1 | Failure in 4 of 9 comparisons: the classifier treated unrelated bridge IGMP reports as ICMP input. This is an instrumentation defect, not a vendor defect. Artifacts and original results are preserved |
 | [Repeated experiment](devices/linux/ubuntu-26.04-wsl2-x86_64/6.18.33.2-microsoft-standard-wsl2-7c656fcc/runs/linux-forwarding-20261024T074115Z-f8a8526f/record.json) | `linux-static-ipv4-v2`, comparator revision 2 | 9 of 9 comparisons pass: healthy ping, missing route, and expired TTL, each repeated three times |
+| [Expanded G5 experiment](devices/linux/ubuntu-26.04-wsl2-x86_64/6.18.33.2-microsoft-standard-wsl2-7c656fcc/runs/linux-forwarding-20261024T125629Z-5275018d/record.json) | `linux-static-ipv4-v3`, comparator revision 3, scenario/comparison schemas v2 | 21 of 21 repetitions and 186 checks pass: adds unanswered ARP policy, route recovery, and two checksum faults with healthy controls |
 
 Revision 2 explicitly excludes unrelated multicast IGMP membership reports from the ICMP comparison and reports how many were ignored. It does not change expected ICMP behavior or rewrite the first record. The scenario/comparator revision pair is validated. Archived runner sources describe the tools at capture time; the current validator can replay both comparison revisions without executing arbitrary archived code.
 
@@ -56,7 +57,7 @@ From PowerShell at the repository root:
 ./scripts/corpus/run-linux-lab.ps1 -Distro Ubuntu-26.04 -Repetitions 3
 ```
 
-The runner builds `wyrlex-headless`, exports S01–S03, and starts a Linux experiment as root inside the specified WSL distribution. It requires Python, iproute2, Linux network namespaces/veth/bridge/AF_PACKET support, and the distro's `jsonschema` package. Tested tool versions are recorded in the target; the runner does not install packages.
+The runner builds `wyrlex-headless`, exports S01–S04/R01/N01/N02 through `--corpus-demo`, and starts a Linux experiment as root inside the specified WSL distribution. It requires Python, iproute2, Linux network namespaces/veth/bridge/AF_PACKET support, and the distro's `jsonschema` package. Tested tool versions are recorded in the target; the runner does not install packages.
 
 Each experiment creates its own four namespaces and private veth/bridge topology. No physical or WSL host interface is attached. Configuration, observations, and captures contain synthetic test-network data. Capture workers stop and the namespaces are deleted on normal completion or a handled exception. A forcibly terminated runner can require cleanup of its recorded namespace names; inspect its `commands.json` before removing anything.
 
@@ -75,6 +76,10 @@ Hashes establish content integrity, not authenticity of an external measurement 
 
 The same original IPv4 bytes from each simulator scenario are sent through Linux with `IP_HDRINCL`. Linux independently resolves ARP, bridges, routes, decrements TTL, and generates echo replies or ICMP errors. The comparator checks router ingress bytes, the ICMP response received by the source, valid checksums, forwarding or absence of forwarding, Ethernet rewrite, and ICMP payload/error quote.
 
-Ethernet padding is excluded. Generated response IP identification differs between stacks; each actual header checksum must still validate. Linux capture time and simulator virtual time are different clocks, so no timing equality is claimed. ARP retry timing, loss/jitter distributions, malformed-input policy, vendor firmware, and optical behavior are outside this initial contract.
+Ethernet padding is excluded. Generated response IP identification differs between stacks; each actual header checksum must still validate. Linux capture time and simulator virtual time are different clocks, so no timing equality is claimed. ARP retry timing, loss/jitter distributions, general malformed-input policy, vendor firmware, and optical behavior are outside the initial S01–S03 contract.
 
-The [evidence report](../docs/evidence/corpus-linux/README.md) records results and remaining G5 work. This corpus does not by itself complete G5, G6, or a vendor pilot.
+The v3 contract adds a bounded no-ARP-answer case, route failure/recovery in one namespace lifetime, and checksum faults injected as Ethernet so Linux cannot repair the input before R1 sees it. Probe windows, exact ingress bytes, pre/post configuration, no capture drops, and same-path healthy controls are required. Schema/validator dispatch retains v1/v2 comparisons; new cases do not expand old schemas.
+
+ARP output differs explicitly: Linux emits ICMP 3/1, while Wyrlex reports internal `arp_timeout` without generating that message. The Linux peer stays up with `arp_ignore=8`; Wyrlex's peer port is disabled. Only the declared no-answer/failure scope is compared. Checksum silence is bounded to at least one second and followed by a valid control, not inferred from an empty capture. N02 targets R1 local delivery; corrupted-ICMP forwarding is outside the result.
+
+The [initial evidence report](../docs/evidence/corpus-linux/README.md) remains historical. The [G5 assessment](../docs/evidence/phase-5-gate/README.md) now passes scoped replay/Linux comparison, including five replay seeds and three repetitions. A corpus record alone does not pass a gate; G6, vendor pilots, and ADR-0014 analysis/claim/combination schema extensions remain open.

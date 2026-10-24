@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:wyrlex:corpus:comparison:v2",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "scenario_id",
+    "status",
+    "comparisons",
+    "scope",
+    "comparator_revision"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+    },
+    "status": {
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    },
+    "comparisons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "case",
+          "repetition",
+          "status",
+          "checks",
+          "mismatches"
+        ],
+        "properties": {
+          "case": {
+            "enum": [
+              "S01",
+              "S02",
+              "S03",
+              "S04",
+              "R01",
+              "N01",
+              "N02"
+            ]
+          },
+          "repetition": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "status": {
+            "enum": [
+              "pass",
+              "fail"
+            ]
+          },
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "passed",
+                "expected",
+                "actual"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "passed": {
+                  "type": "boolean"
+                },
+                "expected": {},
+                "actual": {}
+              },
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "mismatches": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "comparator_revision": {
+      "const": 3
+    }
+  },
+  "additionalProperties": false
+}

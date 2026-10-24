@@ -43,7 +43,14 @@ def check_hash(base, item):
 
 
 def schema(repo, kind, value):
-    definition = read(repo / f"corpus/schema/{kind}-v1.schema.json")
+    version = value.get("schema_version")
+    allowed = {"target": (1,), "record": (1,), "scenario": (1, 2), "comparison": (1, 2)}
+    if version not in allowed[kind]:
+        # Keep schema failures typed, including unsupported future versions.
+        definition = read(repo / f"corpus/schema/{kind}-v1.schema.json")
+        Draft202012Validator(definition).validate(value)
+        raise ValueError("unsupported schema version")
+    definition = read(repo / f"corpus/schema/{kind}-v{version}.schema.json")
     Draft202012Validator.check_schema(definition)
     Draft202012Validator(definition, format_checker=FormatChecker()).validate(value)
 
@@ -95,14 +102,17 @@ def validate_record(repo, record_path, require_pass=False):
     comparison = read(safe_path(folder, record["comparison"]))
     schema(repo, "comparison", comparison)
     require(comparison["scenario_id"] == record["scenario_id"], "comparison scenario mismatch")
-    revision = {"linux-static-ipv4-v1": 1, "linux-static-ipv4-v2": 2}.get(record["scenario_id"])
+    revision = {"linux-static-ipv4-v1": 1, "linux-static-ipv4-v2": 2, "linux-static-ipv4-v3": 3}.get(record["scenario_id"])
     require(revision is not None and comparison.get("comparator_revision", 1) == revision,
             "scenario and comparator revisions differ")
     expected_pairs = {(case, rep) for case in scenario["cases"] for rep in range(1, record["repetitions"] + 1)}
     pairs = [(c["case"], c["repetition"]) for c in comparison["comparisons"]]
     require(set(pairs) == expected_pairs and len(pairs) == len(expected_pairs), "missing or duplicate case repetitions")
-    required_checks = set(scenario["comparison_policy"]["required"]) | {"fixture_outcome"}
+    require(scenario["schema_version"] == comparison["schema_version"] == (2 if revision == 3 else 1),
+            "scenario and comparison schema versions differ")
     for result in comparison["comparisons"]:
+        required_checks = set(scenario["comparison_policy"]["required"][result["case"]]) if revision == 3 else (
+            set(scenario["comparison_policy"]["required"]) | {"fixture_outcome"})
         names = [c["name"] for c in result["checks"]]
         require(set(names) == required_checks and len(names) == len(required_checks), "missing or duplicate invariant check")
         case_dir = folder / f"{result['case']}-r{result['repetition']}"
@@ -116,8 +126,13 @@ def validate_record(repo, record_path, require_pass=False):
             stats.append(stat)
         cleanup = read(case_dir / "cleanup.json")
         require(cleanup == {"complete": True, "failed_namespaces": []}, "namespace cleanup incomplete")
+        context = None
+        if revision == 3:
+            context = {"experiment": read(case_dir / "experiment.json"), "observed": read(case_dir / "observed.json")}
+            if result["case"] == "R01":
+                context["before_simulator"] = read(folder / "S02.json")
         rebuilt = compare_case(result["case"], read(folder / f"{result['case']}.json"), captures, stats, scenario,
-                               revision=revision)
+                               revision=revision, context=context)
         rebuilt["repetition"] = result["repetition"]
         require(rebuilt == result, "comparison does not reproduce from captured artifacts")
     status = "pass" if all(r["status"] == "pass" for r in comparison["comparisons"]) else "fail"

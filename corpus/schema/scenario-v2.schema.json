@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:wyrlex:corpus:scenario:v2",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "scenario_id",
+    "description",
+    "fixture",
+    "cases",
+    "expected",
+    "comparison_policy"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "scenario_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fixture": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "S01",
+          "S02",
+          "S03",
+          "S04",
+          "R01",
+          "N01",
+          "N02"
+        ]
+      }
+    },
+    "expected": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "outcome",
+          "icmp_type",
+          "icmp_code",
+          "forwarded_ttl"
+        ],
+        "properties": {
+          "outcome": {
+            "enum": [
+              "echo_reply",
+              "unreachable",
+              "time_exceeded",
+              "arp_timeout",
+              "invalid_packet"
+            ]
+          },
+          "icmp_type": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "icmp_code": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "forwarded_ttl": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "comparison_policy": {
+      "type": "object",
+      "required": [
+        "required",
+        "normalization",
+        "excluded"
+      ],
+      "properties": {
+        "required": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "normalization": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "excluded": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

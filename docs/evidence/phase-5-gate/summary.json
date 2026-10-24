@@ -1,0 +1,57 @@
+{
+  "record": {
+    "path": "corpus/devices/linux/ubuntu-26.04-wsl2-x86_64/6.18.33.2-microsoft-standard-wsl2-7c656fcc/runs/linux-forwarding-20261024T125629Z-5275018d/record.json",
+    "sha256": "db7d9c252438c981684230b16fcba5179e8e0ad97017d404ad8ea6e7ca3860e5",
+    "bytes": 43279
+  },
+  "scenario": {
+    "path": "corpus/scenarios/linux-static-ipv4-v3.json",
+    "sha256": "25a3727b29054bc32255a37bc8637b39c839ca232c2384f24a9cba1bd320b4c1",
+    "bytes": 5157
+  },
+  "comparisons": 21,
+  "invariant_checks": 186,
+  "cases": {
+    "S01": 3,
+    "S02": 3,
+    "S03": 3,
+    "S04": 3,
+    "R01": 3,
+    "N01": 3,
+    "N02": 3
+  },
+  "declared_difference": "Linux ARP failure emits ICMP 3/1; model reports internal arp_timeout without that message",
+  "replay": {
+    "checkpoint_cases": 7200,
+    "continuations_compared": 21600,
+    "cut_budgets": [
+      0,
+      1,
+      2,
+      6,
+      12
+    ],
+    "different_seed_timings": "different",
+    "impairments": 4,
+    "incomplete_baseline_histories": 315,
+    "repetitions_per_case": 3,
+    "retention_capacities": [
+      0,
+      1,
+      16,
+      1024
+    ],
+    "scenarios": 6,
+    "seed_values": [
+      0,
+      1,
+      42,
+      20260117,
+      18446744073709551615
+    ],
+    "seeds": 5,
+    "tolerance": "exact",
+    "uninterrupted_runs_compared": 1440,
+    "unresolved_baseline_outcomes": 72
+  }
+}

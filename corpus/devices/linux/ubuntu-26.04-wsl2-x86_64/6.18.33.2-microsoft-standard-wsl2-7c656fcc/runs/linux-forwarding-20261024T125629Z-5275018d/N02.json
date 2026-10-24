@@ -1,0 +1,1384 @@
+{
+  "control": {
+    "entities": {
+      "L1": 11,
+      "L2": 12,
+      "L3": 13,
+      "PC1": 1,
+      "PC1:eth0": 2,
+      "PC2": 9,
+      "PC2:eth0": 10,
+      "R1": 6,
+      "R1:eth0": 7,
+      "R1:eth1": 8,
+      "SW1": 3,
+      "SW1:p0": 4,
+      "SW1:p1": 5
+    },
+    "executed_events": 6,
+    "failure_entity": 0,
+    "now_ns": 5000000000,
+    "outcome": "pending",
+    "packet_versions": 6,
+    "packets": [
+      {
+        "cause_event": 0,
+        "fields": [
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 4,
+            "byte_offset": 0,
+            "name": "ipv4.version",
+            "value": 4
+          },
+          {
+            "bit_offset_msb": 4,
+            "bit_width": 4,
+            "byte_offset": 0,
+            "name": "ipv4.ihl",
+            "value": 5
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 6,
+            "byte_offset": 1,
+            "name": "ipv4.dscp",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 6,
+            "bit_width": 2,
+            "byte_offset": 1,
+            "name": "ipv4.ecn",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 2,
+            "name": "ipv4.total_length",
+            "value": 28
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 4,
+            "name": "ipv4.identification",
+            "value": 1
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 3,
+            "byte_offset": 6,
+            "name": "ipv4.flags",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 3,
+            "bit_width": 13,
+            "byte_offset": 6,
+            "name": "ipv4.fragment_offset",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 8,
+            "name": "ipv4.ttl",
+            "value": 64
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 9,
+            "name": "ipv4.protocol",
+            "value": 1
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 10,
+            "name": "ipv4.checksum",
+            "value": 26334
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 32,
+            "byte_offset": 12,
+            "name": "ipv4.src",
+            "value": 167772162
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 32,
+            "byte_offset": 16,
+            "name": "ipv4.dst",
+            "value": 167772161
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 20,
+            "name": "icmp.type",
+            "value": 8
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 21,
+            "name": "icmp.code",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 22,
+            "name": "icmp.checksum",
+            "value": 58826
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 24,
+            "name": "icmp.identifier",
+            "value": 4660
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 26,
+            "name": "icmp.sequence",
+            "value": 1
+          }
+        ],
+        "hex": "4500001c00010000400166de0a0000020a0000010800e5ca12340001",
+        "layer": "ipv4",
+        "packet_id": 1,
+        "parent_version": 0,
+        "version": 1
+      },
+      {
+        "cause_event": 0,
+        "fields": [
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 4,
+            "byte_offset": 0,
+            "name": "ipv4.version",
+            "value": 4
+          },
+          {
+            "bit_offset_msb": 4,
+            "bit_width": 4,
+            "byte_offset": 0,
+            "name": "ipv4.ihl",
+            "value": 5
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 6,
+            "byte_offset": 1,
+            "name": "ipv4.dscp",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 6,
+            "bit_width": 2,
+            "byte_offset": 1,
+            "name": "ipv4.ecn",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 2,
+            "name": "ipv4.total_length",
+            "value": 28
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 4,
+            "name": "ipv4.identification",
+            "value": 1
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 3,
+            "byte_offset": 6,
+            "name": "ipv4.flags",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 3,
+            "bit_width": 13,
+            "byte_offset": 6,
+            "name": "ipv4.fragment_offset",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 8,
+            "name": "ipv4.ttl",
+            "value": 64
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 9,
+            "name": "ipv4.protocol",
+            "value": 1
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 10,
+            "name": "ipv4.checksum",
+            "value": 26334
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 32,
+            "byte_offset": 12,
+            "name": "ipv4.src",
+            "value": 167772161
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 32,
+            "byte_offset": 16,
+            "name": "ipv4.dst",
+            "value": 167772162
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 20,
+            "name": "icmp.type",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 21,
+            "name": "icmp.code",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 22,
+            "name": "icmp.checksum",
+            "value": 60874
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 24,
+            "name": "icmp.identifier",
+            "value": 4660
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 26,
+            "name": "icmp.sequence",
+            "value": 1
+          }
+        ],
+        "hex": "4500001c00010000400166de0a0000010a0000020000edca12340001",
+        "layer": "ipv4",
+        "packet_id": 2,
+        "parent_version": 1,
+        "version": 2
+      },
+      {
+        "cause_event": 0,
+        "fields": [
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 48,
+            "byte_offset": 0,
+            "name": "ethernet.dst",
+            "value": 281474976710655
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 48,
+            "byte_offset": 6,
+            "name": "ethernet.src",
+            "value": 2199023255553
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 12,
+            "name": "ethernet.type",
+            "value": 2054
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 14,
+            "name": "arp.hardware_type",
+            "value": 1
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 16,
+            "name": "arp.protocol_type",
+            "value": 2048
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 18,
+            "name": "arp.hardware_len",
+            "value": 6
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 19,
+            "name": "arp.protocol_len",
+            "value": 4
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 20,
+            "name": "arp.opcode",
+            "value": 1
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 48,
+            "byte_offset": 22,
+            "name": "arp.sender_mac",
+            "value": 2199023255553
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 32,
+            "byte_offset": 28,
+            "name": "arp.sender_ip",
+            "value": 167772161
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 48,
+            "byte_offset": 32,
+            "name": "arp.target_mac",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 32,
+            "byte_offset": 38,
+            "name": "arp.target_ip",
+            "value": 167772162
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 144,
+            "byte_offset": 42,
+            "name": "ethernet.padding",
+            "value": null
+          }
+        ],
+        "hex": "ffffffffffff020000000001080600010800060400010200000000010a0000010000000000000a000002000000000000000000000000000000000000",
+        "layer": "ethernet",
+        "packet_id": 3,
+        "parent_version": 2,
+        "version": 3
+      },
+      {
+        "cause_event": 3,
+        "fields": [
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 48,
+            "byte_offset": 0,
+            "name": "ethernet.dst",
+            "value": 2199023255553
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 48,
+            "byte_offset": 6,
+            "name": "ethernet.src",
+            "value": 2199023255554
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 12,
+            "name": "ethernet.type",
+            "value": 2054
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 14,
+            "name": "arp.hardware_type",
+            "value": 1
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 16,
+            "name": "arp.protocol_type",
+            "value": 2048
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 18,
+            "name": "arp.hardware_len",
+            "value": 6
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 19,
+            "name": "arp.protocol_len",
+            "value": 4
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 20,
+            "name": "arp.opcode",
+            "value": 2
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 48,
+            "byte_offset": 22,
+            "name": "arp.sender_mac",
+            "value": 2199023255554
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 32,
+            "byte_offset": 28,
+            "name": "arp.sender_ip",
+            "value": 167772162
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 48,
+            "byte_offset": 32,
+            "name": "arp.target_mac",
+            "value": 2199023255553
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 32,
+            "byte_offset": 38,
+            "name": "arp.target_ip",
+            "value": 167772161
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 144,
+            "byte_offset": 42,
+            "name": "ethernet.padding",
+            "value": null
+          }
+        ],
+        "hex": "020000000001020000000002080600010800060400020200000000020a0000020200000000010a000001000000000000000000000000000000000000",
+        "layer": "ethernet",
+        "packet_id": 4,
+        "parent_version": 3,
+        "version": 4
+      },
+      {
+        "cause_event": 5,
+        "fields": [
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 48,
+            "byte_offset": 0,
+            "name": "ethernet.dst",
+            "value": 2199023255554
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 48,
+            "byte_offset": 6,
+            "name": "ethernet.src",
+            "value": 2199023255553
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 12,
+            "name": "ethernet.type",
+            "value": 2048
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 4,
+            "byte_offset": 14,
+            "name": "ipv4.version",
+            "value": 4
+          },
+          {
+            "bit_offset_msb": 4,
+            "bit_width": 4,
+            "byte_offset": 14,
+            "name": "ipv4.ihl",
+            "value": 5
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 6,
+            "byte_offset": 15,
+            "name": "ipv4.dscp",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 6,
+            "bit_width": 2,
+            "byte_offset": 15,
+            "name": "ipv4.ecn",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 16,
+            "name": "ipv4.total_length",
+            "value": 28
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 18,
+            "name": "ipv4.identification",
+            "value": 1
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 3,
+            "byte_offset": 20,
+            "name": "ipv4.flags",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 3,
+            "bit_width": 13,
+            "byte_offset": 20,
+            "name": "ipv4.fragment_offset",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 22,
+            "name": "ipv4.ttl",
+            "value": 64
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 23,
+            "name": "ipv4.protocol",
+            "value": 1
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 24,
+            "name": "ipv4.checksum",
+            "value": 26334
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 32,
+            "byte_offset": 26,
+            "name": "ipv4.src",
+            "value": 167772161
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 32,
+            "byte_offset": 30,
+            "name": "ipv4.dst",
+            "value": 167772162
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 34,
+            "name": "icmp.type",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 35,
+            "name": "icmp.code",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 36,
+            "name": "icmp.checksum",
+            "value": 60874
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 38,
+            "name": "icmp.identifier",
+            "value": 4660
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 40,
+            "name": "icmp.sequence",
+            "value": 1
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 144,
+            "byte_offset": 42,
+            "name": "ethernet.padding",
+            "value": null
+          }
+        ],
+        "hex": "02000000000202000000000108004500001c00010000400166de0a0000010a0000020000edca12340001000000000000000000000000000000000000",
+        "layer": "ethernet",
+        "packet_id": 2,
+        "parent_version": 2,
+        "version": 5
+      },
+      {
+        "cause_event": 7,
+        "fields": [
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 4,
+            "byte_offset": 0,
+            "name": "ipv4.version",
+            "value": 4
+          },
+          {
+            "bit_offset_msb": 4,
+            "bit_width": 4,
+            "byte_offset": 0,
+            "name": "ipv4.ihl",
+            "value": 5
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 6,
+            "byte_offset": 1,
+            "name": "ipv4.dscp",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 6,
+            "bit_width": 2,
+            "byte_offset": 1,
+            "name": "ipv4.ecn",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 2,
+            "name": "ipv4.total_length",
+            "value": 28
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 4,
+            "name": "ipv4.identification",
+            "value": 1
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 3,
+            "byte_offset": 6,
+            "name": "ipv4.flags",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 3,
+            "bit_width": 13,
+            "byte_offset": 6,
+            "name": "ipv4.fragment_offset",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 8,
+            "name": "ipv4.ttl",
+            "value": 64
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 9,
+            "name": "ipv4.protocol",
+            "value": 1
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 10,
+            "name": "ipv4.checksum",
+            "value": 26334
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 32,
+            "byte_offset": 12,
+            "name": "ipv4.src",
+            "value": 167772161
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 32,
+            "byte_offset": 16,
+            "name": "ipv4.dst",
+            "value": 167772162
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 20,
+            "name": "icmp.type",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 8,
+            "byte_offset": 21,
+            "name": "icmp.code",
+            "value": 0
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 22,
+            "name": "icmp.checksum",
+            "value": 60874
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 24,
+            "name": "icmp.identifier",
+            "value": 4660
+          },
+          {
+            "bit_offset_msb": 0,
+            "bit_width": 16,
+            "byte_offset": 26,
+            "name": "icmp.sequence",
+            "value": 1
+          }
+        ],
+        "hex": "4500001c00010000400166de0a0000010a0000020000edca12340001",
+        "layer": "ipv4",
+        "packet_id": 2,
+        "parent_version": 5,
+        "version": 6
+      }
+    ],
+    "pending_arp": 0,
+    "pending_events": 0,
+    "reason": "none",
+    "scenario": "valid_control",
+    "trace": [
+      {
+        "cause_id": 0,
+        "detail_a": 0,
+        "detail_b": 0,
+        "entity": 7,
+        "event_id": 0,
+        "kind": "packet_version",
+        "ordinal": 1,
+        "packet_id": 1,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 0,
+        "transmission": 0,
+        "version": 1
+      },
+      {
+        "cause_id": 0,
+        "detail_a": 0,
+        "detail_b": 0,
+        "entity": 6,
+        "event_id": 0,
+        "kind": "icmp_echo_reply",
+        "ordinal": 2,
+        "packet_id": 2,
+        "prior": 1,
+        "reason": "none",
+        "time_ns": 0,
+        "transmission": 0,
+        "version": 2
+      },
+      {
+        "cause_id": 0,
+        "detail_a": 7,
+        "detail_b": 167772162,
+        "entity": 6,
+        "event_id": 0,
+        "kind": "route_selected",
+        "ordinal": 3,
+        "packet_id": 2,
+        "prior": 0,
+        "reason": "connected_route",
+        "time_ns": 0,
+        "transmission": 0,
+        "version": 2
+      },
+      {
+        "cause_id": 0,
+        "detail_a": 167772162,
+        "detail_b": 0,
+        "entity": 7,
+        "event_id": 0,
+        "kind": "arp_lookup",
+        "ordinal": 4,
+        "packet_id": 2,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 0,
+        "transmission": 0,
+        "version": 2
+      },
+      {
+        "cause_id": 0,
+        "detail_a": 167772162,
+        "detail_b": 0,
+        "entity": 7,
+        "event_id": 0,
+        "kind": "packet_buffered",
+        "ordinal": 5,
+        "packet_id": 2,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 0,
+        "transmission": 0,
+        "version": 2
+      },
+      {
+        "cause_id": 0,
+        "detail_a": 167772162,
+        "detail_b": 0,
+        "entity": 7,
+        "event_id": 0,
+        "kind": "arp_request",
+        "ordinal": 6,
+        "packet_id": 3,
+        "prior": 2,
+        "reason": "none",
+        "time_ns": 0,
+        "transmission": 0,
+        "version": 3
+      },
+      {
+        "cause_id": 0,
+        "detail_a": 5,
+        "detail_b": 5800,
+        "entity": 7,
+        "event_id": 0,
+        "kind": "frame_tx",
+        "ordinal": 7,
+        "packet_id": 3,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 0,
+        "transmission": 1,
+        "version": 3
+      },
+      {
+        "cause_id": 0,
+        "detail_a": 0,
+        "detail_b": 0,
+        "entity": 5,
+        "event_id": 1,
+        "kind": "frame_rx",
+        "ordinal": 8,
+        "packet_id": 3,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 5800,
+        "transmission": 1,
+        "version": 3
+      },
+      {
+        "cause_id": 0,
+        "detail_a": 2199023255553,
+        "detail_b": 5,
+        "entity": 3,
+        "event_id": 1,
+        "kind": "mac_learn",
+        "ordinal": 9,
+        "packet_id": 3,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 5800,
+        "transmission": 0,
+        "version": 3
+      },
+      {
+        "cause_id": 0,
+        "detail_a": 0,
+        "detail_b": 0,
+        "entity": 3,
+        "event_id": 1,
+        "kind": "flood",
+        "ordinal": 10,
+        "packet_id": 3,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 5800,
+        "transmission": 0,
+        "version": 3
+      },
+      {
+        "cause_id": 0,
+        "detail_a": 2,
+        "detail_b": 11600,
+        "entity": 4,
+        "event_id": 1,
+        "kind": "frame_tx",
+        "ordinal": 11,
+        "packet_id": 3,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 5800,
+        "transmission": 2,
+        "version": 3
+      },
+      {
+        "cause_id": 1,
+        "detail_a": 0,
+        "detail_b": 0,
+        "entity": 2,
+        "event_id": 3,
+        "kind": "frame_rx",
+        "ordinal": 12,
+        "packet_id": 3,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 11600,
+        "transmission": 2,
+        "version": 3
+      },
+      {
+        "cause_id": 1,
+        "detail_a": 167772161,
+        "detail_b": 2199023255553,
+        "entity": 2,
+        "event_id": 3,
+        "kind": "arp_learn",
+        "ordinal": 13,
+        "packet_id": 3,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 11600,
+        "transmission": 0,
+        "version": 3
+      },
+      {
+        "cause_id": 1,
+        "detail_a": 167772161,
+        "detail_b": 0,
+        "entity": 2,
+        "event_id": 3,
+        "kind": "arp_reply",
+        "ordinal": 14,
+        "packet_id": 4,
+        "prior": 3,
+        "reason": "none",
+        "time_ns": 11600,
+        "transmission": 0,
+        "version": 4
+      },
+      {
+        "cause_id": 1,
+        "detail_a": 4,
+        "detail_b": 17400,
+        "entity": 2,
+        "event_id": 3,
+        "kind": "frame_tx",
+        "ordinal": 15,
+        "packet_id": 4,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 11600,
+        "transmission": 3,
+        "version": 4
+      },
+      {
+        "cause_id": 3,
+        "detail_a": 0,
+        "detail_b": 0,
+        "entity": 4,
+        "event_id": 4,
+        "kind": "frame_rx",
+        "ordinal": 16,
+        "packet_id": 4,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 17400,
+        "transmission": 3,
+        "version": 4
+      },
+      {
+        "cause_id": 3,
+        "detail_a": 2199023255554,
+        "detail_b": 4,
+        "entity": 3,
+        "event_id": 4,
+        "kind": "mac_learn",
+        "ordinal": 17,
+        "packet_id": 4,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 17400,
+        "transmission": 0,
+        "version": 4
+      },
+      {
+        "cause_id": 3,
+        "detail_a": 5,
+        "detail_b": 0,
+        "entity": 3,
+        "event_id": 4,
+        "kind": "switch_forward",
+        "ordinal": 18,
+        "packet_id": 4,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 17400,
+        "transmission": 0,
+        "version": 4
+      },
+      {
+        "cause_id": 3,
+        "detail_a": 7,
+        "detail_b": 23200,
+        "entity": 5,
+        "event_id": 4,
+        "kind": "frame_tx",
+        "ordinal": 19,
+        "packet_id": 4,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 17400,
+        "transmission": 4,
+        "version": 4
+      },
+      {
+        "cause_id": 4,
+        "detail_a": 0,
+        "detail_b": 0,
+        "entity": 7,
+        "event_id": 5,
+        "kind": "frame_rx",
+        "ordinal": 20,
+        "packet_id": 4,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 23200,
+        "transmission": 4,
+        "version": 4
+      },
+      {
+        "cause_id": 4,
+        "detail_a": 167772162,
+        "detail_b": 2199023255554,
+        "entity": 7,
+        "event_id": 5,
+        "kind": "arp_learn",
+        "ordinal": 21,
+        "packet_id": 4,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 23200,
+        "transmission": 0,
+        "version": 4
+      },
+      {
+        "cause_id": 4,
+        "detail_a": 0,
+        "detail_b": 0,
+        "entity": 7,
+        "event_id": 5,
+        "kind": "packet_version",
+        "ordinal": 22,
+        "packet_id": 2,
+        "prior": 2,
+        "reason": "none",
+        "time_ns": 23200,
+        "transmission": 0,
+        "version": 5
+      },
+      {
+        "cause_id": 4,
+        "detail_a": 5,
+        "detail_b": 29000,
+        "entity": 7,
+        "event_id": 5,
+        "kind": "frame_tx",
+        "ordinal": 23,
+        "packet_id": 2,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 23200,
+        "transmission": 5,
+        "version": 5
+      },
+      {
+        "cause_id": 5,
+        "detail_a": 0,
+        "detail_b": 0,
+        "entity": 5,
+        "event_id": 6,
+        "kind": "frame_rx",
+        "ordinal": 24,
+        "packet_id": 2,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 29000,
+        "transmission": 5,
+        "version": 5
+      },
+      {
+        "cause_id": 5,
+        "detail_a": 4,
+        "detail_b": 0,
+        "entity": 3,
+        "event_id": 6,
+        "kind": "switch_forward",
+        "ordinal": 25,
+        "packet_id": 2,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 29000,
+        "transmission": 0,
+        "version": 5
+      },
+      {
+        "cause_id": 5,
+        "detail_a": 2,
+        "detail_b": 34800,
+        "entity": 4,
+        "event_id": 6,
+        "kind": "frame_tx",
+        "ordinal": 26,
+        "packet_id": 2,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 29000,
+        "transmission": 6,
+        "version": 5
+      },
+      {
+        "cause_id": 6,
+        "detail_a": 0,
+        "detail_b": 0,
+        "entity": 2,
+        "event_id": 7,
+        "kind": "frame_rx",
+        "ordinal": 27,
+        "packet_id": 2,
+        "prior": 0,
+        "reason": "none",
+        "time_ns": 34800,
+        "transmission": 6,
+        "version": 5
+      },
+      {
+        "cause_id": 6,
+        "detail_a": 0,
+        "detail_b": 0,
+        "entity": 2,
+        "event_id": 7,
+        "kind": "decapsulate",
+        "ordinal": 28,
+        "packet_id": 2,
+        "prior": 5,
+        "reason": "none",
+        "time_ns": 34800,
+        "transmission": 0,
+        "version": 6
+      },
+      {
+        "cause_id": 6,
+        "detail_a": 0,
+        "detail_b": 0,
+        "entity": 1,
+        "event_id": 7,
+        "kind": "drop",
+        "ordinal": 29,
+        "packet_id": 2,
+        "prior": 0,
+        "reason": "unsolicited_reply",
+        "time_ns": 34800,
+        "transmission": 0,
+        "version": 6
+      }
+    ],
+    "trace_dropped": 0,
+    "trace_rows": 29,
+    "transmission_records": [
+      {
+        "arrival_ns": 5800,
+        "cause_id": 0,
+        "event_id": 1,
+        "from": 7,
+        "id": 1,
+        "link": 12,
+        "start_ns": 0,
+        "to": 5,
+        "version": 3
+      },
+      {
+        "arrival_ns": 11600,
+        "cause_id": 1,
+        "event_id": 3,
+        "from": 4,
+        "id": 2,
+        "link": 11,
+        "start_ns": 5800,
+        "to": 2,
+        "version": 3
+      },
+      {
+        "arrival_ns": 17400,
+        "cause_id": 3,
+        "event_id": 4,
+        "from": 2,
+        "id": 3,
+        "link": 11,
+        "start_ns": 11600,
+        "to": 4,
+        "version": 4
+      },
+      {
+        "arrival_ns": 23200,
+        "cause_id": 4,
+        "event_id": 5,
+        "from": 5,
+        "id": 4,
+        "link": 12,
+        "start_ns": 17400,
+        "to": 7,
+        "version": 4
+      },
+      {
+        "arrival_ns": 29000,
+        "cause_id": 5,
+        "event_id": 6,
+        "from": 7,
+        "id": 5,
+        "link": 12,
+        "start_ns": 23200,
+        "to": 5,
+        "version": 5
+      },
+      {
+        "arrival_ns": 34800,
+        "cause_id": 6,
+        "event_id": 7,
+        "from": 4,
+        "id": 6,
+        "link": 11,
+        "start_ns": 29000,
+        "to": 2,
+        "version": 5
+      }
+    ],
+    "transmissions": 6
+  },
+  "entities": {
+    "L1": 11,
+    "L2": 12,
+    "L3": 13,
+    "PC1": 1,
+    "PC1:eth0": 2,
+    "PC2": 9,
+    "PC2:eth0": 10,
+    "R1": 6,
+    "R1:eth0": 7,
+    "R1:eth1": 8,
+    "SW1": 3,
+    "SW1:p0": 4,
+    "SW1:p1": 5
+  },
+  "executed_events": 0,
+  "failure_entity": 6,
+  "input_port": "R1:eth0",
+  "now_ns": 5000000000,
+  "outcome": "invalid_packet",
+  "packet_versions": 1,
+  "packets": [
+    {
+      "cause_event": 0,
+      "fields": [],
+      "hex": "4500001c00010000400166de0a0000020a0000010800e4ca12340001",
+      "layer": "ipv4",
+      "packet_id": 1,
+      "parent_version": 0,
+      "version": 1
+    }
+  ],
+  "pending_arp": 0,
+  "pending_events": 0,
+  "reason": "invalid_icmp_checksum",
+  "scenario": "N02",
+  "trace": [
+    {
+      "cause_id": 0,
+      "detail_a": 0,
+      "detail_b": 0,
+      "entity": 7,
+      "event_id": 0,
+      "kind": "packet_version",
+      "ordinal": 1,
+      "packet_id": 1,
+      "prior": 0,
+      "reason": "none",
+      "time_ns": 0,
+      "transmission": 0,
+      "version": 1
+    },
+    {
+      "cause_id": 0,
+      "detail_a": 0,
+      "detail_b": 0,
+      "entity": 6,
+      "event_id": 0,
+      "kind": "drop",
+      "ordinal": 2,
+      "packet_id": 1,
+      "prior": 0,
+      "reason": "invalid_icmp_checksum",
+      "time_ns": 0,
+      "transmission": 0,
+      "version": 1
+    }
+  ],
+  "trace_dropped": 0,
+  "trace_rows": 2,
+  "transmission_records": [],
+  "transmissions": 0
+}

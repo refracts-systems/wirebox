@@ -1,0 +1,178 @@
+{
+  "date": "2026-10-24",
+  "committed_baseline": "b3cad111d01b54ba1c2f0c86a55ff1de88999dfc",
+  "scope": "G5 scoped local replay and independent Linux WSL2 runtime comparison",
+  "decision": "pass for declared scope",
+  "p5_06": "complete",
+  "p5_07": "complete",
+  "p5_08": "open; analysis/claim/combination contracts are separate follow-up",
+  "zig_version": "0.17.0",
+  "rust_version": "1.99.1",
+  "corpus_negative_control_tests": 24,
+  "linux_comparisons": 21,
+  "linux_invariant_checks": 186,
+  "kernel_or_ffi_changes": false,
+  "ui_interaction_or_remote_ci": "not_run",
+  "current_binary_sha256": "bac4a97f0b841f7bcf0543950ffa1013c577ca1784bfb5900afeb3454df84a4e",
+  "record": {
+    "path": "corpus/devices/linux/ubuntu-26.04-wsl2-x86_64/6.18.33.2-microsoft-standard-wsl2-7c656fcc/runs/linux-forwarding-20261024T125629Z-5275018d/record.json",
+    "sha256": "db7d9c252438c981684230b16fcba5179e8e0ad97017d404ad8ea6e7ca3860e5",
+    "bytes": 43279
+  },
+  "sources": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "c58a720fdd9e6f765464bd74d92daafc1e22b075d042d3cc5a6e7f8a7af3c9d7",
+      "bytes": 146412
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "25f9aff8597bbbb9691ef8d429e94ddc31b505a67b5495086486d118a59ab79e",
+      "bytes": 497
+    },
+    {
+      "path": "corpus/scenarios/linux-static-ipv4-v1.json",
+      "sha256": "0a4d95e80382c81090104bb6963aa1a55e4e4df5cf616efd16dd9793325e9c2f",
+      "bytes": 1303
+    },
+    {
+      "path": "corpus/scenarios/linux-static-ipv4-v2.json",
+      "sha256": "baaf7f76ba09c392e5950999c6f837c7348525e53632a05721001de6bea6e4e1",
+      "bytes": 1676
+    },
+    {
+      "path": "corpus/scenarios/linux-static-ipv4-v3.json",
+      "sha256": "25a3727b29054bc32255a37bc8637b39c839ca232c2384f24a9cba1bd320b4c1",
+      "bytes": 5157
+    },
+    {
+      "path": "corpus/schema/comparison-v1.schema.json",
+      "sha256": "c91b8edb058f887a5ab2bfc772e25a9626e5e44cedfd3d755a6f87a050dba01c",
+      "bytes": 2318
+    },
+    {
+      "path": "corpus/schema/comparison-v2.schema.json",
+      "sha256": "d94b768379ae45d0ecd92b94c2a8e1a947bc3b48fbeb1fd43b3521c67537081c",
+      "bytes": 2270
+    },
+    {
+      "path": "corpus/schema/record-v1.schema.json",
+      "sha256": "cfd2855f50f1d83c67eb7539f0282ba31e51222528b02f2d5cdb028573ce6bca",
+      "bytes": 3830
+    },
+    {
+      "path": "corpus/schema/scenario-v1.schema.json",
+      "sha256": "622efd7a52cddb105571bb8bf624f93e9a0278201e9c02673d872490fe1a0078",
+      "bytes": 2700
+    },
+    {
+      "path": "corpus/schema/scenario-v2.schema.json",
+      "sha256": "a8916eaacb87e4e192cf8ab96bee2f56f934d6e60397d7c603456d4996c71ac0",
+      "bytes": 3146
+    },
+    {
+      "path": "corpus/schema/target-v1.schema.json",
+      "sha256": "fb637c6667bfdcb52a92f61cd89d080b8bbd573c5a4033da0cd60bc140047c63",
+      "bytes": 2189
+    },
+    {
+      "path": "crates/wirebox-headless/src/main.rs",
+      "sha256": "3a372bf244452ca1486cbd3f1445d77158be83ac35f732ee1ba5c4e3de260c66",
+      "bytes": 2804
+    },
+    {
+      "path": "crates/wirebox-headless/src/packet_demo.rs",
+      "sha256": "a6869787db8fb76753d1a637a3dfc08d077db8e2989215be76e647e75c1b2c7e",
+      "bytes": 25515
+    },
+    {
+      "path": "crates/wirebox-headless/src/phase5.rs",
+      "sha256": "a663b095ec255f740bf60d7b1b594ff5109b7be0edfa3e49d6b2672c3f79e0d6",
+      "bytes": 15260
+    },
+    {
+      "path": "docs/learning/phase_5/phase_5_g5_linux_validation.md",
+      "sha256": "9736f377f54dddff1e5e98ce54426a630b1ceecc54af234ea0a87ebee7af5943",
+      "bytes": 6340
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "d13306be0ecda81ce779baa290ffb417380d525928477f16200884b5169cca33",
+      "bytes": 86
+    },
+    {
+      "path": "scripts/corpus/compare.py",
+      "sha256": "0cf9e83b75e70f5cc4d8f200577c241fe922a5dc36302f7f790c624787795fc2",
+      "bytes": 15679
+    },
+    {
+      "path": "scripts/corpus/linux_lab.py",
+      "sha256": "fa19d9fccb27b301ba3b5d677e1513efba75587afc25be141964aea03e8b98c0",
+      "bytes": 19931
+    },
+    {
+      "path": "scripts/corpus/run-linux-lab.ps1",
+      "sha256": "6286fbd7e5e0abec4a6ffa0bcec97156f13669180173093ba8cca5964bc037b1",
+      "bytes": 3037
+    },
+    {
+      "path": "scripts/corpus/test_corpus.py",
+      "sha256": "d5c80cf3a8c0e819c04c86b0e0db49505e5fd24962936997616b11f54d589189",
+      "bytes": 13339
+    },
+    {
+      "path": "scripts/corpus/validate.py",
+      "sha256": "da0fbd546345ba1a80734b97e25d5c6544cd519bb7a8db82fe24848f71734a41",
+      "bytes": 8783
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/phase-5-gate/README.md",
+      "sha256": "c615a7579e18b1a84930f76a1983506c3e5295fe2bbc46e74175a46a1887e0ad",
+      "bytes": 10079
+    },
+    {
+      "path": "docs/evidence/phase-5-gate/check-phase5.json",
+      "sha256": "05b962d0d04f5181e5b980bd8e192aa55f488eaf8798286e32feb5630bf11abb",
+      "bytes": 1269
+    },
+    {
+      "path": "docs/evidence/phase-5-gate/cleanup.json",
+      "sha256": "bee08e0d2b7e26e0de754b5097421e9f7c08f83b78c055885cb89ba264516847",
+      "bytes": 115
+    },
+    {
+      "path": "docs/evidence/phase-5-gate/experiment.log",
+      "sha256": "9398d9974dcd2776521a45f709d39f68e7cb4fa3874046b920d2c043b482c4fa",
+      "bytes": 922
+    },
+    {
+      "path": "docs/evidence/phase-5-gate/export-recheck.json",
+      "sha256": "613703ffb58b7d372fdc707da711bf799e2d67da5555f6ab6129bdec5e9c53cd",
+      "bytes": 765
+    },
+    {
+      "path": "docs/evidence/phase-5-gate/summary.json",
+      "sha256": "429f5f316640a4b5175be7be9a8213f55bdbfaa3bf8dd4c7b5d5c3f0a992ff98",
+      "bytes": 1361
+    },
+    {
+      "path": "docs/evidence/phase-5-gate/tests.log",
+      "sha256": "b8e6aa3ee117637f4570e53463dc28d19def7722a3bc19d50bba13f3e1c93200",
+      "bytes": 3381
+    },
+    {
+      "path": "docs/evidence/phase-5-gate/validation.json",
+      "sha256": "ce2c31c78f7f197928f9c131c6afbc36b10deb94b5ba52cd6174ad7b0768e560",
+      "bytes": 502
+    },
+    {
+      "path": "docs/evidence/phase-5-gate/verification.log",
+      "sha256": "6e82eb1688db5f5542cd5eb15763b4be17ed4ba949d9d407135a89ee3bcdb539",
+      "bytes": 25271
+    }
+  ],
+  "mikrotik_inventory": "deferred by user; ask again at Phase 6 MikroTik baseline",
+  "cognitive_coverage": "local artifacts stale; human understanding not assessed"
+}

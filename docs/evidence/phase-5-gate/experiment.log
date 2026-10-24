@@ -1,0 +1,31 @@
+   Compiling wyrlex-headless v0.1.0 (C:\Users\ricky\src\wirebox\crates\wirebox-headless)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.79s
+{
+  "record": "corpus/devices/linux/ubuntu-26.04-wsl2-x86_64/6.18.33.2-microsoft-standard-wsl2-7c656fcc/runs/linux-forwarding-20261024T125629Z-5275018d/record.json",
+  "status": "pass",
+  "comparisons": 21,
+  "mismatches": []
+}
+{
+  "records": [
+    {
+      "record_id": "linux-forwarding-20261024T073901Z-981dc0dc",
+      "integrity": "pass",
+      "comparison": "fail",
+      "cases": 9
+    },
+    {
+      "record_id": "linux-forwarding-20261024T074115Z-f8a8526f",
+      "integrity": "pass",
+      "comparison": "pass",
+      "cases": 9
+    },
+    {
+      "record_id": "linux-forwarding-20261024T125629Z-5275018d",
+      "integrity": "pass",
+      "comparison": "pass",
+      "cases": 21
+    }
+  ],
+  "incomplete_attempts": []
+}

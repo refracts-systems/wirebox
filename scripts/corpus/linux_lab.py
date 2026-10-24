@@ -136,13 +136,52 @@ class Lab:
         self.ip("pc1", "route", "add", "default", "via", "10.0.0.1")
         self.ip("pc2", "route", "add", "default", "via", "10.0.1.1")
         self.within("r1", "sysctl", "-qw", "net.ipv4.ip_forward=1")
-        if case != "S02":
+        if case == "S04":
+            # Keep carrier up so ARP attempts are observable. This establishes
+            # no-answer semantics, not equivalence to a physical/admin link down.
+            self.within("pc2", "sysctl", "-qw", "net.ipv4.conf.eth0.arp_ignore=8")
+        if case not in ("S02", "R01"):
             self.ip("r1", "route", "add", "198.51.100.2/32", "via", "10.0.1.2")
 
     def observe(self):
-        return {name: {kind: json.loads(self.ip(name, "-j", *args)) for kind, args in
+        result = {name: {kind: json.loads(self.ip(name, "-j", *args)) for kind, args in
                        [("links", ["link", "show"]), ("addresses", ["address", "show"]), ("routes", ["route", "show"]), ("neighbors", ["neighbor", "show"])]}
                 for name in self.names}
+        result["r1"]["sysctls"] = {"ip_forward": int(self.within("r1", "sysctl", "-n", "net.ipv4.ip_forward"))}
+        result["pc2"]["sysctls"] = {"arp_ignore": int(self.within("pc2", "sysctl", "-n", "net.ipv4.conf.eth0.arp_ignore"))}
+        return result
+
+    def probe(self, name, stimulus, raw=False, quiet=False):
+        start = time.monotonic_ns()
+        if raw:
+            # AF_INET/IP_HDRINCL can recalculate the IPv4 header checksum.
+            # Inject at SW1:p1 so the exact malformed bytes arrive at R1:eth0.
+            frame = bytes.fromhex("0200000000010200000000020800") + stimulus
+            self.within("sw1", sys.executable, "-c",
+                        "import socket,sys;s=socket.socket(socket.AF_PACKET,socket.SOCK_RAW);s.bind(('p1',0));s.send(bytes.fromhex(sys.argv[1]));s.close()", frame.hex())
+        else:
+            self.within("pc1", sys.executable, "-c",
+                        "import socket,sys;s=socket.socket(socket.AF_INET,socket.SOCK_RAW,socket.IPPROTO_RAW);s.setsockopt(socket.IPPROTO_IP,socket.IP_HDRINCL,1);s.sendto(bytes.fromhex(sys.argv[1]),(sys.argv[2],0));s.close()",
+                        stimulus.hex(), ipv4(stimulus)["dst"])
+        deadline = time.monotonic() + (1.0 if quiet else 6.0)
+        while time.monotonic() < deadline:
+            replies = []
+            for line in (self.folder / "source.jsonl").read_text().splitlines():
+                try:
+                    row = json.loads(line)
+                except json.JSONDecodeError:
+                    continue  # A live reader may see the final line mid-write.
+                frame = bytes.fromhex(row["hex"])
+                if row["monotonic_ns"] >= start and row["packet_type"] != 4 and len(frame) >= 42 and frame[12:14] == b"\x08\x00" and frame[23] == 1:
+                    packet = ipv4(frame[14:])
+                    if packet["dst"] == "10.0.0.2" and packet["type"] in (0, 3, 11):
+                        replies.append(row)
+            if replies and not quiet:
+                break
+            time.sleep(0.025)
+        time.sleep(0.05)
+        return {"name": name, "input_hex": stimulus.hex(), "start_ns": start, "end_ns": time.monotonic_ns(),
+                "sent_via": "AF_PACKET sw1:p1" if raw else "AF_INET IP_HDRINCL pc1:eth0"}
 
     def start_captures(self):
         for name, role, ports in [("pc1", "source", ["eth0"]), ("r1", "router", ["eth0", "eth1"])]:
@@ -223,9 +262,9 @@ def run(args):
         write_json(target_path, target)
     folder = target_dir / "runs" / args.run_id
     folder.mkdir(parents=True, exist_ok=False)
-    contract_path = repo / "corpus/scenarios/linux-static-ipv4-v2.json"
+    contract_path = repo / "corpus/scenarios/linux-static-ipv4-v3.json"
     contract = read_json(contract_path)
-    for filename in ["engine-provenance.json", "S01.json", "S02.json", "S03.json"]:
+    for filename in ["engine-provenance.json", *[f"{case}.json" for case in contract["cases"]]]:
         (folder / filename).write_bytes((inputs / filename).read_bytes())
     write_json(folder / "scenario.json", contract)
     archived_sources = []
@@ -242,7 +281,7 @@ def run(args):
             simulator = read_json(folder / f"{case}.json")
             stimulus = bytes.fromhex(simulator["packets"][0]["hex"])
             packet = ipv4(stimulus)
-            if packet["src"] != "10.0.0.2" or packet["type"] != 8 or not packet["checksums_valid"]:
+            if packet["src"] != "10.0.0.2" or packet["type"] != 8 or (packet["checksums_valid"] == (case in ("N01", "N02"))):
                 raise ValueError("unexpected simulator stimulus")
             for repetition in range(1, args.repetitions + 1):
                 case_dir = folder / f"{case}-r{repetition}"
@@ -252,25 +291,21 @@ def run(args):
                     lab.setup(case)
                     before = lab.observe()
                     lab.start_captures()
-                    # IP_HDRINCL preserves the supplied nonzero ID/source/TTL;
-                    # Linux independently resolves ARP, forwards, and replies.
-                    lab.within("pc1", sys.executable, "-c",
-                               "import socket,sys;s=socket.socket(socket.AF_INET,socket.SOCK_RAW,socket.IPPROTO_RAW);s.setsockopt(socket.IPPROTO_IP,socket.IP_HDRINCL,1);s.sendto(bytes.fromhex(sys.argv[1]),(sys.argv[2],0));s.close()",
-                               stimulus.hex(), packet["dst"])
-                    deadline = time.monotonic() + 3
-                    while time.monotonic() < deadline:
-                        lines = (case_dir / "source.jsonl").read_text().splitlines()
-                        replies = []
-                        for line in lines:
-                            row = json.loads(line)
-                            frame = bytes.fromhex(row["hex"])
-                            if row["packet_type"] != 4 and len(frame) >= 42 and frame[12:14] == b"\x08\x00":
-                                replies.append(row)
-                        if replies:
-                            break
-                        time.sleep(0.05)
-                    time.sleep(0.05)
+                    experiment = {"probes": []}
+                    if case == "R01":
+                        experiment["probes"].append(lab.probe("before", stimulus))
+                        action_start = time.monotonic_ns()
+                        lab.ip("r1", "route", "add", "198.51.100.2/32", "via", "10.0.1.2")
+                        experiment["route_add"] = {"start_ns": action_start, "end_ns": time.monotonic_ns()}
+                        experiment["probes"].append(lab.probe("after", stimulus))
+                    else:
+                        raw = case in ("N01", "N02")
+                        experiment["probes"].append(lab.probe("primary", stimulus, raw=raw, quiet=raw))
+                        if raw:
+                            good = bytes.fromhex(simulator["control"]["packets"][0]["hex"])
+                            experiment["probes"].append(lab.probe("control", good, raw=True))
                     lab.stop_captures()
+                    write_json(case_dir / "experiment.json", experiment)
                     write_json(case_dir / "observed.json", {"before": before, "after": lab.observe()})
                 finally:
                     lab.close()
@@ -278,11 +313,14 @@ def run(args):
                 for role in ("source", "router"):
                     captures.extend(json.loads(line) for line in (case_dir / f"{role}.jsonl").read_text().splitlines())
                     stats.append(read_json(case_dir / f"{role}.stats.json"))
-                result = compare_case(case, simulator, captures, stats, contract)
+                context = {"experiment": read_json(case_dir / "experiment.json"), "observed": read_json(case_dir / "observed.json")}
+                if case == "R01":
+                    context["before_simulator"] = read_json(folder / "S02.json")
+                result = compare_case(case, simulator, captures, stats, contract, revision=3, context=context)
                 result["repetition"] = repetition
                 comparisons.append(result)
         status = "pass" if comparisons and all(c["status"] == "pass" for c in comparisons) else "fail"
-        write_json(folder / "comparison.json", {"schema_version": 1, "comparator_revision": 2, "scenario_id": contract["scenario_id"],
+        write_json(folder / "comparison.json", {"schema_version": 2, "comparator_revision": 3, "scenario_id": contract["scenario_id"],
                                                "status": status, "comparisons": comparisons,
                                                "scope": "IPv4/ICMP forwarding subset; no timing or firmware conformance"})
         artifacts = [{"path": p.relative_to(folder).as_posix(), "sha256": digest(p), "bytes": p.stat().st_size}

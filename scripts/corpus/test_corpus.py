@@ -24,7 +24,7 @@ class CorpusTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         records = sorted((ROOT / "corpus/devices").rglob("record.json"))
-        cls.good = next(p for p in reversed(records) if read(p)["status"] == "pass")
+        cls.good = next(p for p in reversed(records) if read(p)["status"] == "pass" and read(p)["scenario_id"] == "linux-static-ipv4-v2")
         cls.failed = next(p for p in records if read(p)["status"] == "fail")
         cls.contract = read(cls.good.parent / "scenario.json")
         cls.simulator = read(cls.good.parent / "S01.json")
@@ -171,6 +171,108 @@ class CorpusTests(unittest.TestCase):
         contract = read(self.failed.parent / "scenario.json")
         self.assertIn("valid_ip_and_icmp_checksums", compare_case(case["case"], simulator, rows, stats, contract, revision=1)["mismatches"])
         self.assertEqual(compare_case(case["case"], simulator, rows, stats, contract, revision=2)["status"], "pass")
+
+
+class ExtendedCorpusTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.record = next(p for p in sorted((ROOT / "corpus/devices").rglob("record.json"), reverse=True)
+                          if read(p)["scenario_id"] == "linux-static-ipv4-v3" and read(p)["status"] == "pass")
+        cls.folder = cls.record.parent
+        cls.contract = read(cls.folder / "scenario.json")
+
+    def inputs(self, case):
+        directory = self.folder / f"{case}-r1"
+        rows, stats = [], []
+        for role in ("source", "router"):
+            rows.extend(json.loads(line) for line in (directory / f"{role}.jsonl").read_text().splitlines())
+            stats.append(read(directory / f"{role}.stats.json"))
+        context = {"experiment": read(directory / "experiment.json"), "observed": read(directory / "observed.json")}
+        if case == "R01":
+            context["before_simulator"] = read(self.folder / "S02.json")
+        return read(self.folder / f"{case}.json"), rows, stats, context
+
+    def compare(self, case, data):
+        simulator, rows, stats, context = data
+        return compare_case(case, simulator, rows, stats, self.contract, revision=3, context=context)
+
+    def test_all_extended_cases_reproduce_with_required_invariants(self):
+        self.assertEqual(validate_record(ROOT, self.record, True)["cases"], 21)
+        for case in self.contract["cases"]:
+            with self.subTest(case=case):
+                result = self.compare(case, self.inputs(case))
+                self.assertEqual(result["status"], "pass")
+                self.assertEqual({c["name"] for c in result["checks"]}, set(self.contract["comparison_policy"]["required"][case]))
+
+    def test_missing_invalid_ingress_cannot_be_mistaken_for_silent_rejection(self):
+        for case in ("N01", "N02"):
+            data = list(self.inputs(case))
+            primary = data[3]["experiment"]["probes"][0]
+            data[1] = [r for r in data[1] if not (primary["start_ns"] <= r["monotonic_ns"] <= primary["end_ns"])]
+            with self.subTest(case=case):
+                self.assertIn("checksum_fault_preserved", self.compare(case, data)["mismatches"])
+
+    def test_repaired_checksum_at_ingress_is_detected(self):
+        for case in ("N01", "N02"):
+            data = list(self.inputs(case))
+            bad = data[0]["packets"][0]["hex"]
+            good = data[0]["control"]["packets"][0]["hex"]
+            changed = 0
+            for row in data[1]:
+                if row["hex"][28:] == bad:
+                    row["hex"] = row["hex"][:28] + good
+                    changed += 1
+            self.assertGreater(changed, 0)
+            with self.subTest(case=case):
+                self.assertIn("checksum_fault_preserved", self.compare(case, data)["mismatches"])
+
+    def test_short_silence_window_is_rejected(self):
+        data = self.inputs("N01")
+        probe = data[3]["experiment"]["probes"][0]
+        probe["end_ns"] = probe["start_ns"] + 10_000_000
+        self.assertIn("quiet_window_bounded", self.compare("N01", data)["mismatches"])
+
+    def test_missing_healthy_control_reply_is_rejected(self):
+        data = list(self.inputs("N02"))
+        control = data[3]["experiment"]["probes"][1]
+        data[1] = [r for r in data[1] if not (r["role"] == "source" and r["monotonic_ns"] >= control["start_ns"])]
+        self.assertIn("valid_control_recovers", self.compare("N02", data)["mismatches"])
+
+    def test_route_recovery_without_prior_failure_is_rejected(self):
+        data = list(self.inputs("R01"))
+        probe = data[3]["experiment"]["probes"][0]
+        data[1] = [r for r in data[1] if not (r["role"] == "source" and probe["start_ns"] <= r["monotonic_ns"] <= probe["end_ns"])]
+        self.assertIn("route_missing_before_change", self.compare("R01", data)["mismatches"])
+
+    def test_route_change_must_happen_between_probes(self):
+        data = self.inputs("R01")
+        experiment = data[3]["experiment"]
+        experiment["route_add"]["start_ns"] = experiment["probes"][0]["start_ns"] - 1
+        self.assertIn("route_added_after_failure", self.compare("R01", data)["mismatches"])
+
+    def test_arp_answer_contradicts_no_answer_case(self):
+        data = self.inputs("S04")
+        request = next(r for r in data[1] if r["role"] == "router" and r["interface"] == "eth1"
+                       and r["hex"][24:28] == "0806" and r["hex"][40:44] == "0001")
+        answer = copy.deepcopy(request)
+        frame = bytearray.fromhex(answer["hex"])
+        frame[20:22] = b"\0\2"
+        frame[28:32] = bytes([10, 0, 1, 2])
+        answer.update(hex=frame.hex(), packet_type=0)
+        data[1].append(answer)
+        self.assertIn("arp_requests_without_reply", self.compare("S04", data)["mismatches"])
+
+    def test_arp_ignore_precondition_is_checked(self):
+        data = self.inputs("S04")
+        data[3]["observed"]["before"]["pc2"]["sysctls"]["arp_ignore"] = 0
+        self.assertIn("lab_preconditions", self.compare("S04", data)["mismatches"])
+
+    def test_new_schema_does_not_expand_old_case_contract(self):
+        from validate import schema
+        old = read(ROOT / "corpus/scenarios/linux-static-ipv4-v2.json")
+        old["cases"].append("N01")
+        with self.assertRaises(ValidationError):
+            schema(ROOT, "scenario", old)
 
 
 if __name__ == "__main__":
